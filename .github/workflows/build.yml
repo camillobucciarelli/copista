@@ -21,3 +21,14 @@ jobs:
         run: gh release create "$GITHUB_REF_NAME" Copista.zip --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
+  appstore:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: [self-hosted, macOS]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./appstore.sh
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+          ASC_KEY_ID: ${{ vars.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ vars.ASC_ISSUER_ID }}
