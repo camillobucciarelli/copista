@@ -29,7 +29,7 @@ fi
 CI=true ./build.sh
 APP="build/Copista.app"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" "$APP/Contents/Info.plist"
-cp "$PROFILE" "$APP/Contents/embedded.provisionprofile"
+install -m 644 "$PROFILE" "$APP/Contents/embedded.provisionprofile"
 codesign --force --options runtime --entitlements Copista.entitlements --sign "$SIGN_APP" "$APP"
 productbuild --component "$APP" /Applications --sign "$SIGN_PKG" build/Copista.pkg
 echo "Fatto: build/Copista.pkg"
