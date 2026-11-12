@@ -37,11 +37,16 @@ Requisito: Xcode Command Line Tools. macOS 13 o successivo.
 
 ## Mac App Store
 
-Il job `appstore` (solo sui tag `v*`) esegue `appstore.sh`. Prerequisiti una tantum sul Mac del runner:
+Il job `appstore` (sui tag `v*` e a mano con `workflow_dispatch`) esegue `appstore.sh`. Prerequisiti una tantum sul Mac del runner:
 
 - Nel portachiavi login: "Apple Distribution" e "3rd Party Mac Developer Installer" (nomi sovrascrivibili con `SIGN_APP` / `SIGN_PKG`).
 - Provisioning profile in `~/.private_keys/Copista_AppStore.provisionprofile` (o `PROFILE`).
 - Chiave API `AuthKey_<ID>.p8` in `~/.private_keys`.
-- Variabili del repository `ASC_KEY_ID` e `ASC_ISSUER_ID`.
+- Secret del repository `ASC_KEY_ID` e `ASC_ISSUER_ID`.
+- Il runner va avviato da terminale con `./run.sh` (non come servizio LaunchAgent), altrimenti codesign non può usare il portachiavi di login.
 
 Prova locale senza upload: `BUILD_NUMBER=1 ./appstore.sh --no-upload`.
+
+## Licenza
+
+MIT. Vedi [LICENSE](LICENSE).
