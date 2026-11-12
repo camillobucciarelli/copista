@@ -1,0 +1,15 @@
+<svg viewBox="0 0 1024 1024" width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Icona Copista: fogli impilati e pennino">
+<rect x="100" y="100" width="824" height="824" rx="186" style="fill: #2B2D6E"/>
+<rect x="334" y="226" width="400" height="500" rx="36" fill="#F6F1E7" opacity="0.32"/>
+<rect x="302" y="258" width="400" height="500" rx="36" fill="#F6F1E7" opacity="0.6"/>
+<rect x="270" y="290" width="400" height="500" rx="36" fill="#F6F1E7"/>
+<rect x="320" y="372" width="240" height="24" rx="12" fill="#CFC7B6"/>
+<rect x="320" y="432" width="180" height="24" rx="12" fill="#CFC7B6"/>
+<rect x="320" y="492" width="110" height="24" rx="12" fill="#CFC7B6"/>
+<g transform="translate(566 520) rotate(35)">
+<rect x="-60" y="-300" width="120" height="176" rx="22" fill="#C9781A"/>
+<path d="M -60 -120 L 60 -120 L 72 -20 L 0 150 L -72 -20 Z" style="fill: #F2A33A"/>
+<circle cx="0" cy="-10" r="15" style="fill: #2B2D6E"/>
+<rect x="-3" y="-10" width="6" height="150" style="fill: #2B2D6E"/>
+</g>
+</svg>
