@@ -17,9 +17,9 @@ L'elemento più recente dello storico. È sempre uguale al contenuto degli appun
 _Avoid_: Corrente, primo elemento
 
 **File di consegna**:
-Un file con nome esatto `text-0.txt` nella cartella Download, che porta un testo inviato da un dispositivo Android. L'app lo trasforma nell'ultimo copiato e poi lo elimina in modo definitivo.
+Un file nella cartella Download che porta un testo inviato da un dispositivo Android. Ha nome `text-0.txt`, oppure `text-0 N.txt` quando macOS rinomina un doppione.
 _Avoid_: File importato, drop file, file AirDrop
 
 **Ricezione da Android**:
-La funzione, che l'utente può abilitare e disabilitare, che trasforma ogni file di consegna nell'ultimo copiato.
+La funzione, spenta finché l'utente non la abilita, che trasforma ogni file di consegna in un elemento e poi elimina il file in modo definitivo. Il file di consegna più recente diventa l'ultimo copiato.
 _Avoid_: Importazione, sincronizzazione, watcher
