@@ -25,7 +25,30 @@ Requisito: Xcode Command Line Tools. macOS 13 o successivo.
 | `Esc` | Chiude la lista |
 | Icona nella barra | Pulizia dello storico, sospensione, uscita |
 
+## Ricezione da Android
+
+Voce di menu "Ricevi testo da Android". All'inizio è spenta.
+
+Quando invii un testo da Android al Mac, il testo arriva in Download come file `text-0.txt`
+(oppure `text-0 2.txt`, `text-0 3.txt`… se il primo esiste già). Con la funzione attiva, Copista:
+
+1. legge il file;
+2. mette il testo negli appunti e in cima allo storico (`Cmd+V` lo incolla);
+3. elimina il file in modo definitivo (non va nel Cestino).
+
+| Caso | Risultato |
+|---|---|
+| File vuoto | Il file è eliminato, nessun elemento nuovo |
+| File non UTF-8 o più grande di 1 MB | Il file resta, nessun elemento nuovo |
+| "Sospendi registrazione" attivo | Il file resta; Copista lo legge alla ripresa |
+| File già presente all'avvio | Copista lo legge |
+
+Limite: il file non porta il segnale "riservato" dei password manager. Una password inviata
+da Android entra nello storico in chiaro. Eliminare l'elemento a mano dalla lista.
+
 ## Permessi
+
+- **Cartella Download**: necessario per "Ricevi testo da Android". macOS lo chiede alla prima attivazione.
 
 - **Accessibilità**: necessario per l'incolla automatico dalla lista.
   Senza permesso, l'elemento scelto va negli appunti e si incolla con `Cmd+V`.

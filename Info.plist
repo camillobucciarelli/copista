@@ -15,5 +15,6 @@
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>LSUIElement</key><true/>
     <key>NSHighResolutionCapable</key><true/>
+    <key>NSDownloadsFolderUsageDescription</key><string>Copista legge il file "text-0.txt" inviato da Android, mette il testo negli appunti ed elimina il file.</string>
 </dict>
 </plist>
