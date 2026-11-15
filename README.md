@@ -75,6 +75,14 @@ Il job `appstore` (sui tag `v*` e a mano con `workflow_dispatch`) esegue `appsto
 
 Prova locale senza upload: `BUILD_NUMBER=1 ./appstore.sh --no-upload`.
 
+## Sito
+
+Le pagine di supporto e privacy sono in `site/`. Il workflow `Site` le carica in un bucket Cloudflare R2 dietro un dominio personalizzato, a ogni push su `main` che cambia `site/` e a mano con `workflow_dispatch`.
+
+- Secret del repository: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ACCOUNT_ID`, `R2_BUCKET`. Variabile opzionale `SITE_BASE_URL` (URL pubblico del dominio).
+- R2 non serve l'indice di cartella: ogni link nomina il file (`index.html`, `privacy.html`). La radice `/` funziona solo con una Transform Rule di Cloudflare impostata a mano (Rewrite URL: path `/` → `/index.html`).
+Prima configurazione (bucket, dominio, secret, primo upload): `tool/site_setup.sh`, una procedura guidata.
+
 ## Licenza
 
 MIT. Vedi [LICENSE](LICENSE).
