@@ -55,6 +55,7 @@ Le pagine di supporto e privacy sono in `site/`. Il workflow `Site` le carica in
 
 - Secret del repository: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ACCOUNT_ID`, `R2_BUCKET`. Variabile opzionale `SITE_BASE_URL` (URL pubblico del dominio).
 - R2 non serve l'indice di cartella: ogni link nomina il file (`index.html`, `privacy.html`). La radice `/` funziona solo con una Transform Rule di Cloudflare impostata a mano (Rewrite URL: path `/` → `/index.html`).
+Prima configurazione (bucket, dominio, secret, primo upload): `tool/site_setup.sh`, una procedura guidata.
 
 ## Licenza
 
