@@ -13,8 +13,16 @@ Un testo nello storico.
 _Avoid_: Clip, voce, item
 
 **Ultimo copiato**:
-L'elemento più recente dello storico. È sempre uguale al contenuto degli appunti di sistema, quindi `Cmd+V` lo incolla.
+L'elemento più recente dello storico. È uguale al contenuto degli appunti di sistema, quindi `Cmd+V` lo incolla. Unica eccezione: dopo un incolla multiplo gli appunti contengono il testo unito.
 _Avoid_: Corrente, primo elemento
+
+**Incolla multiplo**:
+L'azione che incolla più elementi selezionati con un solo `Cmd+V`, come testo unito.
+_Avoid_: Incolla in sequenza, multi-paste
+
+**Testo unito**:
+Il testo prodotto da un incolla multiplo: gli elementi selezionati nell'ordine dello storico, separati da un ritorno a capo. Va negli appunti di sistema ma non diventa un elemento. Alla prima eliminazione dallo storico, l'ultimo copiato lo sostituisce negli appunti.
+_Avoid_: Elemento unito, testo combinato
 
 **File di consegna**:
 Un file nella cartella Download che porta un testo inviato da un dispositivo Android. Ha nome `text-0.txt`, oppure `text-0 N.txt` quando macOS rinomina un doppione.
