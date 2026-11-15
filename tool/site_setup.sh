@@ -238,6 +238,11 @@ for name in R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_ACCOUNT_ID R2_BUCKET; do
   [[ -n "${!name}" ]] || { warn "$name è vuoto: riavvia lo script"; exit 1; }
   set_secret "$name" "${!name}"
 done
+# Senza i quattro secret il workflow Site fallisce: nessun merge finché non ci sono tutti.
+if (( ${#WRITTEN_SECRET[@]} < 4 )); then
+  warn "Non tutti i secret sono stati salvati (permessi di gh?). Impostali a mano con: gh secret set <NOME>"
+  confirm "Hai impostato a mano i secret mancanti?" || exit 1
+fi
 set_var SITE_BASE_URL "https://$DOMAIN"
 pause
 
