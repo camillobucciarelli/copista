@@ -8,6 +8,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private lazy var panel = HistoryPanelController(store: store)
     private var statusItem: NSStatusItem!
     private var hotKey: HotKey?
+    private let reception = AndroidReception()
+    private let receptionEnabledKey = "androidReceptionEnabled"
+    private let receptionExplainedKey = "androidReceptionExplained"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Icona nella barra dei menu
@@ -19,12 +22,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         statusItem.menu = menu
 
         // Pannello
-        panel.onPaste = { [weak self] item in self?.paste(item) }
-        panel.onDelete = { [weak self] item in self?.delete(item) }
+        panel.onPaste = { [weak self] items in self?.paste(items) }
+        panel.onDelete = { [weak self] items in self?.delete(items) }
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
 
         // Controllo degli appunti
         monitor.start()
+
+        // Ricezione da Android: il testo diventa l'ultimo copiato.
+        reception.onText = { [weak self] text in
+            self?.monitor.write(text)
+            self?.store.add(text)
+        }
+        if UserDefaults.standard.bool(forKey: receptionEnabledKey), !reception.start() {
+            UserDefaults.standard.set(false, forKey: receptionEnabledKey)
+        }
 
         // Cmd+Shift+V globale
         hotKey = HotKey(keyCode: UInt32(kVK_ANSI_V),
@@ -39,17 +51,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - Azioni sugli elementi
 
-    private func paste(_ item: ClipItem) {
+    /// Gli elementi sono nell'ordine della lista.
+    private func paste(_ items: [ClipItem]) {
+        guard let first = items.first else { return }
         panel.hide()
-        monitor.write(item.text)          // l'elemento diventa "l'ultimo copiato"
+        if items.count == 1 {
+            monitor.write(first.text)     // l'elemento diventa "l'ultimo copiato"
+        } else {
+            // Incolla multiplo: un solo testo, che non entra nello storico.
+            let joined = items.map(\.text).joined(separator: "\n")
+            monitor.write(joined, record: false)
+        }
         guard AXIsProcessTrusted() else { return }   // senza permesso: usare Cmd+V a mano
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             Self.sendCommandV()
         }
     }
 
-    private func delete(_ item: ClipItem) {
-        store.remove(id: item.id)
+    private func delete(_ items: [ClipItem]) {
+        guard !items.isEmpty else { return }
+        store.remove(ids: Set(items.map(\.id)))
         syncClipboard()
     }
 
@@ -103,6 +124,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let pause = addItem(to: menu, "Sospendi registrazione", #selector(togglePause))
         pause.state = monitor.isPaused ? .on : .off
 
+        let android = addItem(to: menu, "Ricevi testo da Android", #selector(toggleReception))
+        android.state = reception.isRunning ? .on : .off
+
         if !AXIsProcessTrusted() {
             addItem(to: menu, "Abilita incolla automatico (Accessibilità)…", #selector(openAccessibility))
         }
@@ -141,7 +165,51 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         syncClipboard()
     }
 
-    @objc private func togglePause() { monitor.isPaused.toggle() }
+    @objc private func togglePause() {
+        monitor.isPaused.toggle()
+        reception.isPaused = monitor.isPaused
+    }
+
+    @objc private func toggleReception() {
+        let defaults = UserDefaults.standard
+        if reception.isRunning {
+            reception.stop()
+            defaults.set(false, forKey: receptionEnabledKey)
+            return
+        }
+
+        if !defaults.bool(forKey: receptionExplainedKey) {
+            let alert = NSAlert()
+            alert.messageText = "Ricevi testo da Android"
+            alert.informativeText = "Quando invii un testo da Android a questo Mac, il testo arriva "
+                + "nella cartella Download come file \"text-0.txt\".\n\n"
+                + "Copista legge questo file, mette il testo negli appunti e nello storico, "
+                + "poi elimina il file in modo definitivo (non va nel Cestino).\n\n"
+                + "Copista non legge e non modifica altri file. Il testo è salvato in chiaro nello storico."
+            alert.addButton(withTitle: "Abilita")
+            alert.addButton(withTitle: "Annulla")
+            NSApp.activate(ignoringOtherApps: true)
+            guard alert.runModal() == .alertFirstButtonReturn else { return }
+            defaults.set(true, forKey: receptionExplainedKey)
+        }
+
+        if reception.start() {
+            defaults.set(true, forKey: receptionEnabledKey)
+        } else {
+            let alert = NSAlert()
+            alert.alertStyle = .warning
+            alert.messageText = "Copista non ha accesso alla cartella Download"
+            alert.informativeText = "Apri Impostazioni di Sistema > Privacy e sicurezza > File e cartelle, "
+                + "abilita Download per Copista, poi attiva di nuovo la funzione."
+            alert.addButton(withTitle: "Apri Impostazioni")
+            alert.addButton(withTitle: "Annulla")
+            NSApp.activate(ignoringOtherApps: true)
+            if alert.runModal() == .alertFirstButtonReturn,
+               let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders") {
+                NSWorkspace.shared.open(url)
+            }
+        }
+    }
 
     @objc private func openAccessibility() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {

@@ -33,9 +33,11 @@ final class ClipboardMonitor {
         pasteboard.string(forType: .string)
     }
 
-    func write(_ text: String) {
+    /// Con `record: false` il testo va negli appunti ma non entra nello storico.
+    func write(_ text: String, record: Bool = true) {
         pasteboard.clearContents()
         pasteboard.setString(text, forType: .string)
+        if !record { lastChangeCount = pasteboard.changeCount }
     }
 
     func clear() {

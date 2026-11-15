@@ -58,8 +58,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     private let emptyLabel = NSTextField(labelWithString: "Nessun elemento copiato")
     private var keyMonitor: Any?
 
-    var onPaste: ((ClipItem) -> Void)?
-    var onDelete: ((ClipItem) -> Void)?
+    var onPaste: (([ClipItem]) -> Void)?
+    var onDelete: (([ClipItem]) -> Void)?
 
     var isVisible: Bool { panel.isVisible }
 
@@ -102,7 +102,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         title.font = .systemFont(ofSize: 13, weight: .semibold)
         title.textColor = .secondaryLabelColor
 
-        let hint = NSTextField(labelWithString: "↑↓ scegli   ↩ incolla   ⌫ elimina   esc chiudi")
+        let hint = NSTextField(labelWithString: "↑↓ scegli   ⇧ / ⌘ più righe   ↩ incolla   ⌫ elimina   esc chiudi")
         hint.font = .systemFont(ofSize: 11)
         hint.textColor = .tertiaryLabelColor
 
@@ -116,7 +116,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         tableView.rowHeight = 32
         tableView.style = .inset
         tableView.backgroundColor = .clear
-        tableView.allowsMultipleSelection = false
+        tableView.allowsMultipleSelection = true
         tableView.dataSource = self
         tableView.delegate = self
         tableView.target = self
@@ -179,7 +179,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
 
     func reloadIfVisible() {
         guard panel.isVisible else { return }
-        reload(selecting: max(tableView.selectedRow, 0))
+        reload(selecting: tableView.selectedRowIndexes.first ?? 0)
     }
 
     private func reload(selecting row: Int) {
@@ -200,6 +200,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
 
     private func handleKey(_ event: NSEvent) -> NSEvent? {
         guard panel.isVisible, event.window === panel else { return event }
+        // ⇧+frecce: la tabella estende la selezione.
+        if [125, 126].contains(event.keyCode), event.modifierFlags.contains(.shift) { return event }
         switch event.keyCode {
         case 125: moveSelection(by: 1); return nil      // freccia giu'
         case 126: moveSelection(by: -1); return nil     // freccia su
@@ -223,19 +225,29 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         return store.items[row]
     }
 
+    /// Elementi selezionati, nell'ordine della lista.
+    private func selectedItems() -> [ClipItem] {
+        tableView.selectedRowIndexes.compactMap { item(at: $0) }
+    }
+
     private func pasteSelected() {
-        guard let item = item(at: tableView.selectedRow) else { return }
-        onPaste?(item)
+        let items = selectedItems()
+        guard !items.isEmpty else { return }
+        onPaste?(items)
     }
 
     private func deleteSelected() {
-        guard let item = item(at: tableView.selectedRow) else { return }
-        onDelete?(item)
+        let items = selectedItems()
+        guard !items.isEmpty else { return }
+        onDelete?(items)
     }
 
     @objc private func rowClicked() {
+        // ⌘-clic e ⇧-clic cambiano solo la selezione. Invio incolla.
+        let modifiers = NSApp.currentEvent?.modifierFlags ?? []
+        guard modifiers.isDisjoint(with: [.command, .shift]) else { return }
         guard let item = item(at: tableView.clickedRow) else { return }
-        onPaste?(item)
+        onPaste?([item])
     }
 
     // MARK: - Tabella
@@ -255,7 +267,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         let item = store.items[row]
         cell.label.stringValue = Self.preview(of: item.text)
         cell.toolTip = String(item.text.prefix(600))
-        cell.onDelete = { [weak self] in self?.onDelete?(item) }
+        cell.onDelete = { [weak self] in self?.onDelete?([item]) }
         return cell
     }
 
