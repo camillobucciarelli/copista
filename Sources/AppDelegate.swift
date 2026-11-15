@@ -19,8 +19,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         statusItem.menu = menu
 
         // Pannello
-        panel.onPaste = { [weak self] item in self?.paste(item) }
-        panel.onDelete = { [weak self] item in self?.delete(item) }
+        panel.onPaste = { [weak self] items in self?.paste(items) }
+        panel.onDelete = { [weak self] items in self?.delete(items) }
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
 
         // Controllo degli appunti
@@ -39,17 +39,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - Azioni sugli elementi
 
-    private func paste(_ item: ClipItem) {
+    /// Gli elementi sono nell'ordine della lista.
+    private func paste(_ items: [ClipItem]) {
+        guard let first = items.first else { return }
         panel.hide()
-        monitor.write(item.text)          // l'elemento diventa "l'ultimo copiato"
+        if items.count == 1 {
+            monitor.write(first.text)     // l'elemento diventa "l'ultimo copiato"
+        } else {
+            // Incolla multiplo: un solo testo, che non entra nello storico.
+            let joined = items.map(\.text).joined(separator: "\n")
+            monitor.write(joined, record: false)
+        }
         guard AXIsProcessTrusted() else { return }   // senza permesso: usare Cmd+V a mano
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             Self.sendCommandV()
         }
     }
 
-    private func delete(_ item: ClipItem) {
-        store.remove(id: item.id)
+    private func delete(_ items: [ClipItem]) {
+        guard !items.isEmpty else { return }
+        store.remove(ids: Set(items.map(\.id)))
         syncClipboard()
     }
 

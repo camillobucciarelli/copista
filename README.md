@@ -21,7 +21,10 @@ Requisito: Xcode Command Line Tools. macOS 13 o successivo.
 | `Cmd+Shift+V` | Apre / chiude la lista |
 | `↑` `↓` | Sceglie un elemento |
 | `Invio` o clic | Incolla l'elemento scelto |
-| `⌫` o icona cestino | Elimina l'elemento dalla lista |
+| `⌘`-clic, `⇧`-clic, `⇧`+`↑` `↓` | Seleziona più elementi |
+| `Invio` con più elementi | Incolla gli elementi come un solo testo, uno per riga, nell'ordine della lista. Il testo unito non entra nello storico |
+| `⌫` | Elimina gli elementi selezionati |
+| Icona cestino | Elimina l'elemento della riga |
 | `Esc` | Chiude la lista |
 | Icona nella barra | Pulizia dello storico, sospensione, uscita |
 

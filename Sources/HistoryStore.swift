@@ -36,8 +36,8 @@ final class HistoryStore {
         changed()
     }
 
-    func remove(id: UUID) {
-        items.removeAll { $0.id == id }
+    func remove(ids: Set<UUID>) {
+        items.removeAll { ids.contains($0.id) }
         changed()
     }
 
