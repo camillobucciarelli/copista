@@ -1,0 +1,45 @@
+name: Site
+# The website (support and privacy pages, site/) lives in an R2 bucket behind a custom domain, like the
+# sites of postino and custode. R2's custom domain serves no directory index, so every link names its
+# file (index.html, privacy.html); the root `/` is served by a Cloudflare Transform Rule (Rewrite URL:
+# path exactly `/` -> static `/index.html`) set by hand in the dashboard.
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'tool/r2_upload.sh', '.github/workflows/site.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency: site
+jobs:
+  site:
+    # GitHub-hosted: the upload needs only curl, so it does not depend on the self-hosted Mac.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload the website to R2
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          # Public base of the bucket (custom domain), a repository variable; optional.
+          SITE_BASE_URL: ${{ vars.SITE_BASE_URL }}
+        run: |
+          for name in R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_ACCOUNT_ID R2_BUCKET; do
+            test -n "${!name}" || { echo "::error::Secret $name is not set"; exit 1; }
+          done
+          upload() { tool/r2_upload.sh "site/$1" "$1" "$2" "${3:-public, max-age=300}"; }
+          # A font never changes under the same name: a year of cache.
+          for font in site/fonts/*.woff2; do
+            upload "fonts/${font##*/}" font/woff2 'public, max-age=31536000, immutable'
+          done
+          for license in site/fonts/OFL-*.txt; do upload "fonts/${license##*/}" 'text/plain; charset=utf-8'; done
+          upload icon.png image/png
+          upload style.css 'text/css; charset=utf-8'
+          # The pages go last, so they never name a file that is not there yet.
+          for page in site/*.html; do
+            upload "${page##*/}" 'text/html; charset=utf-8'
+            echo "- ${SITE_BASE_URL:+${SITE_BASE_URL%/}/}${page##*/}" >> "$GITHUB_STEP_SUMMARY"
+          done
