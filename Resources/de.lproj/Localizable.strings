@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Einträge löschen, die älter als 24 Stunden sind";
 "menu.pause" = "Aufzeichnung anhalten";
 "menu.android" = "Text von Android empfangen";
-"menu.accessibility" = "Automatisches Einsetzen aktivieren (Bedienungshilfen)…";
 "menu.quit" = "Beenden";
 "android.alert.body" = "Wenn du einen Text von Android an diesen Mac sendest, kommt der Text im Ordner „Downloads“ als Datei „text-0.txt“ an.\n\nCopista liest diese Datei, legt den Text in die Zwischenablage und in den Verlauf und löscht die Datei dann endgültig (sie kommt nicht in den Papierkorb).\n\nCopista liest und ändert keine anderen Dateien. Der Text wird unverschlüsselt im Verlauf gespeichert.";
 "downloads.alert.title" = "Copista hat keinen Zugriff auf den Ordner „Downloads“";
@@ -19,4 +18,4 @@
 "panel.delete" = "Löschen";
 "panel.delete.tooltip" = "Aus der Liste löschen";
 "panel.empty" = "Keine kopierten Einträge";
-"panel.hint" = "↑↓ wählen   ⇧ / ⌘ mehrere   ↩ einsetzen   ⌫ löschen   esc schließen";
+"panel.hint" = "↑↓ wählen   ⇧ / ⌘ mehrere   ↩ kopieren, dann ⌘V   ⌫ löschen   esc schließen";

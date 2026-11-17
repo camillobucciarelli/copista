@@ -1,5 +1,4 @@
 import AppKit
-import ApplicationServices
 import Carbon.HIToolbox
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
@@ -22,7 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         statusItem.menu = menu
 
         // Pannello
-        panel.onPaste = { [weak self] items in self?.paste(items) }
+        panel.onCopy = { [weak self] items in self?.copy(items) }
         panel.onDelete = { [weak self] items in self?.delete(items) }
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
 
@@ -43,16 +42,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                         modifiers: UInt32(cmdKey | shiftKey)) { [weak self] in
             self?.panel.toggle()
         }
-
-        // Serve per inviare Cmd+V all'app in primo piano.
-        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-        _ = AXIsProcessTrustedWithOptions(options)
     }
 
     // MARK: - Azioni sugli elementi
 
     /// Gli elementi sono nell'ordine della lista.
-    private func paste(_ items: [ClipItem]) {
+    private func copy(_ items: [ClipItem]) {
         guard let first = items.first else { return }
         panel.hide()
         if items.count == 1 {
@@ -62,10 +57,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             let joined = items.map(\.text).joined(separator: "\n")
             monitor.write(joined, record: false)
         }
-        guard AXIsProcessTrusted() else { return }   // senza permesso: usare Cmd+V a mano
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            Self.sendCommandV()
-        }
+        // Il pannello non attiva Copista: l'app di prima resta in primo piano
+        // e l'utente incolla con Cmd+V.
     }
 
     private func delete(_ items: [ClipItem]) {
@@ -84,17 +77,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         } else {
             monitor.clear()
         }
-    }
-
-    private static func sendCommandV() {
-        let source = CGEventSource(stateID: .combinedSessionState)
-        let key = CGKeyCode(kVK_ANSI_V)
-        let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true)
-        let up = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: false)
-        down?.flags = .maskCommand
-        up?.flags = .maskCommand
-        down?.post(tap: .cgSessionEventTap)
-        up?.post(tap: .cgSessionEventTap)
     }
 
     // MARK: - Menu della barra
@@ -126,10 +108,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let android = addItem(to: menu, L("menu.android"), #selector(toggleReception))
         android.state = reception.isRunning ? .on : .off
-
-        if !AXIsProcessTrusted() {
-            addItem(to: menu, L("menu.accessibility"), #selector(openAccessibility))
-        }
 
         menu.addItem(.separator())
         addItem(to: menu, L("menu.quit"), #selector(quit))
@@ -203,12 +181,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders") {
                 NSWorkspace.shared.open(url)
             }
-        }
-    }
-
-    @objc private func openAccessibility() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-            NSWorkspace.shared.open(url)
         }
     }
 

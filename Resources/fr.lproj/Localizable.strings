@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Supprimer les éléments de plus de 24 heures";
 "menu.pause" = "Suspendre l’enregistrement";
 "menu.android" = "Recevoir du texte d’Android";
-"menu.accessibility" = "Activer le collage automatique (Accessibilité)…";
 "menu.quit" = "Quitter";
 "android.alert.body" = "Lorsque vous envoyez un texte d’Android vers ce Mac, le texte arrive dans le dossier Téléchargements sous la forme du fichier « text-0.txt ».\n\nCopista lit ce fichier, place le texte dans le presse-papiers et dans l’historique, puis supprime le fichier définitivement (il ne va pas dans la Corbeille).\n\nCopista ne lit et ne modifie aucun autre fichier. Le texte est enregistré en clair dans l’historique.";
 "downloads.alert.title" = "Copista n’a pas accès au dossier Téléchargements";
@@ -19,4 +18,4 @@
 "panel.delete" = "Supprimer";
 "panel.delete.tooltip" = "Supprimer de la liste";
 "panel.empty" = "Aucun élément copié";
-"panel.hint" = "↑↓ choisir   ⇧ / ⌘ plusieurs   ↩ coller   ⌫ supprimer   esc fermer";
+"panel.hint" = "↑↓ choisir   ⇧ / ⌘ plusieurs   ↩ copier, puis ⌘V   ⌫ supprimer   esc fermer";

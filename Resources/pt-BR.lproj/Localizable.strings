@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Apagar itens com mais de 24 horas";
 "menu.pause" = "Pausar registro";
 "menu.android" = "Receber texto do Android";
-"menu.accessibility" = "Ativar colagem automática (Acessibilidade)…";
 "menu.quit" = "Encerrar";
 "android.alert.body" = "Quando você envia um texto do Android para este Mac, o texto chega à pasta Downloads como o arquivo \"text-0.txt\".\n\nO Copista lê esse arquivo, coloca o texto na área de transferência e no histórico e depois apaga o arquivo de forma definitiva (ele não vai para o Lixo).\n\nO Copista não lê nem altera outros arquivos. O texto é salvo sem criptografia no histórico.";
 "downloads.alert.title" = "O Copista não tem acesso à pasta Downloads";
@@ -19,4 +18,4 @@
 "panel.delete" = "Apagar";
 "panel.delete.tooltip" = "Apagar da lista";
 "panel.empty" = "Nenhum item copiado";
-"panel.hint" = "↑↓ escolher   ⇧ / ⌘ várias linhas   ↩ colar   ⌫ apagar   esc fechar";
+"panel.hint" = "↑↓ escolher   ⇧ / ⌘ várias linhas   ↩ copiar, depois ⌘V   ⌫ apagar   esc fechar";

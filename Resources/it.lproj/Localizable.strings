@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Elimina elementi più vecchi di 24 ore";
 "menu.pause" = "Sospendi registrazione";
 "menu.android" = "Ricevi testo da Android";
-"menu.accessibility" = "Abilita incolla automatico (Accessibilità)…";
 "menu.quit" = "Esci";
 "android.alert.body" = "Quando invii un testo da Android a questo Mac, il testo arriva nella cartella Download come file \"text-0.txt\".\n\nCopista legge questo file, mette il testo negli appunti e nello storico, poi elimina il file in modo definitivo (non va nel Cestino).\n\nCopista non legge e non modifica altri file. Il testo è salvato in chiaro nello storico.";
 "downloads.alert.title" = "Copista non ha accesso alla cartella Download";
@@ -19,4 +18,4 @@
 "panel.delete" = "Elimina";
 "panel.delete.tooltip" = "Elimina dalla lista";
 "panel.empty" = "Nessun elemento copiato";
-"panel.hint" = "↑↓ scegli   ⇧ / ⌘ più righe   ↩ incolla   ⌫ elimina   esc chiudi";
+"panel.hint" = "↑↓ scegli   ⇧ / ⌘ più righe   ↩ copia, poi ⌘V   ⌫ elimina   esc chiudi";

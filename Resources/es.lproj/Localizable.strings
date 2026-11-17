@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Eliminar elementos de más de 24 horas";
 "menu.pause" = "Pausar registro";
 "menu.android" = "Recibir texto de Android";
-"menu.accessibility" = "Activar pegado automático (Accesibilidad)…";
 "menu.quit" = "Salir";
 "android.alert.body" = "Cuando envías un texto de Android a este Mac, el texto llega a la carpeta Descargas como el archivo \"text-0.txt\".\n\nCopista lee este archivo, pone el texto en el portapapeles y en el historial, y luego elimina el archivo de forma definitiva (no va a la Papelera).\n\nCopista no lee ni modifica otros archivos. El texto se guarda sin cifrar en el historial.";
 "downloads.alert.title" = "Copista no tiene acceso a la carpeta Descargas";
@@ -19,4 +18,4 @@
 "panel.delete" = "Eliminar";
 "panel.delete.tooltip" = "Eliminar de la lista";
 "panel.empty" = "Ningún elemento copiado";
-"panel.hint" = "↑↓ elegir   ⇧ / ⌘ varias filas   ↩ pegar   ⌫ eliminar   esc cerrar";
+"panel.hint" = "↑↓ elegir   ⇧ / ⌘ varias filas   ↩ copiar, luego ⌘V   ⌫ eliminar   esc cerrar";

@@ -8,7 +8,6 @@
 "menu.removeOlderDay" = "Delete Items Older Than 24 Hours";
 "menu.pause" = "Pause Recording";
 "menu.android" = "Receive Text from Android";
-"menu.accessibility" = "Enable Automatic Paste (Accessibility)…";
 "menu.quit" = "Quit";
 "android.alert.body" = "When you send text from Android to this Mac, the text arrives in the Downloads folder as the file \"text-0.txt\".\n\nCopista reads this file, puts the text on the clipboard and in the history, then deletes the file permanently (it does not go to the Trash).\n\nCopista does not read or change other files. The text is saved unencrypted in the history.";
 "downloads.alert.title" = "Copista does not have access to the Downloads folder";
@@ -19,4 +18,4 @@
 "panel.delete" = "Delete";
 "panel.delete.tooltip" = "Delete from list";
 "panel.empty" = "No copied items";
-"panel.hint" = "↑↓ select   ⇧ / ⌘ multiple rows   ↩ paste   ⌫ delete   esc close";
+"panel.hint" = "↑↓ select   ⇧ / ⌘ multiple rows   ↩ copy, then ⌘V   ⌫ delete   esc close";
