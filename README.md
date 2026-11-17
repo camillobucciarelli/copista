@@ -13,6 +13,11 @@ open build/Copista.app
 
 Requisito: Xcode Command Line Tools. macOS 13 o successivo.
 
+## Lingue
+
+Italiano, inglese, spagnolo, francese, tedesco, portoghese (Brasile). L'app usa la lingua di macOS; se la lingua non è disponibile, usa l'inglese.
+I testi sono in `Resources/<lingua>.lproj/`. Per una nuova lingua, copiare `en.lproj` e tradurre i valori.
+
 ## Uso
 
 | Azione | Risultato |

@@ -13,6 +13,7 @@ swiftc -O -swift-version 5 -target arm64-apple-macos13.0 Sources/*.swift -o "$AP
 mkdir -p "$APP/Contents/Resources"
 cp Info.plist "$APP/Contents/Info.plist"
 cp AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
+cp -R Resources/*.lproj "$APP/Contents/Resources/"
 codesign --force --sign - "$APP"
 
 echo "Fatto: $APP"

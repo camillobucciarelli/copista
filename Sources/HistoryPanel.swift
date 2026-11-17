@@ -21,11 +21,11 @@ final class ClipCellView: NSTableCellView {
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         deleteButton.title = ""
-        deleteButton.image = NSImage(systemSymbolName: "trash", accessibilityDescription: "Elimina")
+        deleteButton.image = NSImage(systemSymbolName: "trash", accessibilityDescription: L("panel.delete"))
         deleteButton.imagePosition = .imageOnly
         deleteButton.isBordered = false
         deleteButton.contentTintColor = .secondaryLabelColor
-        deleteButton.toolTip = "Elimina dalla lista"
+        deleteButton.toolTip = L("panel.delete.tooltip")
         deleteButton.target = self
         deleteButton.action = #selector(deleteClicked)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +55,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     private let panel: KeyPanel
     private let tableView = NSTableView()
     private let scrollView = NSScrollView()
-    private let emptyLabel = NSTextField(labelWithString: "Nessun elemento copiato")
+    private let emptyLabel = NSTextField(labelWithString: L("panel.empty"))
     private var keyMonitor: Any?
 
     var onPaste: (([ClipItem]) -> Void)?
@@ -98,11 +98,11 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         background.state = .active
         panel.contentView = background
 
-        let title = NSTextField(labelWithString: "Storico appunti")
+        let title = NSTextField(labelWithString: L("history.title"))
         title.font = .systemFont(ofSize: 13, weight: .semibold)
         title.textColor = .secondaryLabelColor
 
-        let hint = NSTextField(labelWithString: "↑↓ scegli   ⇧ / ⌘ più righe   ↩ incolla   ⌫ elimina   esc chiudi")
+        let hint = NSTextField(labelWithString: L("panel.hint"))
         hint.font = .systemFont(ofSize: 11)
         hint.textColor = .tertiaryLabelColor
 

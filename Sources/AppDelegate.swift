@@ -16,7 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Icona nella barra dei menu
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = NSImage(systemSymbolName: "doc.on.clipboard",
-                                           accessibilityDescription: "Storico appunti")
+                                           accessibilityDescription: L("history.title"))
         let menu = NSMenu()
         menu.delegate = self
         statusItem.menu = menu
@@ -102,37 +102,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
 
-        let show = addItem(to: menu, "Mostra storico", #selector(showHistory))
+        let show = addItem(to: menu, L("menu.show"), #selector(showHistory))
         show.keyEquivalent = "v"
         show.keyEquivalentModifierMask = [.command, .shift]
 
         menu.addItem(.separator())
 
         let count = store.items.count
-        let info = NSMenuItem(title: count == 1 ? "1 elemento nello storico" : "\(count) elementi nello storico",
+        let info = NSMenuItem(title: count == 1 ? L("menu.count.one") : String(format: L("menu.count.other"), count),
                               action: nil, keyEquivalent: "")
         info.isEnabled = false
         menu.addItem(info)
 
-        addItem(to: menu, "Svuota tutto lo storico", #selector(clearAll))
-        addItem(to: menu, "Mantieni solo gli ultimi 10", #selector(keepLastTen))
-        addItem(to: menu, "Elimina elementi più vecchi di 1 ora", #selector(removeOlderThanHour))
-        addItem(to: menu, "Elimina elementi più vecchi di 24 ore", #selector(removeOlderThanDay))
+        addItem(to: menu, L("menu.clearAll"), #selector(clearAll))
+        addItem(to: menu, L("menu.keepLastTen"), #selector(keepLastTen))
+        addItem(to: menu, L("menu.removeOlderHour"), #selector(removeOlderThanHour))
+        addItem(to: menu, L("menu.removeOlderDay"), #selector(removeOlderThanDay))
 
         menu.addItem(.separator())
 
-        let pause = addItem(to: menu, "Sospendi registrazione", #selector(togglePause))
+        let pause = addItem(to: menu, L("menu.pause"), #selector(togglePause))
         pause.state = monitor.isPaused ? .on : .off
 
-        let android = addItem(to: menu, "Ricevi testo da Android", #selector(toggleReception))
+        let android = addItem(to: menu, L("menu.android"), #selector(toggleReception))
         android.state = reception.isRunning ? .on : .off
 
         if !AXIsProcessTrusted() {
-            addItem(to: menu, "Abilita incolla automatico (Accessibilità)…", #selector(openAccessibility))
+            addItem(to: menu, L("menu.accessibility"), #selector(openAccessibility))
         }
 
         menu.addItem(.separator())
-        addItem(to: menu, "Esci", #selector(quit))
+        addItem(to: menu, L("menu.quit"), #selector(quit))
     }
 
     @discardableResult
@@ -180,14 +180,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         if !defaults.bool(forKey: receptionExplainedKey) {
             let alert = NSAlert()
-            alert.messageText = "Ricevi testo da Android"
-            alert.informativeText = "Quando invii un testo da Android a questo Mac, il testo arriva "
-                + "nella cartella Download come file \"text-0.txt\".\n\n"
-                + "Copista legge questo file, mette il testo negli appunti e nello storico, "
-                + "poi elimina il file in modo definitivo (non va nel Cestino).\n\n"
-                + "Copista non legge e non modifica altri file. Il testo è salvato in chiaro nello storico."
-            alert.addButton(withTitle: "Abilita")
-            alert.addButton(withTitle: "Annulla")
+            alert.messageText = L("menu.android")
+            alert.informativeText = L("android.alert.body")
+            alert.addButton(withTitle: L("button.enable"))
+            alert.addButton(withTitle: L("button.cancel"))
             NSApp.activate(ignoringOtherApps: true)
             guard alert.runModal() == .alertFirstButtonReturn else { return }
             defaults.set(true, forKey: receptionExplainedKey)
@@ -198,11 +194,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         } else {
             let alert = NSAlert()
             alert.alertStyle = .warning
-            alert.messageText = "Copista non ha accesso alla cartella Download"
-            alert.informativeText = "Apri Impostazioni di Sistema > Privacy e sicurezza > File e cartelle, "
-                + "abilita Download per Copista, poi attiva di nuovo la funzione."
-            alert.addButton(withTitle: "Apri Impostazioni")
-            alert.addButton(withTitle: "Annulla")
+            alert.messageText = L("downloads.alert.title")
+            alert.informativeText = L("downloads.alert.body")
+            alert.addButton(withTitle: L("button.openSettings"))
+            alert.addButton(withTitle: L("button.cancel"))
             NSApp.activate(ignoringOtherApps: true)
             if alert.runModal() == .alertFirstButtonReturn,
                let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders") {
