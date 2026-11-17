@@ -1,0 +1,18 @@
+O Copista guarda o histórico dos textos que você copia e permite colá-los de novo pelo teclado.
+
+RECURSOS
+• Cmd+Shift+V abre o histórico. Setas para escolher, Return para copiar, depois Cmd+V para colar.
+• Colagem múltipla: selecione vários itens e pressione Return: eles são copiados como um só texto, um por linha, pronto para Cmd+V.
+• Os últimos 100 textos copiados, sempre disponíveis na barra de menus.
+• Limpeza do histórico: limpe tudo, mantenha os últimos 10, apague os itens com mais de 1 hora ou de 24 horas.
+• Pause o registro quando quiser.
+• Receber texto do Android: quando você envia um texto do telefone Android para o Mac, o Copista o coloca na área de transferência e no histórico. O recurso fica desativado até você ativá-lo no menu.
+
+PRIVACIDADE
+• O histórico fica apenas no seu Mac. Sem conexões de rede, sem contas, sem análises.
+• Os textos marcados como confidenciais pelos gerenciadores de senhas não são registrados.
+
+PERMISSÕES
+• Pasta Downloads (opcional): necessária apenas para "Receber texto do Android". O Copista lê e apaga apenas o arquivo "text-0.txt" enviado do Android.
+
+O Copista é gratuito e de código aberto.

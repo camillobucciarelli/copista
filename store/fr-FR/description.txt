@@ -1,0 +1,18 @@
+Copista conserve l’historique des textes que vous copiez et vous permet de les coller de nouveau depuis le clavier.
+
+FONCTIONS
+• Cmd+Shift+V ouvre l’historique. Flèches pour choisir, Entrée pour copier, puis Cmd+V pour coller.
+• Collage multiple : sélectionnez plusieurs éléments et appuyez sur Entrée : ils sont copiés comme un seul texte, un par ligne, prêt pour Cmd+V.
+• Les 100 derniers textes copiés, toujours disponibles depuis la barre des menus.
+• Nettoyage de l’historique : tout vider, conserver les 10 derniers, supprimer les éléments de plus d’1 heure ou de 24 heures.
+• Suspendez l’enregistrement à tout moment.
+• Recevoir du texte d’Android : lorsque vous envoyez un texte de votre téléphone Android vers le Mac, Copista le place dans le presse-papiers et dans l’historique. La fonction est désactivée tant que vous ne l’activez pas depuis le menu.
+
+CONFIDENTIALITÉ
+• L’historique reste uniquement sur votre Mac. Aucune connexion réseau, aucun compte, aucune analyse.
+• Les textes marqués comme confidentiels par les gestionnaires de mots de passe ne sont pas enregistrés.
+
+AUTORISATIONS
+• Dossier Téléchargements (facultatif) : nécessaire uniquement pour « Recevoir du texte d’Android ». Copista lit et supprime uniquement le fichier « text-0.txt » envoyé depuis Android.
+
+Copista est gratuite et open source.

@@ -1,0 +1,18 @@
+Copista tiene lo storico dei testi che copi e ti permette di incollarli di nuovo dalla tastiera.
+
+FUNZIONI
+• Cmd+Shift+V apre lo storico. Frecce per scegliere, Invio per copiare, poi Cmd+V per incollare.
+• Incolla multiplo: seleziona più elementi e premi Invio: vengono copiati come un solo testo, uno per riga, pronto per Cmd+V.
+• Gli ultimi 100 testi copiati, sempre disponibili dalla barra dei menu.
+• Pulizia dello storico: svuota tutto, mantieni gli ultimi 10, elimina gli elementi più vecchi di 1 ora o di 24 ore.
+• Sospendi la registrazione quando vuoi.
+• Ricevi testo da Android: quando invii un testo dal telefono Android al Mac, Copista lo mette negli appunti e nello storico. La funzione è spenta finché non la abiliti dal menu.
+
+PRIVACY
+• Lo storico resta solo sul tuo Mac. Nessuna connessione di rete, nessun account, nessuna analisi.
+• I testi marcati come riservati dai password manager non sono registrati.
+
+PERMESSI
+• Cartella Download (facoltativo): serve solo per "Ricevi testo da Android". Copista legge ed elimina solo il file "text-0.txt" inviato da Android.
+
+Copista è gratuita e open source.

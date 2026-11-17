@@ -1,0 +1,18 @@
+Copista speichert einen Verlauf der Texte, die du kopierst, und lässt dich diese Texte per Tastatur wieder einsetzen.
+
+FUNKTIONEN
+• Cmd+Shift+V öffnet den Verlauf. Pfeiltasten zum Wählen, Eingabetaste zum Kopieren, dann Cmd+V zum Einsetzen.
+• Mehrfaches Einsetzen: Wähle mehrere Einträge aus und drücke die Eingabetaste: Sie werden als ein Text kopiert, ein Eintrag pro Zeile, bereit für Cmd+V.
+• Die letzten 100 kopierten Texte, immer über die Menüleiste verfügbar.
+• Verlauf aufräumen: alles löschen, nur die letzten 10 behalten, Einträge löschen, die älter als 1 Stunde oder 24 Stunden sind.
+• Halte die Aufzeichnung jederzeit an.
+• Text von Android empfangen: Wenn du einen Text von deinem Android-Telefon an den Mac sendest, legt Copista ihn in die Zwischenablage und in den Verlauf. Die Funktion ist ausgeschaltet, bis du sie im Menü aktivierst.
+
+DATENSCHUTZ
+• Der Verlauf bleibt nur auf deinem Mac. Keine Netzwerkverbindungen, kein Account, keine Analysen.
+• Texte, die von Passwortmanagern als vertraulich markiert sind, werden nicht aufgezeichnet.
+
+BERECHTIGUNGEN
+• Ordner „Downloads“ (optional): nur für „Text von Android empfangen“ nötig. Copista liest und löscht nur die von Android gesendete Datei „text-0.txt“.
+
+Copista ist kostenlos und Open Source.

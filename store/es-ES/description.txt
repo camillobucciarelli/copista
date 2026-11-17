@@ -1,0 +1,18 @@
+Copista guarda el historial de los textos que copias y te permite pegarlos de nuevo desde el teclado.
+
+FUNCIONES
+• Cmd+Shift+V abre el historial. Flechas para elegir, Intro para copiar, luego Cmd+V para pegar.
+• Pegado múltiple: selecciona varios elementos y pulsa Intro: se copian como un solo texto, uno por línea, listo para Cmd+V.
+• Los últimos 100 textos copiados, siempre disponibles desde la barra de menús.
+• Limpieza del historial: vacía todo, conserva los últimos 10, elimina los elementos de más de 1 hora o de 24 horas.
+• Pausa el registro cuando quieras.
+• Recibir texto de Android: cuando envías un texto del teléfono Android al Mac, Copista lo pone en el portapapeles y en el historial. La función está desactivada hasta que la activas desde el menú.
+
+PRIVACIDAD
+• El historial se queda solo en tu Mac. Sin conexiones de red, sin cuentas, sin analíticas.
+• Los textos marcados como confidenciales por los gestores de contraseñas no se registran.
+
+PERMISOS
+• Carpeta Descargas (opcional): solo es necesario para "Recibir texto de Android". Copista lee y elimina solo el archivo "text-0.txt" enviado desde Android.
+
+Copista es gratuita y de código abierto.

@@ -17,7 +17,7 @@ L'elemento più recente dello storico. È uguale al contenuto degli appunti di s
 _Avoid_: Corrente, primo elemento
 
 **Incolla multiplo**:
-L'azione che incolla più elementi selezionati con un solo `Cmd+V`, come testo unito.
+L'azione che copia più elementi selezionati come testo unito, da incollare con un solo `Cmd+V`.
 _Avoid_: Incolla in sequenza, multi-paste
 
 **Testo unito**:
