@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Copista — Supporto</title>
+<title>Copista — Supporto / Support</title>
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="stylesheet" href="style.css"></head><body>
-<header class="topbar"><a class="sponsor" href="https://buymeacoffee.com/camillobucciarelli" rel="noopener"><span aria-hidden="true">☕</span> Buy me a coffee</a></header>
-<main>
+<header class="topbar"><nav class="langs"><a href="#it" lang="it">Italiano</a><a href="#en" lang="en">English</a><a href="#es" lang="es">Español</a><a href="#fr" lang="fr">Français</a><a href="#de" lang="de">Deutsch</a><a href="#pt" lang="pt">Português</a></nav><a class="sponsor" href="https://buymeacoffee.com/camillobucciarelli" rel="noopener"><span aria-hidden="true">☕</span> Buy me a coffee</a></header>
+<main id="it" lang="it">
 <img class="logo" src="icon.png" width="64" height="64" alt="">
 <h1>Copista — Supporto</h1>
 <p>Copista è un'app per la barra dei menu di macOS 13 o successivo che tiene la cronologia del testo copiato (gli ultimi 100 elementi).</p>
@@ -17,6 +17,8 @@
 <li><kbd>Esc</kbd>: chiude l'elenco.</li>
 <li>L'icona nella barra dei menu permette di cancellare la cronologia, mettere in pausa la registrazione e uscire.</li>
 </ul>
+<h2>Ricevi testo da Android</h2>
+<p>La funzione è spenta finché non la abiliti dall'icona nella barra dei menu, voce «Ricevi testo da Android». Quando invii un testo da Android al Mac, il testo arriva nella cartella Download come file <code>text-0.txt</code>. Copista legge il file, mette il testo negli appunti e nella cronologia, poi elimina il file in modo definitivo (non va nel Cestino). Copista non legge il contenuto di altri file e non li modifica. macOS chiede il permesso per la cartella Download alla prima attivazione.</p>
 <h2>Permesso di Accessibilità</h2>
 <p>Serve solo per l'incollaggio automatico (l'app simula Cmd+V). Per attivarlo: Impostazioni di Sistema → Privacy e sicurezza → Accessibilità. Senza il permesso, l'elemento scelto viene messo negli appunti e lo incolli tu con Cmd+V.</p>
 <h2>Domande frequenti</h2>
@@ -27,30 +29,142 @@
 <p>Apri una segnalazione (issue) su <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Non pubblichiamo indirizzi email o numeri di telefono.</p>
 <h2>Sostieni il progetto</h2>
 <p>Copista è gratuita e open source: il <a href="https://github.com/camillobucciarelli/copista" rel="noopener">codice sorgente</a> è su GitHub. Se ti è utile puoi <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">offrirmi un caffè</a>.</p>
-<p><a href="privacy.html">Informativa sulla privacy</a></p>
+<p><a href="privacy.html#it">Informativa sulla privacy</a></p>
 </main>
-<main>
-<h1 lang="en">Copista — Support</h1>
-<div lang="en">
-<p>Copista is a macOS 13+ menu bar app that keeps a history of copied text (last 100 items).</p>
+<main id="en" lang="en">
+<img class="logo" src="icon.png" width="64" height="64" alt="">
+<h1>Copista — Support</h1>
+<p>Copista is a menu bar app for macOS 13 or later that keeps a history of copied text (the last 100 items).</p>
 <h2>How to use</h2>
 <ul>
-<li>Cmd+Shift+V opens/closes the list; arrow keys choose an item.</li>
-<li>Return or click pastes the chosen item.</li>
-<li>Backspace or the trash icon deletes an item; Esc closes the list.</li>
+<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: opens and closes the list.</li>
+<li>Arrow keys: choose an item.</li>
+<li><kbd>Return</kbd> or click: pastes the chosen item.</li>
+<li><kbd>Backspace</kbd> or the trash icon: deletes the item.</li>
+<li><kbd>Esc</kbd>: closes the list.</li>
 <li>The menu bar icon lets you clear the history, pause recording, and quit.</li>
 </ul>
+<h2>Receive text from Android</h2>
+<p>The feature is off until you enable it from the menu bar icon, item “Receive Text from Android”. When you send text from Android to the Mac, the text arrives in the Downloads folder as the file <code>text-0.txt</code>. Copista reads the file, puts the text on the clipboard and in the history, then deletes the file permanently (it does not go to the Trash). Copista does not read the contents of other files and does not change them. macOS asks for permission for the Downloads folder the first time you enable the feature.</p>
 <h2>Accessibility permission</h2>
-<p>Needed only for automatic paste (the app simulates Cmd+V). Enable it in System Settings → Privacy &amp; Security → Accessibility. Without it, the chosen item is put on the clipboard and you paste it with Cmd+V.</p>
+<p>Needed only for automatic paste (the app simulates Cmd+V). To enable it: System Settings → Privacy &amp; Security → Accessibility. Without the permission, the chosen item is put on the clipboard and you paste it with Cmd+V.</p>
 <h2>FAQ</h2>
-<p><b>Paste doesn't work.</b> Grant Accessibility permission to Copista.</p>
-<p><b>How do I clear the history?</b> Use the menu bar icon and choose the clear option.</p>
-<p><b>How do I pause?</b> Use the menu bar icon and choose the pause option.</p>
+<p><b>Paste doesn't work.</b> Grant the Accessibility permission to Copista as described above.</p>
+<p><b>How do I clear the history?</b> From the menu bar icon, choose the item that clears the history.</p>
+<p><b>How do I pause?</b> From the menu bar icon, choose the item that pauses recording.</p>
 <h2>Help</h2>
 <p>Open an <a href="https://github.com/camillobucciarelli/copista/issues">issue on GitHub</a>. No email address or phone number is published.</p>
 <h2>Support the project</h2>
 <p>Copista is free and open source: the <a href="https://github.com/camillobucciarelli/copista" rel="noopener">source code</a> is on GitHub. If it is useful to you, you can <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">buy me a coffee</a>.</p>
-<p><a href="privacy.html">Privacy policy</a></p>
-</div>
+<p><a href="privacy.html#en">Privacy policy</a></p>
 </main>
+<main id="es" lang="es">
+<img class="logo" src="icon.png" width="64" height="64" alt="">
+<h1>Copista — Soporte</h1>
+<p>Copista es una app para la barra de menús de macOS 13 o posterior que guarda el historial del texto copiado (los últimos 100 elementos).</p>
+<h2>Cómo se usa</h2>
+<ul>
+<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: abre y cierra la lista.</li>
+<li>Flechas: eligen un elemento.</li>
+<li><kbd>Intro</kbd> o clic: pega el elemento elegido.</li>
+<li><kbd>Retroceso</kbd> o el icono de la papelera: elimina el elemento.</li>
+<li><kbd>Esc</kbd>: cierra la lista.</li>
+<li>El icono de la barra de menús permite vaciar el historial, pausar el registro y salir.</li>
+</ul>
+<h2>Recibir texto de Android</h2>
+<p>La función está desactivada hasta que la activas desde el icono de la barra de menús, opción «Recibir texto de Android». Cuando envías un texto de Android al Mac, el texto llega a la carpeta Descargas como el archivo <code>text-0.txt</code>. Copista lee el archivo, pone el texto en el portapapeles y en el historial, y luego elimina el archivo de forma definitiva (no va a la Papelera). Copista no lee el contenido de otros archivos ni los modifica. macOS pide el permiso para la carpeta Descargas la primera vez que activas la función.</p>
+<h2>Permiso de Accesibilidad</h2>
+<p>Solo es necesario para el pegado automático (la app simula Cmd+V). Para activarlo: Ajustes del Sistema → Privacidad y seguridad → Accesibilidad. Sin el permiso, el elemento elegido se pone en el portapapeles y lo pegas tú con Cmd+V.</p>
+<h2>Preguntas frecuentes</h2>
+<p><b>El pegado no funciona.</b> Concede el permiso de Accesibilidad a Copista como se indica arriba.</p>
+<p><b>¿Cómo vacío el historial?</b> Desde el icono de la barra de menús, elige la opción para vaciar el historial.</p>
+<p><b>¿Cómo pauso el registro?</b> Desde el icono de la barra de menús, elige la opción para pausar el registro.</p>
+<h2>Ayuda</h2>
+<p>Abre una incidencia (issue) en <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. No publicamos direcciones de correo ni números de teléfono.</p>
+<h2>Apoya el proyecto</h2>
+<p>Copista es gratuita y de código abierto: el <a href="https://github.com/camillobucciarelli/copista" rel="noopener">código fuente</a> está en GitHub. Si te resulta útil, puedes <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">invitarme a un café</a>.</p>
+<p><a href="privacy.html#es">Política de privacidad</a></p>
+</main>
+<main id="fr" lang="fr">
+<img class="logo" src="icon.png" width="64" height="64" alt="">
+<h1>Copista — Assistance</h1>
+<p>Copista est une app pour la barre des menus de macOS 13 ou ultérieur qui conserve l’historique du texte copié (les 100 derniers éléments).</p>
+<h2>Utilisation</h2>
+<ul>
+<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> : ouvre et ferme la liste.</li>
+<li>Flèches : choisissent un élément.</li>
+<li><kbd>Entrée</kbd> ou clic : colle l’élément choisi.</li>
+<li><kbd>Retour arrière</kbd> ou l’icône de la corbeille : supprime l’élément.</li>
+<li><kbd>Esc</kbd> : ferme la liste.</li>
+<li>L’icône de la barre des menus permet de vider l’historique, de suspendre l’enregistrement et de quitter.</li>
+</ul>
+<h2>Recevoir du texte d’Android</h2>
+<p>La fonction est désactivée tant que vous ne l’activez pas depuis l’icône de la barre des menus, option « Recevoir du texte d’Android ». Lorsque vous envoyez un texte d’Android vers le Mac, le texte arrive dans le dossier Téléchargements sous la forme du fichier <code>text-0.txt</code>. Copista lit le fichier, place le texte dans le presse-papiers et dans l’historique, puis supprime le fichier définitivement (il ne va pas dans la Corbeille). Copista ne lit pas le contenu des autres fichiers et ne les modifie pas. macOS demande l’autorisation pour le dossier Téléchargements à la première activation.</p>
+<h2>Autorisation d’accessibilité</h2>
+<p>Elle sert uniquement au collage automatique (l’app simule Cmd+V). Pour l’activer : Réglages Système → Confidentialité et sécurité → Accessibilité. Sans l’autorisation, l’élément choisi est placé dans le presse-papiers et vous le collez avec Cmd+V.</p>
+<h2>Questions fréquentes</h2>
+<p><b>Le collage ne fonctionne pas.</b> Accordez l’autorisation d’accessibilité à Copista comme indiqué ci-dessus.</p>
+<p><b>Comment vider l’historique ?</b> Depuis l’icône de la barre des menus, choisissez l’option qui vide l’historique.</p>
+<p><b>Comment suspendre l’enregistrement ?</b> Depuis l’icône de la barre des menus, choisissez l’option qui suspend l’enregistrement.</p>
+<h2>Aide</h2>
+<p>Ouvrez un ticket (issue) sur <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Nous ne publions ni adresse e-mail ni numéro de téléphone.</p>
+<h2>Soutenir le projet</h2>
+<p>Copista est gratuite et open source : le <a href="https://github.com/camillobucciarelli/copista" rel="noopener">code source</a> est sur GitHub. Si elle vous est utile, vous pouvez <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">m’offrir un café</a>.</p>
+<p><a href="privacy.html#fr">Politique de confidentialité</a></p>
+</main>
+<main id="de" lang="de">
+<img class="logo" src="icon.png" width="64" height="64" alt="">
+<h1>Copista — Support</h1>
+<p>Copista ist eine Menüleisten-App für macOS 13 oder neuer, die einen Verlauf des kopierten Texts speichert (die letzten 100 Einträge).</p>
+<h2>Bedienung</h2>
+<ul>
+<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: öffnet und schließt die Liste.</li>
+<li>Pfeiltasten: wählen einen Eintrag.</li>
+<li><kbd>Eingabetaste</kbd> oder Klick: setzt den gewählten Eintrag ein.</li>
+<li><kbd>Rückschritttaste</kbd> oder das Papierkorb-Symbol: löscht den Eintrag.</li>
+<li><kbd>Esc</kbd>: schließt die Liste.</li>
+<li>Über das Symbol in der Menüleiste kannst du den Verlauf löschen, die Aufzeichnung anhalten und die App beenden.</li>
+</ul>
+<h2>Text von Android empfangen</h2>
+<p>Die Funktion ist ausgeschaltet, bis du sie über das Symbol in der Menüleiste aktivierst (Eintrag „Text von Android empfangen“). Wenn du einen Text von Android an den Mac sendest, kommt der Text im Ordner „Downloads“ als Datei <code>text-0.txt</code> an. Copista liest die Datei, legt den Text in die Zwischenablage und in den Verlauf und löscht die Datei dann endgültig (sie kommt nicht in den Papierkorb). Copista liest den Inhalt anderer Dateien nicht und ändert sie nicht. macOS fragt bei der ersten Aktivierung nach der Berechtigung für den Ordner „Downloads“.</p>
+<h2>Berechtigung „Bedienungshilfen“</h2>
+<p>Sie ist nur für das automatische Einsetzen nötig (die App simuliert Cmd+V). So aktivierst du sie: Systemeinstellungen → Datenschutz &amp; Sicherheit → Bedienungshilfen. Ohne die Berechtigung kommt der gewählte Eintrag in die Zwischenablage und du setzt ihn mit Cmd+V ein.</p>
+<h2>Häufige Fragen</h2>
+<p><b>Das Einsetzen funktioniert nicht.</b> Erteile Copista die Berechtigung „Bedienungshilfen“ wie oben beschrieben.</p>
+<p><b>Wie lösche ich den Verlauf?</b> Wähle über das Symbol in der Menüleiste den Eintrag, der den Verlauf löscht.</p>
+<p><b>Wie halte ich die Aufzeichnung an?</b> Wähle über das Symbol in der Menüleiste den Eintrag, der die Aufzeichnung anhält.</p>
+<h2>Hilfe</h2>
+<p>Erstelle ein Issue auf <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Wir veröffentlichen keine E-Mail-Adresse und keine Telefonnummer.</p>
+<h2>Projekt unterstützen</h2>
+<p>Copista ist kostenlos und Open Source: Der <a href="https://github.com/camillobucciarelli/copista" rel="noopener">Quellcode</a> liegt auf GitHub. Wenn die App für dich nützlich ist, kannst du <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">mir einen Kaffee spendieren</a>.</p>
+<p><a href="privacy.html#de">Datenschutzerklärung</a></p>
+</main>
+<main id="pt" lang="pt">
+<img class="logo" src="icon.png" width="64" height="64" alt="">
+<h1>Copista — Suporte</h1>
+<p>O Copista é um app para a barra de menus do macOS 13 ou posterior que guarda o histórico do texto copiado (os últimos 100 itens).</p>
+<h2>Como usar</h2>
+<ul>
+<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: abre e fecha a lista.</li>
+<li>Setas: escolhem um item.</li>
+<li><kbd>Return</kbd> ou clique: cola o item escolhido.</li>
+<li><kbd>Delete</kbd> ou o ícone da lixeira: apaga o item.</li>
+<li><kbd>Esc</kbd>: fecha a lista.</li>
+<li>O ícone na barra de menus permite limpar o histórico, pausar o registro e encerrar o app.</li>
+</ul>
+<h2>Receber texto do Android</h2>
+<p>O recurso fica desativado até você ativá-lo pelo ícone na barra de menus, item “Receber texto do Android”. Quando você envia um texto do Android para o Mac, o texto chega à pasta Downloads como o arquivo <code>text-0.txt</code>. O Copista lê o arquivo, coloca o texto na área de transferência e no histórico e depois apaga o arquivo de forma definitiva (ele não vai para o Lixo). O Copista não lê o conteúdo de outros arquivos nem os altera. O macOS pede a permissão para a pasta Downloads na primeira ativação.</p>
+<h2>Permissão de Acessibilidade</h2>
+<p>É necessária apenas para a colagem automática (o app simula Cmd+V). Para ativar: Ajustes do Sistema → Privacidade e Segurança → Acessibilidade. Sem a permissão, o item escolhido vai para a área de transferência e você cola com Cmd+V.</p>
+<h2>Perguntas frequentes</h2>
+<p><b>A colagem não funciona.</b> Conceda a permissão de Acessibilidade ao Copista como indicado acima.</p>
+<p><b>Como limpo o histórico?</b> Pelo ícone na barra de menus, escolha o item que limpa o histórico.</p>
+<p><b>Como pauso o registro?</b> Pelo ícone na barra de menus, escolha o item que pausa o registro.</p>
+<h2>Ajuda</h2>
+<p>Abra uma issue no <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Não publicamos endereços de e-mail nem números de telefone.</p>
+<h2>Apoie o projeto</h2>
+<p>O Copista é gratuito e de código aberto: o <a href="https://github.com/camillobucciarelli/copista" rel="noopener">código-fonte</a> está no GitHub. Se ele for útil para você, você pode <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">me pagar um café</a>.</p>
+<p><a href="privacy.html#pt">Política de privacidade</a></p>
+</main>
+<script>(function(){var m=document.querySelectorAll('main[lang]');function p(){var l=[location.hash.slice(1)].concat(navigator.languages||[]),c='en';for(var i=0;i<l.length;i++){var k=l[i].slice(0,2).toLowerCase();if(k&&document.getElementById(k)){c=k;break}}for(var j=0;j<m.length;j++)m[j].hidden=m[j].id!==c;document.documentElement.lang=c}addEventListener('hashchange',p);p()})();</script>
 </body></html>

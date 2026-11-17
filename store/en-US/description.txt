@@ -1,0 +1,19 @@
+Copista keeps a history of the text you copy and lets you paste it again from the keyboard.
+
+FEATURES
+• Cmd+Shift+V opens the history. Arrow keys to choose, Return to paste.
+• Multiple paste: select several items and paste them as one text, one per line.
+• The last 100 copied texts, always available from the menu bar.
+• History cleanup: clear everything, keep the last 10, delete items older than 1 hour or 24 hours.
+• Pause recording at any time.
+• Receive text from Android: when you send text from your Android phone to the Mac, Copista puts it on the clipboard and in the history. The feature is off until you enable it from the menu.
+
+PRIVACY
+• The history stays only on your Mac. No network connections, no account, no analytics.
+• Text flagged as confidential by password managers is not recorded.
+
+PERMISSIONS
+• Accessibility (optional): needed only for automatic paste. Without the permission, the chosen item is put on the clipboard and you paste it with Cmd+V.
+• Downloads folder (optional): needed only for "Receive Text from Android". Copista reads and deletes only the file "text-0.txt" sent from Android.
+
+Copista is free and open source.

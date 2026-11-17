@@ -18,6 +18,9 @@ Requisito: Xcode Command Line Tools. macOS 13 o successivo.
 Italiano, inglese, spagnolo, francese, tedesco, portoghese (Brasile). L'app usa la lingua di macOS; se la lingua non è disponibile, usa l'inglese.
 I testi sono in `Resources/<lingua>.lproj/`. Per una nuova lingua, copiare `en.lproj` e tradurre i valori.
 
+Il sito (`site/`) ha le stesse lingue: ogni pagina contiene tutte le lingue e mostra quella del browser, oppure quella nel link (`index.html#en`).
+I testi della scheda del Mac App Store sono in `store/<locale>/` (sottotitolo, descrizione, parole chiave, testo promozionale, novità). Vanno copiati a mano in App Store Connect.
+
 ## Uso
 
 | Azione | Risultato |

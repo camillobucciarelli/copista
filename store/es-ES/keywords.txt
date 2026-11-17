@@ -1,0 +1,1 @@
+portapapeles,historial,copiar,pegar,texto,barra de menús,android,productividad,clipboard
