@@ -1,1 +1,1 @@
-O histórico dos textos copiados, na barra de menus. Cmd+Shift+V para escolher e colar. Tudo fica no seu Mac.
+O histórico dos textos copiados, na barra de menus. Cmd+Shift+V para escolher, Return para copiar, Cmd+V para colar. Tudo fica no seu Mac.

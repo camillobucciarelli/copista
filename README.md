@@ -28,9 +28,9 @@ I testi della scheda del Mac App Store sono in `store/<locale>/` (sottotitolo, d
 | `Cmd+V` | Incolla l'ultimo elemento (comportamento di sistema) |
 | `Cmd+Shift+V` | Apre / chiude la lista |
 | `↑` `↓` | Sceglie un elemento |
-| `Invio` o clic | Incolla l'elemento scelto |
+| `Invio` o clic | Copia l'elemento scelto negli appunti e chiude la lista; poi `Cmd+V` lo incolla nell'app di prima |
 | `⌘`-clic, `⇧`-clic, `⇧`+`↑` `↓` | Seleziona più elementi |
-| `Invio` con più elementi | Incolla gli elementi come un solo testo, uno per riga, nell'ordine della lista. Il testo unito non entra nello storico |
+| `Invio` con più elementi | Copia gli elementi come un solo testo, uno per riga, nell'ordine della lista. Il testo unito non entra nello storico |
 | `⌫` | Elimina gli elementi selezionati |
 | Icona cestino | Elimina l'elemento della riga |
 | `Esc` | Chiude la lista |
@@ -60,11 +60,6 @@ da Android entra nello storico in chiaro. Eliminare l'elemento a mano dalla list
 ## Permessi
 
 - **Cartella Download**: necessario per "Ricevi testo da Android". macOS lo chiede alla prima attivazione.
-
-- **Accessibilità**: necessario per l'incolla automatico dalla lista.
-  Senza permesso, l'elemento scelto va negli appunti e si incolla con `Cmd+V`.
-- La firma è ad-hoc. Dopo ogni nuova compilazione macOS può chiedere di nuovo
-  il permesso (rimuovere e aggiungere di nuovo l'app in Accessibilità).
 
 ## Dati
 

@@ -1,8 +1,8 @@
 Copista tiene lo storico dei testi che copi e ti permette di incollarli di nuovo dalla tastiera.
 
 FUNZIONI
-• Cmd+Shift+V apre lo storico. Frecce per scegliere, Invio per incollare.
-• Incolla multiplo: seleziona più elementi e incollali come un solo testo, uno per riga.
+• Cmd+Shift+V apre lo storico. Frecce per scegliere, Invio per copiare, poi Cmd+V per incollare.
+• Incolla multiplo: seleziona più elementi e premi Invio: vengono copiati come un solo testo, uno per riga, pronto per Cmd+V.
 • Gli ultimi 100 testi copiati, sempre disponibili dalla barra dei menu.
 • Pulizia dello storico: svuota tutto, mantieni gli ultimi 10, elimina gli elementi più vecchi di 1 ora o di 24 ore.
 • Sospendi la registrazione quando vuoi.
@@ -13,7 +13,6 @@ PRIVACY
 • I testi marcati come riservati dai password manager non sono registrati.
 
 PERMESSI
-• Accessibilità (facoltativo): serve solo per l'incolla automatico. Senza il permesso, l'elemento scelto va negli appunti e lo incolli con Cmd+V.
 • Cartella Download (facoltativo): serve solo per "Ricevi testo da Android". Copista legge ed elimina solo il file "text-0.txt" inviato da Android.
 
 Copista è gratuita e open source.

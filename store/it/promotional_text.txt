@@ -1,1 +1,1 @@
-Lo storico dei testi copiati, nella barra dei menu. Cmd+Shift+V per scegliere e incollare. Tutto resta sul tuo Mac.
+Lo storico dei testi copiati, nella barra dei menu. Cmd+Shift+V per scegliere, Invio per copiare, Cmd+V per incollare. Tutto resta sul tuo Mac.

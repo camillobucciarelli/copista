@@ -1,1 +1,1 @@
-El historial de los textos copiados, en la barra de menús. Cmd+Shift+V para elegir y pegar. Todo se queda en tu Mac.
+El historial de los textos copiados, en la barra de menús. Cmd+Shift+V para elegir, Intro para copiar, Cmd+V para pegar. Todo se queda en tu Mac.
