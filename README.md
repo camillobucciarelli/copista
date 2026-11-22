@@ -11,7 +11,7 @@ App per la barra dei menu di macOS. Tiene lo storico dei testi copiati.
 open build/Copista.app
 ```
 
-Requisito: Xcode Command Line Tools. macOS 13 o successivo.
+Requisito: Xcode Command Line Tools. macOS 11 o successivo.
 
 ## Lingue
 
