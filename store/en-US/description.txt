@@ -2,6 +2,8 @@ Copista keeps a history of the text you copy and lets you paste it again from th
 
 FEATURES
 • Cmd+Shift+V opens the history. Arrow keys to choose, Return to copy, then Cmd+V to paste.
+• Optional automatic paste: off by default, it pastes the item for you after you select it. Enable it from the menu; macOS asks for a permission.
+• Edit the text of a history item.
 • Multiple paste: select several items and press Return: they are copied as one text, one per line, ready for Cmd+V.
 • The last 100 copied texts, always available from the menu bar.
 • History cleanup: clear everything, keep the last 10, delete items older than 1 hour or 24 hours.
@@ -14,5 +16,6 @@ PRIVACY
 
 PERMISSIONS
 • Downloads folder (optional): needed only for "Receive Text from Android". Copista reads and deletes only the file "text-0.txt" sent from Android.
+• Control the computer (optional): asked only if you enable "Paste automatically on selection". Copista uses it only to send Cmd+V after you select an item.
 
 Copista is free and open source.

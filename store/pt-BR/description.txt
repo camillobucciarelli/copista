@@ -2,6 +2,8 @@ O Copista guarda o histórico dos textos que você copia e permite colá-los de 
 
 RECURSOS
 • Cmd+Shift+V abre o histórico. Setas para escolher, Return para copiar, depois Cmd+V para colar.
+• Colagem automática opcional: desativada por padrão, cola o item para você depois que você o seleciona. Ative no menu; o macOS pede uma permissão.
+• Edite o texto de um item do histórico.
 • Colagem múltipla: selecione vários itens e pressione Return: eles são copiados como um só texto, um por linha, pronto para Cmd+V.
 • Os últimos 100 textos copiados, sempre disponíveis na barra de menus.
 • Limpeza do histórico: limpe tudo, mantenha os últimos 10, apague os itens com mais de 1 hora ou de 24 horas.
@@ -14,5 +16,6 @@ PRIVACIDADE
 
 PERMISSÕES
 • Pasta Downloads (opcional): necessária apenas para "Receber texto do Android". O Copista lê e apaga apenas o arquivo "text-0.txt" enviado do Android.
+• Controle do computador (opcional): pedido apenas se você ativar "Colar automaticamente ao selecionar". O Copista o usa só para enviar Cmd+V depois que você seleciona um item.
 
 O Copista é gratuito e de código aberto.
