@@ -19,3 +19,6 @@
 "panel.delete.tooltip" = "Supprimer de la liste";
 "panel.empty" = "Aucun élément copié";
 "panel.hint" = "↑↓ choisir   ⇧ / ⌘ plusieurs   ↩ copier, puis ⌘V   ⌫ supprimer   esc fermer";
+"panel.edit" = "Modifier";
+"panel.edit.tooltip" = "Modifier l'élément";
+"button.save" = "Enregistrer";

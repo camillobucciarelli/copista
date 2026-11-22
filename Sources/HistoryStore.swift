@@ -2,7 +2,7 @@ import Foundation
 
 struct ClipItem: Codable, Equatable {
     let id: UUID
-    let text: String
+    var text: String
     var date: Date
 }
 
@@ -33,6 +33,15 @@ final class HistoryStore {
         if items.count > maxItems {
             items.removeLast(items.count - maxItems)
         }
+        changed()
+    }
+
+    /// Modifica il testo sul posto: posizione e data restano. Se un altro elemento
+    /// ha gia' lo stesso testo, resta uno solo (quello modificato).
+    func update(id: UUID, text: String) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        items[index].text = text
+        items.removeAll { $0.id != id && $0.text == text }
         changed()
     }
 

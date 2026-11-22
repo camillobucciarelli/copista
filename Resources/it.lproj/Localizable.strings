@@ -19,3 +19,6 @@
 "panel.delete.tooltip" = "Elimina dalla lista";
 "panel.empty" = "Nessun elemento copiato";
 "panel.hint" = "↑↓ scegli   ⇧ / ⌘ più righe   ↩ copia, poi ⌘V   ⌫ elimina   esc chiudi";
+"panel.edit" = "Modifica";
+"panel.edit.tooltip" = "Modifica elemento";
+"button.save" = "Salva";

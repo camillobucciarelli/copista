@@ -19,3 +19,6 @@
 "panel.delete.tooltip" = "Apagar da lista";
 "panel.empty" = "Nenhum item copiado";
 "panel.hint" = "↑↓ escolher   ⇧ / ⌘ várias linhas   ↩ copiar, depois ⌘V   ⌫ apagar   esc fechar";
+"panel.edit" = "Editar";
+"panel.edit.tooltip" = "Editar item";
+"button.save" = "Salvar";

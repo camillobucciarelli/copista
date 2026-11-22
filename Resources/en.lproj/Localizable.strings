@@ -19,3 +19,6 @@
 "panel.delete.tooltip" = "Delete from list";
 "panel.empty" = "No copied items";
 "panel.hint" = "↑↓ select   ⇧ / ⌘ multiple rows   ↩ copy, then ⌘V   ⌫ delete   esc close";
+"panel.edit" = "Edit";
+"panel.edit.tooltip" = "Edit item";
+"button.save" = "Save";
