@@ -1,7 +1,7 @@
 name: Site
-# The website (support and privacy pages, site/) lives in an R2 bucket behind a custom domain, like the
+# The website (home, support and privacy pages, site/) lives in an R2 bucket behind a custom domain, like the
 # sites of postino and custode. R2's custom domain serves no directory index, so every link names its
-# file (index.html, privacy.html); the root `/` is served by a Cloudflare Transform Rule (Rewrite URL:
+# file (index.html, support.html, privacy.html); the root `/` is served by a Cloudflare Transform Rule (Rewrite URL:
 # path exactly `/` -> static `/index.html`) set by hand in the dashboard.
 on:
   push:
@@ -31,15 +31,31 @@ jobs:
             test -n "${!name}" || { echo "::error::Secret $name is not set"; exit 1; }
           done
           upload() { tool/r2_upload.sh "site/$1" "$1" "$2" "${3:-public, max-age=300}"; }
-          # A font never changes under the same name: a year of cache.
-          for font in site/fonts/*.woff2; do
-            upload "fonts/${font##*/}" font/woff2 'public, max-age=31536000, immutable'
-          done
-          for license in site/fonts/OFL-*.txt; do upload "fonts/${license##*/}" 'text/plain; charset=utf-8'; done
-          upload icon.png image/png
-          upload style.css 'text/css; charset=utf-8'
+          # Every file under site/ is uploaded, keyed by its path relative to site/ (subfolders included).
+          ctype() {
+            case "$1" in
+              *.html) echo 'text/html; charset=utf-8' ;;
+              *.css) echo 'text/css; charset=utf-8' ;;
+              *.txt) echo 'text/plain; charset=utf-8' ;;
+              *.woff2) echo font/woff2 ;;
+              *.png) echo image/png ;;
+              *.jpg|*.jpeg) echo image/jpeg ;;
+              *.webp) echo image/webp ;;
+              *.svg) echo image/svg+xml ;;
+              *) echo "::error::No content type for $1" >&2; return 1 ;;
+            esac
+          }
           # The pages go last, so they never name a file that is not there yet.
-          for page in site/*.html; do
-            upload "${page##*/}" 'text/html; charset=utf-8'
-            echo "- ${SITE_BASE_URL:+${SITE_BASE_URL%/}/}${page##*/}" >> "$GITHUB_STEP_SUMMARY"
-          done
+          while IFS= read -r file; do
+            key=${file#site/}
+            # A font never changes under the same name: a year of cache.
+            case "$key" in
+              fonts/*.woff2) upload "$key" "$(ctype "$key")" 'public, max-age=31536000, immutable' ;;
+              *) upload "$key" "$(ctype "$key")" ;;
+            esac
+          done < <(find site -type f ! -name '*.html' | sort)
+          while IFS= read -r file; do
+            key=${file#site/}
+            upload "$key" "$(ctype "$key")"
+            echo "- ${SITE_BASE_URL:+${SITE_BASE_URL%/}/}$key" >> "$GITHUB_STEP_SUMMARY"
+          done < <(find site -type f -name '*.html' | sort)
