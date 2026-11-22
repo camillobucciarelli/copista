@@ -184,18 +184,16 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=9
+TOTAL_STAGES=8
 
 REPO=camillobucciarelli/copista
-OLD_REPO=camillobucciarelli/copista-site
-BRANCH=claude/vigilant-hypatia-7oah6y
 DOMAIN=copista.camillobucciarelli.dev
 ZONE=camillobucciarelli.dev
 
-banner "Copista: sito da GitHub Pages a Cloudflare R2"
+banner "Copista: sito su Cloudflare R2"
 
 stage "Prerequisiti"
-say "Serve la CLI gh con accesso a $REPO e a $OLD_REPO."
+say "Serve la CLI gh con accesso a $REPO."
 command -v gh >/dev/null 2>&1 || { warn "gh non è installato: brew install gh"; exit 1; }
 gh auth status >/dev/null 2>&1 || { warn "gh non è autenticato: gh auth login"; exit 1; }
 here=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)
@@ -246,17 +244,9 @@ fi
 set_var SITE_BASE_URL "https://$DOMAIN"
 pause
 
-stage "GitHub: merge e primo upload"
-say "Il merge del branch $BRANCH su main avvia il workflow Site, che carica site/ nel bucket."
-state=$(gh pr view "$BRANCH" --json state -q .state 2>/dev/null || echo NONE)
-if [[ "$state" == MERGED ]]; then
-  say "La pull request è già unita: avvio il workflow a mano."
-  gh workflow run site.yml --ref main
-elif confirm "Unisco la pull request di $BRANCH su main?"; then
-  gh pr merge "$BRANCH" --merge
-else
-  warn "Merge saltato: il sito non viene caricato."; exit 1
-fi
+stage "GitHub: primo upload"
+say "Il workflow Site carica site/ nel bucket: lo avvio a mano."
+gh workflow run site.yml --ref main
 say "Aspetto l'avvio del workflow..."
 sleep 15
 run=$(gh run list --workflow site.yml --limit 1 --json databaseId -q '.[0].databaseId')
@@ -279,17 +269,7 @@ pause
 stage "App Store Connect: nuovi URL"
 open_url "https://appstoreconnect.apple.com/apps"
 step "App Copista → App Privacy: Privacy Policy URL → https://$DOMAIN/privacy.html"
-step "Alla prossima versione: Support URL → https://$DOMAIN/index.html"
-note "Il Support URL di una versione già pubblicata non si cambia: per questo i vecchi indirizzi restano come reindirizzamento."
+step "Alla prossima versione: Support URL → https://$DOMAIN/support.html"
 pause "Premi Invio quando hai finito"
-
-stage "GitHub Pages: reindirizzamento dai vecchi indirizzi"
-say "La pull request su $OLD_REPO sostituisce le vecchie pagine con un rinvio a https://$DOMAIN."
-say "GitHub Pages resta attivo, così i vecchi link continuano a funzionare."
-if confirm "Unisco la pull request di reindirizzamento su $OLD_REPO?"; then
-  gh pr merge "$BRANCH" --repo "$OLD_REPO" --merge || SKIPPED+=("merge della pull request di $OLD_REPO")
-else
-  SKIPPED+=("merge della pull request di reindirizzamento su $OLD_REPO")
-fi
 
 finish
