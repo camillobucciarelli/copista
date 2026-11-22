@@ -10,7 +10,9 @@ final class KeyPanel: NSPanel {
 final class ClipCellView: NSTableCellView {
     let label = NSTextField(labelWithString: "")
     let deleteButton = NSButton()
+    let editButton = NSButton()
     var onDelete: (() -> Void)?
+    var onEdit: (() -> Void)?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -30,14 +32,29 @@ final class ClipCellView: NSTableCellView {
         deleteButton.action = #selector(deleteClicked)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
 
+        editButton.title = ""
+        editButton.image = NSImage(systemSymbolName: "pencil", accessibilityDescription: L("panel.edit"))
+        editButton.imagePosition = .imageOnly
+        editButton.isBordered = false
+        editButton.contentTintColor = .secondaryLabelColor
+        editButton.toolTip = L("panel.edit.tooltip")
+        editButton.target = self
+        editButton.action = #selector(editClicked)
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(label)
+        addSubview(editButton)
         addSubview(deleteButton)
         textField = label
 
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
+            label.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -8),
+            editButton.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -4),
+            editButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            editButton.widthAnchor.constraint(equalToConstant: 22),
+            editButton.heightAnchor.constraint(equalToConstant: 22),
             deleteButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
             deleteButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             deleteButton.widthAnchor.constraint(equalToConstant: 22),
@@ -48,6 +65,7 @@ final class ClipCellView: NSTableCellView {
     required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
 
     @objc private func deleteClicked() { onDelete?() }
+    @objc private func editClicked() { onEdit?() }
 }
 
 final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate {
@@ -60,6 +78,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
 
     var onCopy: (([ClipItem]) -> Void)?
     var onDelete: (([ClipItem]) -> Void)?
+    var onEdit: ((ClipItem) -> Void)?
 
     var isVisible: Bool { panel.isVisible }
 
@@ -267,6 +286,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         let item = store.items[row]
         cell.label.stringValue = Self.preview(of: item.text)
         cell.toolTip = String(item.text.prefix(600))
+        cell.onEdit = { [weak self] in self?.onEdit?(item) }
         cell.onDelete = { [weak self] in self?.onDelete?([item]) }
         return cell
     }

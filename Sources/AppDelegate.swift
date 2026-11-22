@@ -23,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Pannello
         panel.onCopy = { [weak self] items in self?.copy(items) }
         panel.onDelete = { [weak self] items in self?.delete(items) }
+        panel.onEdit = { [weak self] item in self?.edit(item) }
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
 
         // Controllo degli appunti
@@ -59,6 +60,42 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         // Il pannello non attiva Copista: l'app di prima resta in primo piano
         // e l'utente incolla con Cmd+V.
+    }
+
+    /// Editor di testo semplice. Non scrive negli appunti: salva solo nello storico.
+    private func edit(_ item: ClipItem) {
+        panel.hide()
+        let textView = NSTextView(frame: NSRect(x: 0, y: 0, width: 420, height: 200))
+        textView.isRichText = false
+        textView.allowsUndo = true
+        textView.font = .systemFont(ofSize: 13)
+        textView.isVerticallyResizable = true
+        textView.autoresizingMask = .width
+        textView.textContainer?.widthTracksTextView = true
+        textView.string = item.text
+        let scroll = NSScrollView(frame: textView.frame)
+        scroll.documentView = textView
+        scroll.hasVerticalScroller = true
+        scroll.borderType = .bezelBorder
+
+        let alert = NSAlert()
+        alert.messageText = L("panel.edit")
+        alert.accessoryView = scroll
+        alert.addButton(withTitle: L("button.save"))
+        alert.addButton(withTitle: L("button.cancel"))
+        alert.window.initialFirstResponder = textView
+
+        let saveButton = alert.buttons[0]
+        let observer = NotificationCenter.default.addObserver(forName: NSText.didChangeNotification, object: textView, queue: .main) { _ in
+            saveButton.isEnabled = !textView.string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        defer { NotificationCenter.default.removeObserver(observer) }
+
+        NSApp.activate(ignoringOtherApps: true)
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        let wasOnClipboard = monitor.currentString() == item.text
+        store.update(id: item.id, text: textView.string)
+        if wasOnClipboard { monitor.write(textView.string, record: false) }
     }
 
     private func delete(_ items: [ClipItem]) {
