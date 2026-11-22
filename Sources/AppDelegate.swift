@@ -12,6 +12,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let receptionExplainedKey = "androidReceptionExplained"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        installEditMenu()
+
         // Icona nella barra dei menu
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = NSImage(systemSymbolName: "doc.on.clipboard",
@@ -62,8 +64,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // e l'utente incolla con Cmd+V.
     }
 
+    /// Menu principale minimo (invisibile in un'app agente): serve solo a instradare
+    /// Cmd+Z/X/C/V/A al campo di testo attivo tramite la responder chain.
+    private func installEditMenu() {
+        let edit = NSMenu(title: "Edit")
+        for (title, action, key) in [("Undo", "undo:", "z"), ("Redo", "redo:", "Z"), ("Cut", "cut:", "x"),
+                                     ("Copy", "copy:", "c"), ("Paste", "paste:", "v"), ("Select All", "selectAll:", "a")] {
+            edit.addItem(withTitle: title, action: Selector(action), keyEquivalent: key)
+        }
+        let editItem = NSMenuItem()
+        editItem.submenu = edit
+        let main = NSMenu()
+        main.addItem(editItem)
+        NSApp.mainMenu = main
+    }
+
     /// Editor di testo semplice. Non scrive negli appunti: salva solo nello storico.
     private func edit(_ item: ClipItem) {
+        // Il pannello non e' attivante: l'app in primo piano e' ancora quella di prima.
+        let previousApp = NSWorkspace.shared.frontmostApplication.flatMap {
+            $0.processIdentifier == ProcessInfo.processInfo.processIdentifier ? nil : $0
+        }
         panel.hide()
         let textView = NSTextView(frame: NSRect(x: 0, y: 0, width: 420, height: 200))
         textView.isRichText = false
@@ -92,7 +113,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         defer { NotificationCenter.default.removeObserver(observer) }
 
         NSApp.activate(ignoringOtherApps: true)
-        guard alert.runModal() == .alertFirstButtonReturn else { return }
+        let response = alert.runModal()
+        previousApp?.activate()
+        guard response == .alertFirstButtonReturn else { return }
         let wasOnClipboard = monitor.currentString() == item.text
         store.update(id: item.id, text: textView.string)
         if wasOnClipboard { monitor.write(textView.string, record: false) }
