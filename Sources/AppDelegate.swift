@@ -10,6 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let reception = AndroidReception()
     private let receptionEnabledKey = "androidReceptionEnabled"
     private let receptionExplainedKey = "androidReceptionExplained"
+    private let autoPasteKey = "autoPasteOnSelection"
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         installEditMenu()
@@ -60,8 +61,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             let joined = items.map(\.text).joined(separator: "\n")
             monitor.write(joined, record: false)
         }
-        // Il pannello non attiva Copista: l'app di prima resta in primo piano
-        // e l'utente incolla con Cmd+V.
+        // Il pannello non attiva Copista: l'app di prima resta in primo piano.
+        // Opzione attiva e permesso concesso: Cmd+V sintetico. Altrimenti lo
+        // preme l'utente.
+        guard UserDefaults.standard.bool(forKey: autoPasteKey), CGPreflightPostEventAccess() else { return }
+        // ponytail: ritardo fisso, aspetta che l'app di prima torni attiva
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            let key = CGKeyCode(kVK_ANSI_V)
+            for down in [true, false] {
+                let event = CGEvent(keyboardEventSource: nil, virtualKey: key, keyDown: down)
+                event?.flags = .maskCommand
+                event?.post(tap: .cghidEventTap)
+            }
+        }
     }
 
     /// Menu principale minimo (invisibile in un'app agente): serve solo a instradare
@@ -169,6 +181,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let android = addItem(to: menu, L("menu.android"), #selector(toggleReception))
         android.state = reception.isRunning ? .on : .off
 
+        let autoPaste = addItem(to: menu, L("menu.autoPaste"), #selector(toggleAutoPaste))
+        autoPaste.state = UserDefaults.standard.bool(forKey: autoPasteKey) ? .on : .off
+        autoPaste.toolTip = L("menu.autoPaste.tooltip")
+
         menu.addItem(.separator())
         addItem(to: menu, L("menu.quit"), #selector(quit))
     }
@@ -206,6 +222,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc private func togglePause() {
         monitor.isPaused.toggle()
         reception.isPaused = monitor.isPaused
+    }
+
+    @objc private func toggleAutoPaste() {
+        let defaults = UserDefaults.standard
+        let on = !defaults.bool(forKey: autoPasteKey)
+        defaults.set(on, forKey: autoPasteKey)
+        // Senza permesso resta attivo ma la selezione si limita a copiare.
+        if on, !CGPreflightPostEventAccess() { _ = CGRequestPostEventAccess() }
     }
 
     @objc private func toggleReception() {
