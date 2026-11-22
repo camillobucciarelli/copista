@@ -2,6 +2,8 @@ Copista conserve l’historique des textes que vous copiez et vous permet de les
 
 FONCTIONS
 • Cmd+Shift+V ouvre l’historique. Flèches pour choisir, Entrée pour copier, puis Cmd+V pour coller.
+• Collage automatique facultatif : désactivé par défaut, il colle l’élément pour vous après sélection. Il s’active depuis le menu ; macOS demande une autorisation.
+• Modifiez le texte d’un élément de l’historique.
 • Collage multiple : sélectionnez plusieurs éléments et appuyez sur Entrée : ils sont copiés comme un seul texte, un par ligne, prêt pour Cmd+V.
 • Les 100 derniers textes copiés, toujours disponibles depuis la barre des menus.
 • Nettoyage de l’historique : tout vider, conserver les 10 derniers, supprimer les éléments de plus d’1 heure ou de 24 heures.
@@ -14,5 +16,6 @@ CONFIDENTIALITÉ
 
 AUTORISATIONS
 • Dossier Téléchargements (facultatif) : nécessaire uniquement pour « Recevoir du texte d’Android ». Copista lit et supprime uniquement le fichier « text-0.txt » envoyé depuis Android.
+• Contrôle de l’ordinateur (facultatif) : demandé uniquement si vous activez « Coller automatiquement à la sélection ». Copista l’utilise seulement pour envoyer Cmd+V après la sélection d’un élément.
 
 Copista est gratuite et open source.

@@ -2,6 +2,8 @@ Copista guarda el historial de los textos que copias y te permite pegarlos de nu
 
 FUNCIONES
 • Cmd+Shift+V abre el historial. Flechas para elegir, Intro para copiar, luego Cmd+V para pegar.
+• Pegado automático opcional: desactivado por defecto, pega el elemento por ti tras seleccionarlo. Se activa desde el menú; macOS pide un permiso.
+• Edita el texto de un elemento del historial.
 • Pegado múltiple: selecciona varios elementos y pulsa Intro: se copian como un solo texto, uno por línea, listo para Cmd+V.
 • Los últimos 100 textos copiados, siempre disponibles desde la barra de menús.
 • Limpieza del historial: vacía todo, conserva los últimos 10, elimina los elementos de más de 1 hora o de 24 horas.
@@ -14,5 +16,6 @@ PRIVACIDAD
 
 PERMISOS
 • Carpeta Descargas (opcional): solo es necesario para "Recibir texto de Android". Copista lee y elimina solo el archivo "text-0.txt" enviado desde Android.
+• Control del ordenador (opcional): solo se pide si activas "Pegar automáticamente al seleccionar". Copista lo usa solo para enviar Cmd+V tras seleccionar un elemento.
 
 Copista es gratuita y de código abierto.

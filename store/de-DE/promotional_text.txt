@@ -1,1 +1,1 @@
-Der Verlauf deiner kopierten Texte in der Menüleiste. Cmd+Shift+V zum Wählen, Eingabetaste zum Kopieren, Cmd+V zum Einsetzen. Alles bleibt auf deinem Mac.
+Verlauf deiner kopierten Texte in der Menüleiste. Cmd+Shift+V wählen, Eingabetaste kopiert, Cmd+V setzt ein (oder optional automatisch). Bleibt auf deinem Mac.

@@ -2,6 +2,8 @@ Copista speichert einen Verlauf der Texte, die du kopierst, und lässt dich dies
 
 FUNKTIONEN
 • Cmd+Shift+V öffnet den Verlauf. Pfeiltasten zum Wählen, Eingabetaste zum Kopieren, dann Cmd+V zum Einsetzen.
+• Optionales automatisches Einsetzen: standardmäßig aus, setzt den Eintrag nach der Auswahl für dich ein. Du aktivierst es im Menü; macOS fragt nach einer Berechtigung.
+• Bearbeite den Text eines Verlaufseintrags.
 • Mehrfaches Einsetzen: Wähle mehrere Einträge aus und drücke die Eingabetaste: Sie werden als ein Text kopiert, ein Eintrag pro Zeile, bereit für Cmd+V.
 • Die letzten 100 kopierten Texte, immer über die Menüleiste verfügbar.
 • Verlauf aufräumen: alles löschen, nur die letzten 10 behalten, Einträge löschen, die älter als 1 Stunde oder 24 Stunden sind.
@@ -14,5 +16,6 @@ DATENSCHUTZ
 
 BERECHTIGUNGEN
 • Ordner „Downloads“ (optional): nur für „Text von Android empfangen“ nötig. Copista liest und löscht nur die von Android gesendete Datei „text-0.txt“.
+• Steuerung des Computers (optional): wird nur angefragt, wenn du „Bei Auswahl automatisch einfügen“ aktivierst. Copista nutzt sie nur, um nach der Auswahl eines Eintrags Cmd+V zu senden.
 
 Copista ist kostenlos und Open Source.

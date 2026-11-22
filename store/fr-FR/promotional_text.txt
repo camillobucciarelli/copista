@@ -1,1 +1,1 @@
-L’historique des textes copiés, dans la barre des menus. Cmd+Shift+V pour choisir, Entrée pour copier, Cmd+V pour coller. Tout reste sur votre Mac.
+L’historique des textes copiés, dans la barre des menus. Cmd+Shift+V pour choisir, Entrée pour copier, Cmd+V pour coller (ou collage auto en option). Sur votre Mac.

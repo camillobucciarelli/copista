@@ -2,6 +2,8 @@ Copista tiene lo storico dei testi che copi e ti permette di incollarli di nuovo
 
 FUNZIONI
 • Cmd+Shift+V apre lo storico. Frecce per scegliere, Invio per copiare, poi Cmd+V per incollare.
+• Incolla automatico facoltativo: spento di default, incolla l'elemento al posto tuo dopo che lo selezioni. Lo attivi dal menu; macOS chiede un permesso.
+• Modifica il testo di un elemento dello storico.
 • Incolla multiplo: seleziona più elementi e premi Invio: vengono copiati come un solo testo, uno per riga, pronto per Cmd+V.
 • Gli ultimi 100 testi copiati, sempre disponibili dalla barra dei menu.
 • Pulizia dello storico: svuota tutto, mantieni gli ultimi 10, elimina gli elementi più vecchi di 1 ora o di 24 ore.
@@ -14,5 +16,6 @@ PRIVACY
 
 PERMESSI
 • Cartella Download (facoltativo): serve solo per "Ricevi testo da Android". Copista legge ed elimina solo il file "text-0.txt" inviato da Android.
+• Controllo del computer (facoltativo): richiesto solo se attivi "Incolla automaticamente alla selezione". Copista lo usa solo per inviare Cmd+V dopo che selezioni un elemento.
 
 Copista è gratuita e open source.

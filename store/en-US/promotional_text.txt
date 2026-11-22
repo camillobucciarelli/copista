@@ -1,1 +1,1 @@
-Your copied text history, in the menu bar. Press Cmd+Shift+V to choose, Return to copy, then Cmd+V to paste. Everything stays on your Mac.
+Your copied text history, in the menu bar. Cmd+Shift+V to choose, Return to copy, then Cmd+V to paste (or opt in to auto-paste). Stays on your Mac.
