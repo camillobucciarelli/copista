@@ -13,7 +13,7 @@ Un testo nello storico.
 _Avoid_: Clip, voce, item
 
 **Ultimo copiato**:
-L'elemento più recente dello storico. È uguale al contenuto degli appunti di sistema, quindi `Cmd+V` lo incolla. Unica eccezione: dopo un incolla multiplo gli appunti contengono il testo unito.
+L'elemento più recente dello storico. È uguale al contenuto degli appunti di sistema, quindi `Cmd+V` lo incolla. La selezione di un elemento copia soltanto; un'opzione del menu, spenta all'inizio, incolla in automatico dopo che l'utente ha concesso il permesso. Unica eccezione: dopo un incolla multiplo gli appunti contengono il testo unito.
 _Avoid_: Corrente, primo elemento
 
 **Incolla multiplo**:

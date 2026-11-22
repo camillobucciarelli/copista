@@ -19,6 +19,9 @@
 "panel.delete.tooltip" = "Delete from list";
 "panel.empty" = "No copied items";
 "panel.hint" = "↑↓ select   ⇧ / ⌘ multiple rows   ↩ copy, then ⌘V   ⌫ delete   esc close";
+"panel.hint.autoPaste" = "↑↓ select   ⇧ / ⌘ multiple rows   ↩ paste   ⌫ delete   esc close";
 "panel.edit" = "Edit";
 "panel.edit.tooltip" = "Edit item";
 "button.save" = "Save";
+"menu.autoPaste" = "Paste automatically on selection";
+"menu.autoPaste.tooltip" = "Sends ⌘V to the previous app after copying. Requires permission to control the computer.";

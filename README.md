@@ -28,7 +28,7 @@ I testi della scheda del Mac App Store sono in `store/<locale>/` (sottotitolo, d
 | `Cmd+V` | Incolla l'ultimo elemento (comportamento di sistema) |
 | `Cmd+Shift+V` | Apre / chiude la lista |
 | `↑` `↓` | Sceglie un elemento |
-| `Invio` o clic | Copia l'elemento scelto negli appunti e chiude la lista; poi `Cmd+V` lo incolla nell'app di prima |
+| `Invio` o clic | Copia l'elemento scelto negli appunti e chiude la lista; poi `Cmd+V` lo incolla nell'app di prima. Con l'opzione "Incolla automaticamente" del menu (spenta all'inizio, richiede un permesso) incolla da solo |
 | `⌘`-clic, `⇧`-clic, `⇧`+`↑` `↓` | Seleziona più elementi |
 | `Invio` con più elementi | Copia gli elementi come un solo testo, uno per riga, nell'ordine della lista. Il testo unito non entra nello storico |
 | `⌫` | Elimina gli elementi selezionati |

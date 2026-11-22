@@ -19,6 +19,9 @@
 "panel.delete.tooltip" = "Eliminar de la lista";
 "panel.empty" = "Ningún elemento copiado";
 "panel.hint" = "↑↓ elegir   ⇧ / ⌘ varias filas   ↩ copiar, luego ⌘V   ⌫ eliminar   esc cerrar";
+"panel.hint.autoPaste" = "↑↓ elegir   ⇧ / ⌘ varias filas   ↩ pegar   ⌫ eliminar   esc cerrar";
 "panel.edit" = "Editar";
 "panel.edit.tooltip" = "Editar elemento";
 "button.save" = "Guardar";
+"menu.autoPaste" = "Pegar automáticamente al seleccionar";
+"menu.autoPaste.tooltip" = "Tras copiar, envía ⌘V a la app anterior. Requiere permiso para controlar el ordenador.";

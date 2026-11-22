@@ -74,6 +74,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     private let tableView = NSTableView()
     private let scrollView = NSScrollView()
     private let emptyLabel = NSTextField(labelWithString: L("panel.empty"))
+    private let hint = NSTextField(labelWithString: "")
     private var keyMonitor: Any?
 
     var onCopy: (([ClipItem]) -> Void)?
@@ -121,7 +122,6 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         title.font = .systemFont(ofSize: 13, weight: .semibold)
         title.textColor = .secondaryLabelColor
 
-        let hint = NSTextField(labelWithString: L("panel.hint"))
         hint.font = .systemFont(ofSize: 11)
         hint.textColor = .tertiaryLabelColor
 
@@ -175,6 +175,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     }
 
     func show() {
+        let autoPaste = UserDefaults.standard.bool(forKey: "autoPasteOnSelection") && CGPreflightPostEventAccess()
+        hint.stringValue = L(autoPaste ? "panel.hint.autoPaste" : "panel.hint")
         reload(selecting: 0)
 
         let mouse = NSEvent.mouseLocation

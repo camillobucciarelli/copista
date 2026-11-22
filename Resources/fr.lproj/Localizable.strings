@@ -19,6 +19,9 @@
 "panel.delete.tooltip" = "Supprimer de la liste";
 "panel.empty" = "Aucun élément copié";
 "panel.hint" = "↑↓ choisir   ⇧ / ⌘ plusieurs   ↩ copier, puis ⌘V   ⌫ supprimer   esc fermer";
+"panel.hint.autoPaste" = "↑↓ choisir   ⇧ / ⌘ plusieurs   ↩ coller   ⌫ supprimer   esc fermer";
 "panel.edit" = "Modifier";
 "panel.edit.tooltip" = "Modifier l'élément";
 "button.save" = "Enregistrer";
+"menu.autoPaste" = "Coller automatiquement à la sélection";
+"menu.autoPaste.tooltip" = "Après la copie, envoie ⌘V à l'app précédente. Nécessite l'autorisation de contrôler l'ordinateur.";
