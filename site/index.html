@@ -1,164 +1,330 @@
 <!doctype html>
-<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Copista — Supporto / Support</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Copista — Clipboard history for the macOS menu bar</title>
+<meta name="description" content="Copista keeps a history of the text you copy and lets you paste it again from the keyboard. Free, open source, stays on your Mac.">
+<link rel="canonical" href="https://copista.camillobucciarelli.dev/index.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Copista"><meta property="og:title" content="Copista — Clipboard history for the macOS menu bar"><meta property="og:description" content="Copista keeps a history of the text you copy and lets you paste it again from the keyboard. Free, open source, stays on your Mac."><meta property="og:url" content="https://copista.camillobucciarelli.dev/index.html"><meta property="og:image" content="https://copista.camillobucciarelli.dev/img/hero.jpg">
+<meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="stylesheet" href="style.css"></head><body>
-<header class="topbar"><nav class="langs"><a href="#it" lang="it">Italiano</a><a href="#en" lang="en">English</a><a href="#es" lang="es">Español</a><a href="#fr" lang="fr">Français</a><a href="#de" lang="de">Deutsch</a><a href="#pt" lang="pt">Português</a></nav><a class="sponsor" href="https://buymeacoffee.com/camillobucciarelli" rel="noopener"><span aria-hidden="true">☕</span> Buy me a coffee</a></header>
-<main id="it" lang="it">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Supporto</h1>
-<p>Copista è un'app per la barra dei menu di macOS 13 o successivo che tiene la cronologia del testo copiato (gli ultimi 100 elementi).</p>
-<h2>Come si usa</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: apre e chiude l'elenco.</li>
-<li>Frecce: scelgono un elemento.</li>
-<li><kbd>Invio</kbd> o clic: copia l'elemento scelto negli appunti e chiude l'elenco; poi premi <kbd>Cmd</kbd>+<kbd>V</kbd> per incollarlo.</li>
-<li><kbd>Backspace</kbd> o icona del cestino: elimina l'elemento.</li>
-<li>Icona della matita: modifica il testo dell'elemento.</li>
-<li><kbd>Esc</kbd>: chiude l'elenco.</li>
-<li>L'icona nella barra dei menu permette di cancellare la cronologia, mettere in pausa la registrazione e uscire.</li>
-</ul>
-<h2>Ricevi testo da Android</h2>
-<p>La funzione è spenta finché non la abiliti dall'icona nella barra dei menu, voce «Ricevi testo da Android». Quando invii un testo da Android al Mac, il testo arriva nella cartella Download come file <code>text-0.txt</code>. Copista legge il file, mette il testo negli appunti e nella cronologia, poi elimina il file in modo definitivo (non va nel Cestino). Copista non legge il contenuto di altri file e non li modifica. macOS chiede il permesso per la cartella Download alla prima attivazione.</p>
-<h2>Domande frequenti</h2>
-<p><b>Dopo Invio il testo non compare.</b> Copista copia il testo negli appunti: premi Cmd+V nell'app dove stavi scrivendo. Se preferisci che incolli da solo, attiva «Incolla automaticamente alla selezione» dall'icona nella barra dei menu (spento di default): macOS chiede un permesso.</p>
-<p><b>Come cancello la cronologia?</b> Dall'icona nella barra dei menu, scegli la voce per cancellare la cronologia.</p>
-<p><b>Come metto in pausa?</b> Dall'icona nella barra dei menu, scegli la voce per mettere in pausa la registrazione.</p>
-<h2>Assistenza</h2>
-<p>Apri una segnalazione (issue) su <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Non pubblichiamo indirizzi email o numeri di telefono.</p>
-<h2>Sostieni il progetto</h2>
-<p>Copista è gratuita e open source: il <a href="https://github.com/camillobucciarelli/copista" rel="noopener">codice sorgente</a> è su GitHub. Se ti è utile puoi <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">offrirmi un caffè</a>.</p>
-<p><a href="privacy.html#it">Informativa sulla privacy</a></p>
+<div class="page" id="it" lang="it" data-title="Copista — Lo storico dei testi copiati, nella barra dei menu" data-desc="Copista tiene lo storico dei testi che copi e ti permette di incollarli di nuovo dalla tastiera. Gratis, open source, resta sul tuo Mac.">
+<a class="skip" href="#main-it">Vai al contenuto</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#it"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Principale">
+<a href="index.html#it" aria-current="page">Funzioni</a>
+<a href="privacy.html#it">Privacy</a>
+<a href="support.html#it">Supporto</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Lingua" autocomplete="off"><option value="it" lang="it" selected>Italiano</option><option value="en" lang="en">English</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="de" lang="de">Deutsch</option><option value="pt" lang="pt">Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Scarica</a>
+</nav></div></header>
+<main id="main-it">
+<section class="wrap hero">
+<p class="eb">App per la barra dei menu di macOS</p>
+<h1>Lo storico dei testi copiati, nella barra dei menu.</h1>
+<p class="lead">Copista tiene lo storico dei testi che copi e ti permette di incollarli di nuovo dalla tastiera. Resta sul tuo Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Scarica Copista</a><a class="btn sec" href="support.html#it">Come si usa</a></div>
+<p class="small">Gratis · Licenza MIT · macOS 13 o successivo</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="Copista su Mac: la finestra «Storico appunti» con otto testi copiati, il primo selezionato, e in basso le scorciatoie per scegliere, incollare, eliminare e chiudere"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Resta sul tuo Mac</h3><p class="muted">Lo storico è salvato solo in locale sul tuo Mac, nel contenitore dell'app. Lo sviluppatore non raccoglie alcun dato.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>Nessuna connessione</h3><p class="muted">L'app non effettua alcuna connessione di rete, non ha account, analisi, pubblicità.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Codice aperto</h3><p class="muted">Copista è gratuita e open source: il <a href="https://github.com/camillobucciarelli/copista">codice sorgente</a> è su GitHub, con licenza MIT.</p></div>
+</div></section>
+<section id="features-it" class="wrap features">
+<div class="row"><div class="text"><p class="eb">Storico</p><h2>Scegli dalla tastiera, incolla dove stavi scrivendo.</h2><p class="lead">Cmd+Shift+V apre lo storico. Frecce per scegliere, Invio per copiare, poi Cmd+V per incollare.</p><ul class="keys"><li><span>Apre e chiude l'elenco</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Sceglie un elemento</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Copia l'elemento scelto e chiude l'elenco</span><span class="k"><kbd>Invio</kbd></span></li><li><span>Elimina l'elemento</span><span class="k"><kbd>Backspace</kbd></span></li><li><span>Chiude l'elenco</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#it">Tutti i comandi</a></div>
+<div class="shot"><img src="img/history-it.jpg" width="1600" height="1000" loading="lazy" alt="La finestra «Storico appunti»: sette testi copiati, il primo evidenziato, un cestino su ogni riga e le scorciatoie in basso"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-it.jpg" width="1600" height="1000" loading="lazy" alt="La finestra che spiega «Ricevi testo da Android», con i pulsanti Annulla e Abilita"></div>
+<div class="text"><p class="eb">Facoltativo</p><h2>Ricevi testo da Android.</h2><p class="lead">Quando invii un testo dal telefono Android al Mac, Copista lo mette negli appunti e nello storico.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>La funzione è spenta finché non la abiliti dal menu.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Copista legge ed elimina solo il file <code>text-0.txt</code> inviato da Android.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Non legge il contenuto di altri file e non li modifica.</span></li></ul><a class="link" href="support.html#android-it">Come funziona la ricezione</a></div></div>
+<div class="row"><div class="text"><p class="eb">Modifica e incolla</p><h2>Più elementi in un solo testo.</h2><p class="lead">Seleziona più elementi e premi Invio: vengono copiati come un solo testo, uno per riga, pronto per Cmd+V.</p><ul class="defs"><li><span>Modifica</span><span class="muted">Modifica il testo di un elemento dello storico.</span></li><li><span>Selezione multipla</span><span class="muted"><kbd>⌘</kbd>-clic, <kbd>⇧</kbd>-clic, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>: seleziona più elementi.</span></li><li><span>Incolla automatico facoltativo</span><span class="muted">Spento di default, incolla l'elemento al posto tuo dopo che lo selezioni. Lo attivi dal menu; macOS chiede un permesso.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-it.jpg" width="1600" height="1000" loading="lazy" alt="Il menu di Copista nella barra dei menu: Mostra storico, le voci per svuotare lo storico, Sospendi registrazione, Ricevi testo da Android, Esci"></div></div>
+</section>
+<section class="wrap more"><h2>E il resto.</h2><div class="cards"><div><h3>Ultimi 100 elementi</h3><p class="muted">Gli ultimi 100 testi copiati, sempre disponibili dalla barra dei menu.</p></div><div><h3>Modifica</h3><p class="muted">Icona della matita: modifica il testo dell'elemento.</p></div><div><h3>Pausa della registrazione</h3><p class="muted">Sospendi la registrazione quando vuoi, dall'icona nella barra dei menu.</p></div><div><h3>Pulizia dello storico</h3><p class="muted">Svuota tutto, mantieni gli ultimi 10, elimina gli elementi più vecchi di 1 ora o di 24 ore.</p></div><div><h3>Voci riservate ignorate</h3><p class="muted">I testi marcati come riservati dai password manager non sono registrati.</p></div><div><h3>Sei lingue</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. L'app usa la lingua di macOS; se la lingua non è disponibile, usa l'inglese.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Privacy</p><h2>Cosa lascia il tuo Mac: niente.</h2><p class="lead">Lo storico resta solo sul tuo Mac. Nessuna connessione di rete, nessun account, nessuna analisi.</p><a class="link" href="privacy.html#it">Leggi l'informativa sulla privacy</a></div>
+<dl><div><dt>Solo in locale</dt><dd>Lo storico è salvato solo in locale sul tuo Mac, nel contenitore dell'app, in chiaro (testo non cifrato).</dd></div><div><dt>Nessuna rete</dt><dd>L'app non effettua alcuna connessione di rete, non ha account, analisi, pubblicità.</dd></div><div><dt>Nessun dato raccolto</dt><dd>Lo sviluppatore non raccoglie alcun dato.</dd></div><div><dt>Voci riservate escluse</dt><dd>Gli elementi contrassegnati come riservati dai gestori di password non vengono registrati.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Supporto</p><h2>Come si usa, in una pagina.</h2><p class="lead">I comandi, la ricezione da Android e le domande frequenti.</p><a class="btn sec sm" href="support.html#it" style="align-self:flex-start">Vai al supporto</a></div>
+<ul class="faqlinks"><li><a href="support.html#it"><span><span>Dopo Invio il testo non compare.</span><span>Copista copia il testo negli appunti: premi Cmd+V nell'app dove stavi scrivendo.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#it"><span><span>Come cancello lo storico?</span><span>Dall'icona nella barra dei menu.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#it"><span><span>Come metto in pausa?</span><span>Dall'icona nella barra dei menu.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>Lo storico dei tuoi appunti, a portata di scorciatoia.</h2><p>Copista è gratuita e open source.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Scarica Copista</a><p>Se ti è utile puoi <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">offrirmi un caffè</a>.</p></div></section>
 </main>
-<main id="en" lang="en">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Support</h1>
-<p>Copista is a menu bar app for macOS 13 or later that keeps a history of copied text (the last 100 items).</p>
-<h2>How to use</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: opens and closes the list.</li>
-<li>Arrow keys: choose an item.</li>
-<li><kbd>Return</kbd> or click: copies the chosen item to the clipboard and closes the list; then press <kbd>Cmd</kbd>+<kbd>V</kbd> to paste it.</li>
-<li><kbd>Backspace</kbd> or the trash icon: deletes the item.</li>
-<li>Pencil icon: edits the text of the item.</li>
-<li><kbd>Esc</kbd>: closes the list.</li>
-<li>The menu bar icon lets you clear the history, pause recording, and quit.</li>
-</ul>
-<h2>Receive text from Android</h2>
-<p>The feature is off until you enable it from the menu bar icon, item “Receive Text from Android”. When you send text from Android to the Mac, the text arrives in the Downloads folder as the file <code>text-0.txt</code>. Copista reads the file, puts the text on the clipboard and in the history, then deletes the file permanently (it does not go to the Trash). Copista does not read the contents of other files and does not change them. macOS asks for permission for the Downloads folder the first time you enable the feature.</p>
-<h2>FAQ</h2>
-<p><b>Nothing appears after Return.</b> Copista copies the text to the clipboard: press Cmd+V in the app where you were typing. If you prefer it to paste by itself, turn on “Paste automatically on selection” from the menu bar icon (off by default): macOS asks for a permission.</p>
-<p><b>How do I clear the history?</b> From the menu bar icon, choose the item that clears the history.</p>
-<p><b>How do I pause?</b> From the menu bar icon, choose the item that pauses recording.</p>
-<h2>Help</h2>
-<p>Open an <a href="https://github.com/camillobucciarelli/copista/issues">issue on GitHub</a>. No email address or phone number is published.</p>
-<h2>Support the project</h2>
-<p>Copista is free and open source: the <a href="https://github.com/camillobucciarelli/copista" rel="noopener">source code</a> is on GitHub. If it is useful to you, you can <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">buy me a coffee</a>.</p>
-<p><a href="privacy.html#en">Privacy policy</a></p>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>Lo storico dei testi copiati, nella barra dei menu.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Piè di pagina">
+<a href="support.html#it">Supporto</a>
+<a href="privacy.html#it">Privacy</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">Licenza MIT</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Offrimi un caffè</a>
+</nav></div></footer>
+</div>
+<div class="page" id="en" lang="en" data-title="Copista — Your copied text history, in the menu bar" data-desc="Copista keeps a history of the text you copy and lets you paste it again from the keyboard. Free, open source, stays on your Mac.">
+<a class="skip" href="#main-en">Skip to content</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#en"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Main">
+<a href="index.html#en" aria-current="page">Features</a>
+<a href="privacy.html#en">Privacy</a>
+<a href="support.html#en">Support</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Language" autocomplete="off"><option value="it" lang="it">Italiano</option><option value="en" lang="en" selected>English</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="de" lang="de">Deutsch</option><option value="pt" lang="pt">Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Download</a>
+</nav></div></header>
+<main id="main-en">
+<section class="wrap hero">
+<p class="eb">A menu bar app for macOS</p>
+<h1>Your copied text history, in the menu bar.</h1>
+<p class="lead">Copista keeps a history of the text you copy and lets you paste it again from the keyboard. It stays on your Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Download Copista</a><a class="btn sec" href="support.html#en">How to use</a></div>
+<p class="small">Free · MIT license · macOS 13 or later</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="Copista on a Mac: the “Storico appunti” window (Italian for Clipboard History) with eight copied texts, the first one selected, and the shortcuts for choosing, pasting, deleting and closing at the bottom"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Stays on your Mac</h3><p class="muted">The history is stored only locally on your Mac, in the app's own container. The developer collects no data.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>No connection</h3><p class="muted">The app makes no network connections and has no account, analytics or ads.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Open source</h3><p class="muted">Copista is free and open source: the <a href="https://github.com/camillobucciarelli/copista">source code</a> is on GitHub, under the MIT license.</p></div>
+</div></section>
+<section id="features-en" class="wrap features">
+<div class="row"><div class="text"><p class="eb">History</p><h2>Choose from the keyboard, paste where you were typing.</h2><p class="lead">Cmd+Shift+V opens the history. Arrow keys to choose, Return to copy, then Cmd+V to paste.</p><ul class="keys"><li><span>Opens and closes the list</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Chooses an item</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Copies the chosen item and closes the list</span><span class="k"><kbd>Return</kbd></span></li><li><span>Deletes the item</span><span class="k"><kbd>Backspace</kbd></span></li><li><span>Closes the list</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#en">All the commands</a></div>
+<div class="shot"><img src="img/history-en.jpg" width="1600" height="1000" loading="lazy" alt="The “Clipboard History” window: seven copied texts, the first one highlighted, a trash icon on every row and the shortcuts at the bottom"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-en.jpg" width="1600" height="1000" loading="lazy" alt="The window that explains “Receive Text from Android”, with the Cancel and Enable buttons"></div>
+<div class="text"><p class="eb">Optional</p><h2>Receive text from Android.</h2><p class="lead">When you send text from your Android phone to the Mac, Copista puts it on the clipboard and in the history.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>The feature is off until you enable it from the menu.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Copista reads and deletes only the file <code>text-0.txt</code> sent from Android.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>It does not read the contents of other files and does not change them.</span></li></ul><a class="link" href="support.html#android-en">How receiving works</a></div></div>
+<div class="row"><div class="text"><p class="eb">Edit and paste</p><h2>Several items in a single text.</h2><p class="lead">Select several items and press Return: they are copied as one text, one per line, ready for Cmd+V.</p><ul class="defs"><li><span>Edit</span><span class="muted">Edit the text of a history item.</span></li><li><span>Multiple selection</span><span class="muted"><kbd>⌘</kbd>-click, <kbd>⇧</kbd>-click, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>: select several items.</span></li><li><span>Optional automatic paste</span><span class="muted">Off by default, it pastes the item for you after you select it. Enable it from the menu; macOS asks for a permission.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-en.jpg" width="1600" height="1000" loading="lazy" alt="The Copista menu in the menu bar: Show History, the items to clear the history, Pause Recording, Receive Text from Android, Quit"></div></div>
+</section>
+<section class="wrap more"><h2>And the rest.</h2><div class="cards"><div><h3>Last 100 items</h3><p class="muted">The last 100 copied texts, always available from the menu bar.</p></div><div><h3>Edit</h3><p class="muted">Pencil icon: edits the text of the item.</p></div><div><h3>Pause recording</h3><p class="muted">Pause recording whenever you want, from the menu bar icon.</p></div><div><h3>History cleanup</h3><p class="muted">Clear everything, keep the last 10, delete items older than 1 hour or 24 hours.</p></div><div><h3>Confidential items ignored</h3><p class="muted">Text flagged as confidential by password managers is not recorded.</p></div><div><h3>Six languages</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. The app uses the macOS language; if it is not available, it uses English.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Privacy</p><h2>What leaves your Mac: nothing.</h2><p class="lead">The history stays only on your Mac. No network connections, no account, no analytics.</p><a class="link" href="privacy.html#en">Read the privacy policy</a></div>
+<dl><div><dt>Local only</dt><dd>The history is stored only locally on your Mac, in the app's own container, in plain text (not encrypted).</dd></div><div><dt>No network</dt><dd>The app makes no network connections and has no account, analytics or ads.</dd></div><div><dt>No data collected</dt><dd>The developer collects no data.</dd></div><div><dt>Confidential items excluded</dt><dd>Items flagged as confidential by password managers are not recorded.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Support</p><h2>How to use it, on one page.</h2><p class="lead">The commands, receiving from Android and the FAQ.</p><a class="btn sec sm" href="support.html#en" style="align-self:flex-start">Go to support</a></div>
+<ul class="faqlinks"><li><a href="support.html#en"><span><span>Nothing appears after Return.</span><span>Copista copies the text to the clipboard: press Cmd+V in the app where you were typing.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#en"><span><span>How do I clear the history?</span><span>From the menu bar icon.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#en"><span><span>How do I pause?</span><span>From the menu bar icon.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>Your clipboard history, one shortcut away.</h2><p>Copista is free and open source.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Download Copista</a><p>If it is useful to you, you can <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">buy me a coffee</a>.</p></div></section>
 </main>
-<main id="es" lang="es">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Soporte</h1>
-<p>Copista es una app para la barra de menús de macOS 13 o posterior que guarda el historial del texto copiado (los últimos 100 elementos).</p>
-<h2>Cómo se usa</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: abre y cierra la lista.</li>
-<li>Flechas: eligen un elemento.</li>
-<li><kbd>Intro</kbd> o clic: copia el elemento elegido al portapapeles y cierra la lista; después pulsa <kbd>Cmd</kbd>+<kbd>V</kbd> para pegarlo.</li>
-<li><kbd>Retroceso</kbd> o el icono de la papelera: elimina el elemento.</li>
-<li>Icono del lápiz: edita el texto del elemento.</li>
-<li><kbd>Esc</kbd>: cierra la lista.</li>
-<li>El icono de la barra de menús permite vaciar el historial, pausar el registro y salir.</li>
-</ul>
-<h2>Recibir texto de Android</h2>
-<p>La función está desactivada hasta que la activas desde el icono de la barra de menús, opción «Recibir texto de Android». Cuando envías un texto de Android al Mac, el texto llega a la carpeta Descargas como el archivo <code>text-0.txt</code>. Copista lee el archivo, pone el texto en el portapapeles y en el historial, y luego elimina el archivo de forma definitiva (no va a la Papelera). Copista no lee el contenido de otros archivos ni los modifica. macOS pide el permiso para la carpeta Descargas la primera vez que activas la función.</p>
-<h2>Preguntas frecuentes</h2>
-<p><b>No aparece nada tras Intro.</b> Copista copia el texto al portapapeles: pulsa Cmd+V en la app donde estabas escribiendo. Si prefieres que pegue solo, activa «Pegar automáticamente al seleccionar» desde el icono de la barra de menús (desactivado por defecto): macOS pide un permiso.</p>
-<p><b>¿Cómo vacío el historial?</b> Desde el icono de la barra de menús, elige la opción para vaciar el historial.</p>
-<p><b>¿Cómo pauso el registro?</b> Desde el icono de la barra de menús, elige la opción para pausar el registro.</p>
-<h2>Ayuda</h2>
-<p>Abre una incidencia (issue) en <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. No publicamos direcciones de correo ni números de teléfono.</p>
-<h2>Apoya el proyecto</h2>
-<p>Copista es gratuita y de código abierto: el <a href="https://github.com/camillobucciarelli/copista" rel="noopener">código fuente</a> está en GitHub. Si te resulta útil, puedes <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">invitarme a un café</a>.</p>
-<p><a href="privacy.html#es">Política de privacidad</a></p>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>Your copied text history, in the menu bar.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Footer">
+<a href="support.html#en">Support</a>
+<a href="privacy.html#en">Privacy</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">MIT license</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Buy me a coffee</a>
+</nav></div></footer>
+</div>
+<div class="page" id="es" lang="es" data-title="Copista — El historial de los textos copiados, en la barra de menús" data-desc="Copista guarda el historial de los textos que copias y te permite pegarlos de nuevo desde el teclado. Gratis, de código abierto, se queda en tu Mac.">
+<a class="skip" href="#main-es">Saltar al contenido</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#es"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Principal">
+<a href="index.html#es" aria-current="page">Funciones</a>
+<a href="privacy.html#es">Privacidad</a>
+<a href="support.html#es">Soporte</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Idioma" autocomplete="off"><option value="it" lang="it">Italiano</option><option value="en" lang="en">English</option><option value="es" lang="es" selected>Español</option><option value="fr" lang="fr">Français</option><option value="de" lang="de">Deutsch</option><option value="pt" lang="pt">Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Descargar</a>
+</nav></div></header>
+<main id="main-es">
+<section class="wrap hero">
+<p class="eb">App para la barra de menús de macOS</p>
+<h1>El historial de los textos copiados, en la barra de menús.</h1>
+<p class="lead">Copista guarda el historial de los textos que copias y te permite pegarlos de nuevo desde el teclado. Se queda en tu Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Descargar Copista</a><a class="btn sec" href="support.html#es">Cómo se usa</a></div>
+<p class="small">Gratis · Licencia MIT · macOS 13 o posterior</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="Copista en un Mac: la ventana «Storico appunti» (Historial del portapapeles, en italiano) con ocho textos copiados, el primero seleccionado, y abajo los atajos para elegir, pegar, eliminar y cerrar"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Se queda en tu Mac</h3><p class="muted">El historial se guarda solo en local en tu Mac, en el contenedor de la app. El desarrollador no recoge ningún dato.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>Sin conexión</h3><p class="muted">La app no hace ninguna conexión de red y no tiene cuentas, analíticas ni publicidad.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Código abierto</h3><p class="muted">Copista es gratuita y de código abierto: el <a href="https://github.com/camillobucciarelli/copista">código fuente</a> está en GitHub, con licencia MIT.</p></div>
+</div></section>
+<section id="features-es" class="wrap features">
+<div class="row"><div class="text"><p class="eb">Historial</p><h2>Elige con el teclado, pega donde estabas escribiendo.</h2><p class="lead">Cmd+Shift+V abre el historial. Flechas para elegir, Intro para copiar, luego Cmd+V para pegar.</p><ul class="keys"><li><span>Abre y cierra la lista</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Elige un elemento</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Copia el elemento elegido y cierra la lista</span><span class="k"><kbd>Intro</kbd></span></li><li><span>Elimina el elemento</span><span class="k"><kbd>Retroceso</kbd></span></li><li><span>Cierra la lista</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#es">Todos los comandos</a></div>
+<div class="shot"><img src="img/history-es.jpg" width="1600" height="1000" loading="lazy" alt="La ventana «Historial del portapapeles»: siete textos copiados, el primero resaltado, una papelera en cada fila y los atajos abajo"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-es.jpg" width="1600" height="1000" loading="lazy" alt="La ventana que explica «Recibir texto de Android», con los botones Cancelar y Activar"></div>
+<div class="text"><p class="eb">Opcional</p><h2>Recibir texto de Android.</h2><p class="lead">Cuando envías un texto del teléfono Android al Mac, Copista lo pone en el portapapeles y en el historial.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>La función está desactivada hasta que la activas desde el menú.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Copista lee y elimina solo el archivo <code>text-0.txt</code> enviado desde Android.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>No lee el contenido de otros archivos ni los modifica.</span></li></ul><a class="link" href="support.html#android-es">Cómo funciona la recepción</a></div></div>
+<div class="row"><div class="text"><p class="eb">Edita y pega</p><h2>Varios elementos en un solo texto.</h2><p class="lead">Selecciona varios elementos y pulsa Intro: se copian como un solo texto, uno por línea, listo para Cmd+V.</p><ul class="defs"><li><span>Editar</span><span class="muted">Edita el texto de un elemento del historial.</span></li><li><span>Selección múltiple</span><span class="muted"><kbd>⌘</kbd>-clic, <kbd>⇧</kbd>-clic, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>: selecciona varios elementos.</span></li><li><span>Pegado automático opcional</span><span class="muted">Desactivado por defecto, pega el elemento por ti tras seleccionarlo. Se activa desde el menú; macOS pide un permiso.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-es.jpg" width="1600" height="1000" loading="lazy" alt="El menú de Copista en la barra de menús: Mostrar historial, las opciones para vaciar el historial, Pausar registro, Recibir texto de Android, Salir"></div></div>
+</section>
+<section class="wrap more"><h2>Y lo demás.</h2><div class="cards"><div><h3>Últimos 100 elementos</h3><p class="muted">Los últimos 100 textos copiados, siempre disponibles desde la barra de menús.</p></div><div><h3>Editar</h3><p class="muted">Icono del lápiz: edita el texto del elemento.</p></div><div><h3>Pausa del registro</h3><p class="muted">Pausa el registro cuando quieras, desde el icono de la barra de menús.</p></div><div><h3>Limpieza del historial</h3><p class="muted">Vacía todo, conserva los últimos 10, elimina los elementos de más de 1 hora o de 24 horas.</p></div><div><h3>Elementos confidenciales ignorados</h3><p class="muted">Los textos marcados como confidenciales por los gestores de contraseñas no se registran.</p></div><div><h3>Seis idiomas</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. La app usa el idioma de macOS; si no está disponible, usa inglés.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Privacidad</p><h2>Lo que sale de tu Mac: nada.</h2><p class="lead">El historial se queda solo en tu Mac. Sin conexiones de red, sin cuentas, sin analíticas.</p><a class="link" href="privacy.html#es">Lee la política de privacidad</a></div>
+<dl><div><dt>Solo en local</dt><dd>El historial se guarda solo en local en tu Mac, en el contenedor de la app, en texto sin cifrar.</dd></div><div><dt>Sin red</dt><dd>La app no hace ninguna conexión de red y no tiene cuentas, analíticas ni publicidad.</dd></div><div><dt>Ningún dato recogido</dt><dd>El desarrollador no recoge ningún dato.</dd></div><div><dt>Elementos confidenciales excluidos</dt><dd>Los elementos marcados como confidenciales por los gestores de contraseñas no se registran.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Soporte</p><h2>Cómo se usa, en una página.</h2><p class="lead">Los comandos, la recepción desde Android y las preguntas frecuentes.</p><a class="btn sec sm" href="support.html#es" style="align-self:flex-start">Ir a soporte</a></div>
+<ul class="faqlinks"><li><a href="support.html#es"><span><span>No aparece nada tras Intro.</span><span>Copista copia el texto al portapapeles: pulsa Cmd+V en la app donde estabas escribiendo.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#es"><span><span>¿Cómo vacío el historial?</span><span>Desde el icono de la barra de menús.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#es"><span><span>¿Cómo pauso el registro?</span><span>Desde el icono de la barra de menús.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>El historial de tu portapapeles, a un atajo de distancia.</h2><p>Copista es gratuita y de código abierto.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Descargar Copista</a><p>Si te resulta útil, puedes <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">invitarme a un café</a>.</p></div></section>
 </main>
-<main id="fr" lang="fr">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Assistance</h1>
-<p>Copista est une app pour la barre des menus de macOS 13 ou ultérieur qui conserve l’historique du texte copié (les 100 derniers éléments).</p>
-<h2>Utilisation</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> : ouvre et ferme la liste.</li>
-<li>Flèches : choisissent un élément.</li>
-<li><kbd>Entrée</kbd> ou clic : copie l’élément choisi dans le presse-papiers et ferme la liste ; appuyez ensuite sur <kbd>Cmd</kbd>+<kbd>V</kbd> pour le coller.</li>
-<li><kbd>Retour arrière</kbd> ou l’icône de la corbeille : supprime l’élément.</li>
-<li>Icône du crayon : modifie le texte de l’élément.</li>
-<li><kbd>Esc</kbd> : ferme la liste.</li>
-<li>L’icône de la barre des menus permet de vider l’historique, de suspendre l’enregistrement et de quitter.</li>
-</ul>
-<h2>Recevoir du texte d’Android</h2>
-<p>La fonction est désactivée tant que vous ne l’activez pas depuis l’icône de la barre des menus, option « Recevoir du texte d’Android ». Lorsque vous envoyez un texte d’Android vers le Mac, le texte arrive dans le dossier Téléchargements sous la forme du fichier <code>text-0.txt</code>. Copista lit le fichier, place le texte dans le presse-papiers et dans l’historique, puis supprime le fichier définitivement (il ne va pas dans la Corbeille). Copista ne lit pas le contenu des autres fichiers et ne les modifie pas. macOS demande l’autorisation pour le dossier Téléchargements à la première activation.</p>
-<h2>Questions fréquentes</h2>
-<p><b>Rien n’apparaît après Entrée.</b> Copista copie le texte dans le presse-papiers : appuyez sur Cmd+V dans l’app où vous écriviez. Si vous préférez qu’il colle tout seul, activez « Coller automatiquement à la sélection » depuis l’icône de la barre des menus (désactivé par défaut) : macOS demande une autorisation.</p>
-<p><b>Comment vider l’historique ?</b> Depuis l’icône de la barre des menus, choisissez l’option qui vide l’historique.</p>
-<p><b>Comment suspendre l’enregistrement ?</b> Depuis l’icône de la barre des menus, choisissez l’option qui suspend l’enregistrement.</p>
-<h2>Aide</h2>
-<p>Ouvrez un ticket (issue) sur <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Nous ne publions ni adresse e-mail ni numéro de téléphone.</p>
-<h2>Soutenir le projet</h2>
-<p>Copista est gratuite et open source : le <a href="https://github.com/camillobucciarelli/copista" rel="noopener">code source</a> est sur GitHub. Si elle vous est utile, vous pouvez <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">m’offrir un café</a>.</p>
-<p><a href="privacy.html#fr">Politique de confidentialité</a></p>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>El historial de los textos copiados, en la barra de menús.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Pie de página">
+<a href="support.html#es">Soporte</a>
+<a href="privacy.html#es">Privacidad</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">Licencia MIT</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Invítame a un café</a>
+</nav></div></footer>
+</div>
+<div class="page" id="fr" lang="fr" data-title="Copista — L’historique des textes copiés, dans la barre des menus" data-desc="Copista conserve l’historique des textes que vous copiez et vous permet de les coller de nouveau depuis le clavier. Gratuite, open source, elle reste sur votre Mac.">
+<a class="skip" href="#main-fr">Aller au contenu</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#fr"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Principale">
+<a href="index.html#fr" aria-current="page">Fonctions</a>
+<a href="privacy.html#fr">Confidentialité</a>
+<a href="support.html#fr">Assistance</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Langue" autocomplete="off"><option value="it" lang="it">Italiano</option><option value="en" lang="en">English</option><option value="es" lang="es">Español</option><option value="fr" lang="fr" selected>Français</option><option value="de" lang="de">Deutsch</option><option value="pt" lang="pt">Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Télécharger</a>
+</nav></div></header>
+<main id="main-fr">
+<section class="wrap hero">
+<p class="eb">App pour la barre des menus de macOS</p>
+<h1>L’historique des textes copiés, dans la barre des menus.</h1>
+<p class="lead">Copista conserve l’historique des textes que vous copiez et vous permet de les coller de nouveau depuis le clavier. Il reste sur votre Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Télécharger Copista</a><a class="btn sec" href="support.html#fr">Utilisation</a></div>
+<p class="small">Gratuite · Licence MIT · macOS 13 ou ultérieur</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="Copista sur Mac : la fenêtre « Storico appunti » (Historique du presse-papiers, en italien) avec huit textes copiés, le premier sélectionné, et en bas les raccourcis pour choisir, coller, supprimer et fermer"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Reste sur votre Mac</h3><p class="muted">L’historique est enregistré uniquement en local sur votre Mac, dans le conteneur de l’app. Le développeur ne collecte aucune donnée.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>Aucune connexion</h3><p class="muted">L’app n’établit aucune connexion réseau et n’a ni compte, ni outil d’analyse, ni publicité.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Code ouvert</h3><p class="muted">Copista est gratuite et open source : le <a href="https://github.com/camillobucciarelli/copista">code source</a> est sur GitHub, sous licence MIT.</p></div>
+</div></section>
+<section id="features-fr" class="wrap features">
+<div class="row"><div class="text"><p class="eb">Historique</p><h2>Choisissez au clavier, collez là où vous écriviez.</h2><p class="lead">Cmd+Shift+V ouvre l’historique. Flèches pour choisir, Entrée pour copier, puis Cmd+V pour coller.</p><ul class="keys"><li><span>Ouvre et ferme la liste</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Choisit un élément</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Copie l’élément choisi et ferme la liste</span><span class="k"><kbd>Entrée</kbd></span></li><li><span>Supprime l’élément</span><span class="k"><kbd>Retour arrière</kbd></span></li><li><span>Ferme la liste</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#fr">Toutes les commandes</a></div>
+<div class="shot"><img src="img/history-fr.jpg" width="1600" height="1000" loading="lazy" alt="La fenêtre « Historique du presse-papiers » : sept textes copiés, le premier en surbrillance, une corbeille sur chaque ligne et les raccourcis en bas"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-fr.jpg" width="1600" height="1000" loading="lazy" alt="La fenêtre qui explique « Recevoir du texte d’Android », avec les boutons Annuler et Activer"></div>
+<div class="text"><p class="eb">Facultatif</p><h2>Recevoir du texte d’Android.</h2><p class="lead">Lorsque vous envoyez un texte de votre téléphone Android vers le Mac, Copista le place dans le presse-papiers et dans l’historique.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>La fonction est désactivée tant que vous ne l’activez pas depuis le menu.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Copista lit et supprime uniquement le fichier <code>text-0.txt</code> envoyé depuis Android.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Il ne lit pas le contenu des autres fichiers et ne les modifie pas.</span></li></ul><a class="link" href="support.html#android-fr">Comment fonctionne la réception</a></div></div>
+<div class="row"><div class="text"><p class="eb">Modifier et coller</p><h2>Plusieurs éléments dans un seul texte.</h2><p class="lead">Sélectionnez plusieurs éléments et appuyez sur Entrée : ils sont copiés comme un seul texte, un par ligne, prêt pour Cmd+V.</p><ul class="defs"><li><span>Modifier</span><span class="muted">Modifiez le texte d’un élément de l’historique.</span></li><li><span>Sélection multiple</span><span class="muted"><kbd>⌘</kbd>-clic, <kbd>⇧</kbd>-clic, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd> : sélectionnent plusieurs éléments.</span></li><li><span>Collage automatique facultatif</span><span class="muted">Désactivé par défaut, il colle l’élément pour vous après sélection. Il s’active depuis le menu ; macOS demande une autorisation.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-fr.jpg" width="1600" height="1000" loading="lazy" alt="Le menu de Copista dans la barre des menus : Afficher l’historique, les options pour vider l’historique, Suspendre l’enregistrement, Recevoir du texte d’Android, Quitter"></div></div>
+</section>
+<section class="wrap more"><h2>Et le reste.</h2><div class="cards"><div><h3>100 derniers éléments</h3><p class="muted">Les 100 derniers textes copiés, toujours disponibles depuis la barre des menus.</p></div><div><h3>Modifier</h3><p class="muted">Icône du crayon : modifie le texte de l’élément.</p></div><div><h3>Pause de l’enregistrement</h3><p class="muted">Suspendez l’enregistrement à tout moment, depuis l’icône de la barre des menus.</p></div><div><h3>Nettoyage de l’historique</h3><p class="muted">Tout vider, conserver les 10 derniers, supprimer les éléments de plus d’1 heure ou de 24 heures.</p></div><div><h3>Éléments confidentiels ignorés</h3><p class="muted">Les textes marqués comme confidentiels par les gestionnaires de mots de passe ne sont pas enregistrés.</p></div><div><h3>Six langues</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. L’app utilise la langue de macOS ; si elle n’est pas disponible, elle utilise l’anglais.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Confidentialité</p><h2>Ce qui quitte votre Mac : rien.</h2><p class="lead">L’historique reste uniquement sur votre Mac. Aucune connexion réseau, aucun compte, aucune analyse.</p><a class="link" href="privacy.html#fr">Lire la politique de confidentialité</a></div>
+<dl><div><dt>Uniquement en local</dt><dd>L’historique est enregistré uniquement en local sur votre Mac, dans le conteneur de l’app, en clair (texte non chiffré).</dd></div><div><dt>Aucun réseau</dt><dd>L’app n’établit aucune connexion réseau et n’a ni compte, ni outil d’analyse, ni publicité.</dd></div><div><dt>Aucune donnée collectée</dt><dd>Le développeur ne collecte aucune donnée.</dd></div><div><dt>Éléments confidentiels exclus</dt><dd>Les éléments marqués comme confidentiels par les gestionnaires de mots de passe ne sont pas enregistrés.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Assistance</p><h2>L’utilisation, en une page.</h2><p class="lead">Les commandes, la réception depuis Android et les questions fréquentes.</p><a class="btn sec sm" href="support.html#fr" style="align-self:flex-start">Aller à l’assistance</a></div>
+<ul class="faqlinks"><li><a href="support.html#fr"><span><span>Rien n’apparaît après Entrée.</span><span>Copista copie le texte dans le presse-papiers : appuyez sur Cmd+V dans l’app où vous écriviez.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#fr"><span><span>Comment vider l’historique ?</span><span>Depuis l’icône de la barre des menus.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#fr"><span><span>Comment suspendre l’enregistrement ?</span><span>Depuis l’icône de la barre des menus.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>L’historique de votre presse-papiers, à un raccourci.</h2><p>Copista est gratuite et open source.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Télécharger Copista</a><p>Si elle vous est utile, vous pouvez <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">m’offrir un café</a>.</p></div></section>
 </main>
-<main id="de" lang="de">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Support</h1>
-<p>Copista ist eine Menüleisten-App für macOS 13 oder neuer, die einen Verlauf des kopierten Texts speichert (die letzten 100 Einträge).</p>
-<h2>Bedienung</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: öffnet und schließt die Liste.</li>
-<li>Pfeiltasten: wählen einen Eintrag.</li>
-<li><kbd>Eingabetaste</kbd> oder Klick: kopiert den gewählten Eintrag in die Zwischenablage und schließt die Liste; mit <kbd>Cmd</kbd>+<kbd>V</kbd> setzt du ihn ein.</li>
-<li><kbd>Rückschritttaste</kbd> oder das Papierkorb-Symbol: löscht den Eintrag.</li>
-<li>Stift-Symbol: bearbeitet den Text des Eintrags.</li>
-<li><kbd>Esc</kbd>: schließt die Liste.</li>
-<li>Über das Symbol in der Menüleiste kannst du den Verlauf löschen, die Aufzeichnung anhalten und die App beenden.</li>
-</ul>
-<h2>Text von Android empfangen</h2>
-<p>Die Funktion ist ausgeschaltet, bis du sie über das Symbol in der Menüleiste aktivierst (Eintrag „Text von Android empfangen“). Wenn du einen Text von Android an den Mac sendest, kommt der Text im Ordner „Downloads“ als Datei <code>text-0.txt</code> an. Copista liest die Datei, legt den Text in die Zwischenablage und in den Verlauf und löscht die Datei dann endgültig (sie kommt nicht in den Papierkorb). Copista liest den Inhalt anderer Dateien nicht und ändert sie nicht. macOS fragt bei der ersten Aktivierung nach der Berechtigung für den Ordner „Downloads“.</p>
-<h2>Häufige Fragen</h2>
-<p><b>Nach der Eingabetaste erscheint nichts.</b> Copista kopiert den Text in die Zwischenablage: Drücke Cmd+V in der App, in der du geschrieben hast. Wenn du möchtest, dass er von selbst einfügt, aktiviere über das Symbol in der Menüleiste „Bei Auswahl automatisch einfügen“ (standardmäßig aus): macOS fragt nach einer Berechtigung.</p>
-<p><b>Wie lösche ich den Verlauf?</b> Wähle über das Symbol in der Menüleiste den Eintrag, der den Verlauf löscht.</p>
-<p><b>Wie halte ich die Aufzeichnung an?</b> Wähle über das Symbol in der Menüleiste den Eintrag, der die Aufzeichnung anhält.</p>
-<h2>Hilfe</h2>
-<p>Erstelle ein Issue auf <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Wir veröffentlichen keine E-Mail-Adresse und keine Telefonnummer.</p>
-<h2>Projekt unterstützen</h2>
-<p>Copista ist kostenlos und Open Source: Der <a href="https://github.com/camillobucciarelli/copista" rel="noopener">Quellcode</a> liegt auf GitHub. Wenn die App für dich nützlich ist, kannst du <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">mir einen Kaffee spendieren</a>.</p>
-<p><a href="privacy.html#de">Datenschutzerklärung</a></p>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>L’historique des textes copiés, dans la barre des menus.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Pied de page">
+<a href="support.html#fr">Assistance</a>
+<a href="privacy.html#fr">Confidentialité</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">Licence MIT</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Offrez-moi un café</a>
+</nav></div></footer>
+</div>
+<div class="page" id="de" lang="de" data-title="Copista — Der Verlauf deiner kopierten Texte, in der Menüleiste" data-desc="Copista speichert einen Verlauf der Texte, die du kopierst, und lässt dich diese per Tastatur wieder einsetzen. Kostenlos, Open Source, bleibt auf deinem Mac.">
+<a class="skip" href="#main-de">Zum Inhalt springen</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#de"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Hauptnavigation">
+<a href="index.html#de" aria-current="page">Funktionen</a>
+<a href="privacy.html#de">Datenschutz</a>
+<a href="support.html#de">Support</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Sprache" autocomplete="off"><option value="it" lang="it">Italiano</option><option value="en" lang="en">English</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="de" lang="de" selected>Deutsch</option><option value="pt" lang="pt">Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Herunterladen</a>
+</nav></div></header>
+<main id="main-de">
+<section class="wrap hero">
+<p class="eb">Menüleisten-App für macOS</p>
+<h1>Der Verlauf deiner kopierten Texte, in der Menüleiste.</h1>
+<p class="lead">Copista speichert einen Verlauf der Texte, die du kopierst, und lässt dich diese per Tastatur wieder einsetzen. Er bleibt auf deinem Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Copista laden</a><a class="btn sec" href="support.html#de">So funktioniert’s</a></div>
+<p class="small">Kostenlos · MIT-Lizenz · macOS 13 oder neuer</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="Copista auf dem Mac: das Fenster „Storico appunti“ (italienisch für Verlauf der Zwischenablage) mit acht kopierten Texten, der erste ausgewählt, und unten die Kurzbefehle zum Wählen, Einsetzen, Löschen und Schließen"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Bleibt auf deinem Mac</h3><p class="muted">Der Verlauf wird nur lokal auf deinem Mac gespeichert, im Container der App. Der Entwickler erfasst keine Daten.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>Keine Verbindung</h3><p class="muted">Die App stellt keine Netzwerkverbindungen her und hat keine Accounts, keine Analysen und keine Werbung.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Open Source</h3><p class="muted">Copista ist kostenlos und Open Source: Der <a href="https://github.com/camillobucciarelli/copista">Quellcode</a> liegt auf GitHub, unter MIT-Lizenz.</p></div>
+</div></section>
+<section id="features-de" class="wrap features">
+<div class="row"><div class="text"><p class="eb">Verlauf</p><h2>Per Tastatur wählen, dort einsetzen, wo du geschrieben hast.</h2><p class="lead">Cmd+Shift+V öffnet den Verlauf. Pfeiltasten zum Wählen, Eingabetaste zum Kopieren, dann Cmd+V zum Einsetzen.</p><ul class="keys"><li><span>Öffnet und schließt die Liste</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Wählt einen Eintrag</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Kopiert den gewählten Eintrag und schließt die Liste</span><span class="k"><kbd>Eingabetaste</kbd></span></li><li><span>Löscht den Eintrag</span><span class="k"><kbd>Rückschritttaste</kbd></span></li><li><span>Schließt die Liste</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#de">Alle Befehle</a></div>
+<div class="shot"><img src="img/history-de.jpg" width="1600" height="1000" loading="lazy" alt="Das Fenster „Verlauf der Zwischenablage“: sieben kopierte Texte, der erste hervorgehoben, ein Papierkorb in jeder Zeile und unten die Kurzbefehle"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-de.jpg" width="1600" height="1000" loading="lazy" alt="Das Fenster, das „Text von Android empfangen“ erklärt, mit den Schaltflächen Abbrechen und Aktivieren"></div>
+<div class="text"><p class="eb">Optional</p><h2>Text von Android empfangen.</h2><p class="lead">Wenn du einen Text von deinem Android-Telefon an den Mac sendest, legt Copista ihn in die Zwischenablage und in den Verlauf.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Die Funktion ist ausgeschaltet, bis du sie im Menü aktivierst.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Copista liest und löscht nur die von Android gesendete Datei <code>text-0.txt</code>.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Es liest den Inhalt anderer Dateien nicht und ändert sie nicht.</span></li></ul><a class="link" href="support.html#android-de">So funktioniert der Empfang</a></div></div>
+<div class="row"><div class="text"><p class="eb">Bearbeiten und einsetzen</p><h2>Mehrere Einträge in einem Text.</h2><p class="lead">Wähle mehrere Einträge aus und drücke die Eingabetaste: Sie werden als ein Text kopiert, ein Eintrag pro Zeile, bereit für Cmd+V.</p><ul class="defs"><li><span>Bearbeiten</span><span class="muted">Bearbeite den Text eines Verlaufseintrags.</span></li><li><span>Mehrfachauswahl</span><span class="muted"><kbd>⌘</kbd>-Klick, <kbd>⇧</kbd>-Klick, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>: wählen mehrere Einträge aus.</span></li><li><span>Optionales automatisches Einsetzen</span><span class="muted">Standardmäßig aus, setzt den Eintrag nach der Auswahl für dich ein. Du aktivierst es im Menü; macOS fragt nach einer Berechtigung.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-de.jpg" width="1600" height="1000" loading="lazy" alt="Das Copista-Menü in der Menüleiste: Verlauf anzeigen, die Einträge zum Löschen des Verlaufs, Aufzeichnung anhalten, Text von Android empfangen, Beenden"></div></div>
+</section>
+<section class="wrap more"><h2>Und der Rest.</h2><div class="cards"><div><h3>Letzte 100 Einträge</h3><p class="muted">Die letzten 100 kopierten Texte, immer über die Menüleiste verfügbar.</p></div><div><h3>Bearbeiten</h3><p class="muted">Stift-Symbol: bearbeitet den Text des Eintrags.</p></div><div><h3>Aufzeichnung anhalten</h3><p class="muted">Halte die Aufzeichnung jederzeit an, über das Symbol in der Menüleiste.</p></div><div><h3>Verlauf aufräumen</h3><p class="muted">Alles löschen, nur die letzten 10 behalten, Einträge löschen, die älter als 1 Stunde oder 24 Stunden sind.</p></div><div><h3>Vertrauliche Einträge ignoriert</h3><p class="muted">Texte, die von Passwortmanagern als vertraulich markiert sind, werden nicht aufgezeichnet.</p></div><div><h3>Sechs Sprachen</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. Die App verwendet die Sprache von macOS; ist sie nicht verfügbar, nutzt sie Englisch.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Datenschutz</p><h2>Was deinen Mac verlässt: nichts.</h2><p class="lead">Der Verlauf bleibt nur auf deinem Mac. Keine Netzwerkverbindungen, kein Account, keine Analysen.</p><a class="link" href="privacy.html#de">Datenschutzerklärung lesen</a></div>
+<dl><div><dt>Nur lokal</dt><dd>Der Verlauf wird nur lokal auf deinem Mac gespeichert, im Container der App, als unverschlüsselter Text.</dd></div><div><dt>Kein Netzwerk</dt><dd>Die App stellt keine Netzwerkverbindungen her und hat keine Accounts, keine Analysen und keine Werbung.</dd></div><div><dt>Keine Daten erfasst</dt><dd>Der Entwickler erfasst keine Daten.</dd></div><div><dt>Vertrauliche Einträge ausgeschlossen</dt><dd>Einträge, die von Passwortmanagern als vertraulich markiert sind, werden nicht aufgezeichnet.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Support</p><h2>Die Bedienung, auf einer Seite.</h2><p class="lead">Die Befehle, der Empfang von Android und die häufigen Fragen.</p><a class="btn sec sm" href="support.html#de" style="align-self:flex-start">Zum Support</a></div>
+<ul class="faqlinks"><li><a href="support.html#de"><span><span>Nach der Eingabetaste erscheint nichts.</span><span>Copista kopiert den Text in die Zwischenablage: Drücke Cmd+V in der App, in der du geschrieben hast.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#de"><span><span>Wie lösche ich den Verlauf?</span><span>Über das Symbol in der Menüleiste.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#de"><span><span>Wie halte ich die Aufzeichnung an?</span><span>Über das Symbol in der Menüleiste.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>Der Verlauf deiner Zwischenablage, nur einen Kurzbefehl entfernt.</h2><p>Copista ist kostenlos und Open Source.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Copista laden</a><p>Wenn die App für dich nützlich ist, kannst du <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">mir einen Kaffee spendieren</a>.</p></div></section>
 </main>
-<main id="pt" lang="pt">
-<img class="logo" src="icon.png" width="64" height="64" alt="">
-<h1>Copista — Suporte</h1>
-<p>O Copista é um app para a barra de menus do macOS 13 ou posterior que guarda o histórico do texto copiado (os últimos 100 itens).</p>
-<h2>Como usar</h2>
-<ul>
-<li><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>: abre e fecha a lista.</li>
-<li>Setas: escolhem um item.</li>
-<li><kbd>Return</kbd> ou clique: copia o item escolhido para a área de transferência e fecha a lista; depois cole com <kbd>Cmd</kbd>+<kbd>V</kbd>.</li>
-<li><kbd>Delete</kbd> ou o ícone da lixeira: apaga o item.</li>
-<li>Ícone do lápis: edita o texto do item.</li>
-<li><kbd>Esc</kbd>: fecha a lista.</li>
-<li>O ícone na barra de menus permite limpar o histórico, pausar o registro e encerrar o app.</li>
-</ul>
-<h2>Receber texto do Android</h2>
-<p>O recurso fica desativado até você ativá-lo pelo ícone na barra de menus, item “Receber texto do Android”. Quando você envia um texto do Android para o Mac, o texto chega à pasta Downloads como o arquivo <code>text-0.txt</code>. O Copista lê o arquivo, coloca o texto na área de transferência e no histórico e depois apaga o arquivo de forma definitiva (ele não vai para o Lixo). O Copista não lê o conteúdo de outros arquivos nem os altera. O macOS pede a permissão para a pasta Downloads na primeira ativação.</p>
-<h2>Perguntas frequentes</h2>
-<p><b>Nada aparece depois do Return.</b> O Copista copia o texto para a área de transferência: pressione Cmd+V no app em que você estava digitando. Se preferir que ele cole sozinho, ative “Colar automaticamente ao selecionar” no ícone da barra de menus (desativado por padrão): o macOS pede uma permissão.</p>
-<p><b>Como limpo o histórico?</b> Pelo ícone na barra de menus, escolha o item que limpa o histórico.</p>
-<p><b>Como pauso o registro?</b> Pelo ícone na barra de menus, escolha o item que pausa o registro.</p>
-<h2>Ajuda</h2>
-<p>Abra uma issue no <a href="https://github.com/camillobucciarelli/copista/issues">GitHub</a>. Não publicamos endereços de e-mail nem números de telefone.</p>
-<h2>Apoie o projeto</h2>
-<p>O Copista é gratuito e de código aberto: o <a href="https://github.com/camillobucciarelli/copista" rel="noopener">código-fonte</a> está no GitHub. Se ele for útil para você, você pode <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">me pagar um café</a>.</p>
-<p><a href="privacy.html#pt">Política de privacidade</a></p>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>Der Verlauf deiner kopierten Texte, in der Menüleiste.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Fußbereich">
+<a href="support.html#de">Support</a>
+<a href="privacy.html#de">Datenschutz</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">MIT-Lizenz</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Spendiere mir einen Kaffee</a>
+</nav></div></footer>
+</div>
+<div class="page" id="pt" lang="pt" data-title="Copista — O histórico dos textos copiados, na barra de menus" data-desc="O Copista guarda o histórico dos textos que você copia e permite colá-los de novo pelo teclado. Grátis, de código aberto, fica no seu Mac.">
+<a class="skip" href="#main-pt">Ir para o conteúdo</a>
+<header class="site-header"><div class="wrap">
+<a class="brand" href="index.html#pt"><img src="icon.png" alt="" width="32" height="32">Copista</a>
+<nav class="nav" aria-label="Principal">
+<a href="index.html#pt" aria-current="page">Recursos</a>
+<a href="privacy.html#pt">Privacidade</a>
+<a href="support.html#pt">Suporte</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<select class="langsel" aria-label="Idioma" autocomplete="off"><option value="it" lang="it">Italiano</option><option value="en" lang="en">English</option><option value="es" lang="es">Español</option><option value="fr" lang="fr">Français</option><option value="de" lang="de">Deutsch</option><option value="pt" lang="pt" selected>Português</option></select>
+<a class="btn-sm" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener">Baixar</a>
+</nav></div></header>
+<main id="main-pt">
+<section class="wrap hero">
+<p class="eb">App para a barra de menus do macOS</p>
+<h1>O histórico dos textos copiados, na barra de menus.</h1>
+<p class="lead">O Copista guarda o histórico dos textos que você copia e permite colá-los de novo pelo teclado. Fica no seu Mac.</p>
+<div class="btns"><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Baixar o Copista</a><a class="btn sec" href="support.html#pt">Como usar</a></div>
+<p class="small">Grátis · Licença MIT · macOS 13 ou posterior</p>
+<picture><source media="(prefers-color-scheme: dark)" srcset="img/hero-dark.jpg"><img src="img/hero.jpg" width="1600" height="1000" alt="O Copista no Mac: a janela “Storico appunti” (Histórico da área de transferência, em italiano) com oito textos copiados, o primeiro selecionado, e embaixo os atalhos para escolher, colar, apagar e fechar"></picture>
+</section>
+<section class="strip"><div class="wrap">
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>Fica no seu Mac</h3><p class="muted">O histórico é salvo apenas localmente no seu Mac, no contêiner do app. O desenvolvedor não coleta nenhum dado.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M7.5 7.6A6 6 0 0 0 6 19h11.5a4.5 4.5 0 0 0 1.7-.4"/><path d="M9.5 5.4A6 6 0 0 1 18 9.5a4.5 4.5 0 0 1 3 4.2"/></svg></span><h3>Sem conexão</h3><p class="muted">O app não faz nenhuma conexão de rede e não tem contas, análises nem publicidade.</p></div>
+<div><span class="ico"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5"/><path d="M16 7l5 5-5 5"/><path d="M14 4l-4 16"/></svg></span><h3>Código aberto</h3><p class="muted">O Copista é gratuito e de código aberto: o <a href="https://github.com/camillobucciarelli/copista">código-fonte</a> está no GitHub, com licença MIT.</p></div>
+</div></section>
+<section id="features-pt" class="wrap features">
+<div class="row"><div class="text"><p class="eb">Histórico</p><h2>Escolha pelo teclado, cole onde você estava digitando.</h2><p class="lead">Cmd+Shift+V abre o histórico. Setas para escolher, Return para copiar, depois Cmd+V para colar.</p><ul class="keys"><li><span>Abre e fecha a lista</span><span class="k"><kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></li><li><span>Escolhe um item</span><span class="k"><kbd>↑</kbd><kbd>↓</kbd></span></li><li><span>Copia o item escolhido e fecha a lista</span><span class="k"><kbd>Return</kbd></span></li><li><span>Apaga o item</span><span class="k"><kbd>Delete</kbd></span></li><li><span>Fecha a lista</span><span class="k"><kbd>Esc</kbd></span></li></ul><a class="link" href="support.html#pt">Todos os comandos</a></div>
+<div class="shot"><img src="img/history-pt.jpg" width="1600" height="1000" loading="lazy" alt="A janela “Histórico da área de transferência”: sete textos copiados, o primeiro destacado, uma lixeira em cada linha e os atalhos embaixo"></div></div>
+<div class="row rev"><div class="shot s2"><img src="img/android-pt.jpg" width="1600" height="1000" loading="lazy" alt="A janela que explica “Receber texto do Android”, com os botões Cancelar e Ativar"></div>
+<div class="text"><p class="eb">Opcional</p><h2>Receber texto do Android.</h2><p class="lead">Quando você envia um texto do telefone Android para o Mac, o Copista o coloca na área de transferência e no histórico.</p><ul class="checks"><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>O recurso fica desativado até você ativá-lo no menu.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>O Copista lê e apaga apenas o arquivo <code>text-0.txt</code> enviado do Android.</span></li><li><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Ele não lê o conteúdo de outros arquivos nem os altera.</span></li></ul><a class="link" href="support.html#android-pt">Como funciona o recebimento</a></div></div>
+<div class="row"><div class="text"><p class="eb">Edite e cole</p><h2>Vários itens em um só texto.</h2><p class="lead">Selecione vários itens e pressione Return: eles são copiados como um só texto, um por linha, pronto para Cmd+V.</p><ul class="defs"><li><span>Editar</span><span class="muted">Edite o texto de um item do histórico.</span></li><li><span>Seleção múltipla</span><span class="muted"><kbd>⌘</kbd>-clique, <kbd>⇧</kbd>-clique, <kbd>⇧</kbd>+<kbd>↑</kbd> <kbd>↓</kbd>: selecionam vários itens.</span></li><li><span>Colagem automática opcional</span><span class="muted">Desativada por padrão, cola o item para você depois que você o seleciona. Ative no menu; o macOS pede uma permissão.</span></li></ul></div>
+<div class="shot s3"><img src="img/menu-pt.jpg" width="1600" height="1000" loading="lazy" alt="O menu do Copista na barra de menus: Mostrar histórico, os itens para limpar o histórico, Pausar registro, Receber texto do Android, Encerrar"></div></div>
+</section>
+<section class="wrap more"><h2>E o resto.</h2><div class="cards"><div><h3>Últimos 100 itens</h3><p class="muted">Os últimos 100 textos copiados, sempre disponíveis na barra de menus.</p></div><div><h3>Editar</h3><p class="muted">Ícone do lápis: edita o texto do item.</p></div><div><h3>Pausa do registro</h3><p class="muted">Pause o registro quando quiser, pelo ícone na barra de menus.</p></div><div><h3>Limpeza do histórico</h3><p class="muted">Limpe tudo, mantenha os últimos 10, apague os itens com mais de 1 hora ou de 24 horas.</p></div><div><h3>Itens confidenciais ignorados</h3><p class="muted">Os textos marcados como confidenciais pelos gerenciadores de senhas não são registrados.</p></div><div><h3>Seis idiomas</h3><p class="muted">Italiano, English, Español, Français, Deutsch, Português. O app usa o idioma do macOS; se ele não estiver disponível, usa inglês.</p></div></div></section>
+<section class="band"><div class="wrap">
+<div class="text"><p class="eb">Privacidade</p><h2>O que sai do seu Mac: nada.</h2><p class="lead">O histórico fica apenas no seu Mac. Sem conexões de rede, sem contas, sem análises.</p><a class="link" href="privacy.html#pt">Leia a política de privacidade</a></div>
+<dl><div><dt>Apenas local</dt><dd>O histórico é salvo apenas localmente no seu Mac, no contêiner do app, em texto sem criptografia.</dd></div><div><dt>Sem rede</dt><dd>O app não faz nenhuma conexão de rede e não tem contas, análises nem publicidade.</dd></div><div><dt>Nenhum dado coletado</dt><dd>O desenvolvedor não coleta nenhum dado.</dd></div><div><dt>Itens confidenciais excluídos</dt><dd>Os itens marcados como confidenciais pelos gerenciadores de senhas não são registrados.</dd></div></dl></div></section>
+<section class="wrap help"><div class="text"><p class="eb">Suporte</p><h2>Como usar, em uma página.</h2><p class="lead">Os comandos, o recebimento do Android e as perguntas frequentes.</p><a class="btn sec sm" href="support.html#pt" style="align-self:flex-start">Ir para o suporte</a></div>
+<ul class="faqlinks"><li><a href="support.html#pt"><span><span>Nada aparece depois do Return.</span><span>O Copista copia o texto para a área de transferência: pressione Cmd+V no app em que você estava digitando.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#pt"><span><span>Como limpo o histórico?</span><span>Pelo ícone na barra de menus.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li><li><a href="support.html#pt"><span><span>Como pauso o registro?</span><span>Pelo ícone na barra de menus.</span></span><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></span></a></li></ul></section>
+<section class="wrap cta"><div><h2>O histórico dos seus textos copiados, a um atalho de distância.</h2><p>O Copista é gratuito e de código aberto.</p><a class="btn" href="https://github.com/camillobucciarelli/copista/releases/latest" rel="noopener"><span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg></span>Baixar o Copista</a><p>Se ele for útil para você, você pode <a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener" class="link">me pagar um café</a>.</p></div></section>
 </main>
-<script>(function(){var m=document.querySelectorAll('main[lang]');function p(){var l=[location.hash.slice(1)].concat(navigator.languages||[]),c='en';for(var i=0;i<l.length;i++){var k=l[i].slice(0,2).toLowerCase();if(k&&document.getElementById(k)){c=k;break}}for(var j=0;j<m.length;j++)m[j].hidden=m[j].id!==c;document.documentElement.lang=c}addEventListener('hashchange',p);p()})();</script>
+<footer class="site-footer"><div class="wrap">
+<div class="about"><p>Copista</p><p>O histórico dos textos copiados, na barra de menus.</p><p>Camillo Bucciarelli</p></div>
+<nav aria-label="Rodapé">
+<a href="support.html#pt">Suporte</a>
+<a href="privacy.html#pt">Privacidade</a>
+<a href="https://github.com/camillobucciarelli/copista" rel="noopener">GitHub</a>
+<a href="https://github.com/camillobucciarelli/copista/blob/main/LICENSE" rel="noopener">Licença MIT</a>
+<a href="https://buymeacoffee.com/camillobucciarelli" rel="noopener">Me pague um café</a>
+</nav></div></footer>
+</div>
+<script>(function(){var L=['it','en','es','fr','de','pt'],cur,pg=document.querySelectorAll('.page'),sel=document.querySelectorAll('.langsel'),
+dm=document.querySelector('meta[name=description]');
+function pick(){var h=location.hash.slice(1);if(L.indexOf(h)>-1)return h;if(cur)return cur;var n=navigator.languages||[];
+for(var i=0;i<n.length;i++){var k=n[i].slice(0,2).toLowerCase();if(L.indexOf(k)>-1)return k}return'en'}
+function show(){cur=pick();for(var i=0;i<pg.length;i++){var on=pg[i].id===cur;pg[i].hidden=!on;if(on){document.title=pg[i].dataset.title;if(dm&&pg[i].dataset.desc)dm.content=pg[i].dataset.desc}}
+document.documentElement.lang=cur}
+for(var i=0;i<sel.length;i++)sel[i].onchange=function(){location.hash=this.value};
+addEventListener('hashchange',show);show()})();</script>
 </body></html>
