@@ -92,6 +92,7 @@ private final class PillButton: FillView {
             button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: title)?
                 .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))
             button.imagePosition = .imageOnly
+            button.imageScaling = .scaleProportionallyDown
             button.contentTintColor = titleColor
             button.title = ""
         } else {
@@ -105,8 +106,16 @@ private final class PillButton: FillView {
             button.centerXAnchor.constraint(equalTo: centerXAnchor),
             button.centerYAnchor.constraint(equalTo: centerYAnchor),
             heightAnchor.constraint(equalToConstant: height),
-            widthAnchor.constraint(equalTo: button.widthAnchor, constant: padding * 2),
         ])
+        if symbol != nil {   // quadrato height×height, immagine centrata
+            NSLayoutConstraint.activate([
+                widthAnchor.constraint(equalToConstant: height),
+                button.widthAnchor.constraint(equalTo: widthAnchor),
+                button.heightAnchor.constraint(equalTo: heightAnchor),
+            ])
+        } else {
+            widthAnchor.constraint(equalTo: button.widthAnchor, constant: padding * 2).isActive = true
+        }
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
 }
@@ -173,33 +182,48 @@ final class ECellView: NSTableCellView {
         titleLabel.font = .systemFont(ofSize: 13, weight: .semibold)
 
         pinState.image = NSImage(systemSymbolName: "pin.fill", accessibilityDescription: "Fissato")?
-            .withSymbolConfiguration(.init(pointSize: 11, weight: .regular))
+            .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))
+        pinState.imageScaling = .scaleProportionallyDown
         pinState.setAccessibilityLabel("Fissato")
         pinButton = PillButton(title: "Fissa", symbol: "pin", fill: EColor.onAccent.withAlphaComponent(0.18),
                                titleColor: EColor.onAccent, padding: 0, height: 22, radius: 5,
                                target: self, action: #selector(pinClicked))
-        pinButton.widthAnchor.constraint(equalToConstant: 22).isActive = true
         moreButton = PillButton(title: "Altre azioni", symbol: "ellipsis", fill: EColor.onAccent.withAlphaComponent(0.18),
                                 titleColor: EColor.onAccent, padding: 0, height: 22, radius: 5,
                                 target: self, action: #selector(moreClicked))
-        moreButton.widthAnchor.constraint(equalToConstant: 22).isActive = true
 
         let texts = NSStackView(views: [titleLabel, previewLabel])
         texts.orientation = .vertical
         texts.alignment = .leading
         texts.spacing = 0
         texts.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        let row = NSStackView(views: [texts, pinState, pinButton, moreButton])
-        row.alignment = .centerY
-        row.spacing = 6
-        row.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(row)
+        // Contenitore a destra, largo fisso (22 + 6 + 22), uguale per ogni riga:
+        // glifo di stato e pulsanti condividono lo stesso bordo destro.
+        let buttons = NSStackView(views: [pinButton, moreButton])
+        buttons.spacing = 6
+        let trailing = NSView()
+        for view in [texts, trailing, pinState, buttons] as [NSView] {
+            view.translatesAutoresizingMaskIntoConstraints = false
+        }
+        trailing.addSubview(pinState)
+        trailing.addSubview(buttons)
+        addSubview(texts)
+        addSubview(trailing)
         textField = previewLabel
         // margine riga 10 + padding 8 a sinistra, 10 + 6 a destra
         NSLayoutConstraint.activate([
-            row.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18),
-            row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            row.centerYAnchor.constraint(equalTo: centerYAnchor),
+            texts.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18),
+            texts.trailingAnchor.constraint(equalTo: trailing.leadingAnchor, constant: -6),
+            texts.centerYAnchor.constraint(equalTo: centerYAnchor),
+            trailing.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            trailing.centerYAnchor.constraint(equalTo: centerYAnchor),
+            trailing.widthAnchor.constraint(equalToConstant: 50),
+            trailing.heightAnchor.constraint(equalToConstant: 22),
+            buttons.trailingAnchor.constraint(equalTo: trailing.trailingAnchor),
+            buttons.centerYAnchor.constraint(equalTo: trailing.centerYAnchor),
+            // il glifo sta centrato nello stesso quadrato 22×22 dell'ultimo pulsante
+            pinState.centerXAnchor.constraint(equalTo: trailing.trailingAnchor, constant: -11),
+            pinState.centerYAnchor.constraint(equalTo: trailing.centerYAnchor),
         ])
     }
 
@@ -321,7 +345,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
         // Ricerca: 28 alto, raggio 7, riempimento, lente 14, testo 13
         let glass = NSImageView(image: NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)!
-            .withSymbolConfiguration(.init(pointSize: 12, weight: .medium))!)
+            .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))!)
+        glass.imageScaling = .scaleProportionallyDown
         glass.contentTintColor = .secondaryLabelColor
         search.placeholderString = "Cerca testo o etichetta"
         search.setAccessibilityLabel("Cerca negli appunti")
