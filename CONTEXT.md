@@ -17,7 +17,7 @@ Un breve testo facoltativo che l'utente assegna a un elemento per riconoscerlo n
 _Avoid_: Label, nome, titolo, tag
 
 **Elemento fissato**:
-Un elemento che l'utente ha fissato perché resti nello storico. Non conta nel limite dello storico e nessuna eliminazione automatica o in blocco lo rimuove; lo si toglie solo con un'azione esplicita a parte. Fissare e sfissare sono le azioni.
+Un elemento che l'utente ha fissato perché resti nello storico. Non conta nel limite dello storico e nessuna eliminazione automatica o in blocco lo rimuove; per eliminarlo bisogna prima sfissarlo. Fissare e sfissare sono le azioni.
 _Avoid_: Pinnato, preferito, salvato, bloccato
 
 **Ultimo copiato**:
