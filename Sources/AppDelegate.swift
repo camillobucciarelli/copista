@@ -38,6 +38,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             NSApp.activate(ignoringOtherApps: true)
             panel.onEnterE = { [weak self] in self?.panelE.show() }
             panelE.onLeave = { [weak self] v in self?.panel.showVariant(v) }
+            // PROTOTYPE debug: render offscreen di E e uscita
+            let args = ProcessInfo.processInfo.arguments
+            if let i = args.firstIndex(of: "-render-e-row"), i + 1 < args.count {
+                panelE.renderDebug(to: args[i + 1])
+                exit(0)
+            }
             if PrototypeVariant.atLaunch == .e { panelE.show() } else { panel.show() }
             return
         }

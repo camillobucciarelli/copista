@@ -79,8 +79,15 @@ private func text(_ string: String, size: CGFloat, weight: NSFont.Weight = .regu
 }
 
 /// Pulsante a pillola (Annulla / Salva) e pulsante icona 22×22 delle righe.
+/// I simboli SF portano un proprio alignmentRect: NSButton lo trasforma in
+/// alignmentRectInsets e Auto Layout allarga il frame (22 -> 22.5×29.5), deformando
+/// e decentrando l'immagine. Qui il frame coincide col quadrato del vincolo.
+private final class PlainButton: NSButton {
+    override var alignmentRectInsets: NSEdgeInsets { NSEdgeInsetsZero }
+}
+
 private final class PillButton: FillView {
-    let button = NSButton()
+    let button: NSButton = PlainButton()
     init(title: String, symbol: String? = nil, fill: NSColor?, titleColor: NSColor, weight: NSFont.Weight = .regular,
          padding: CGFloat, height: CGFloat, radius: CGFloat, target: AnyObject, action: Selector) {
         super.init(fill: fill, radius: radius)
@@ -166,6 +173,7 @@ final class ECellView: NSTableCellView {
     let pinState = NSImageView()
     fileprivate var pinButton: PillButton!
     fileprivate var moreButton: PillButton!
+    fileprivate let trailing = NSView()
     var onPin: (() -> Void)?
     var onMore: (() -> Void)?
     private var fissato = false
@@ -201,7 +209,6 @@ final class ECellView: NSTableCellView {
         // glifo di stato e pulsanti condividono lo stesso bordo destro.
         let buttons = NSStackView(views: [pinButton, moreButton])
         buttons.spacing = 6
-        let trailing = NSView()
         for view in [texts, trailing, pinState, buttons] as [NSView] {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -648,6 +655,49 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     }
 
     func hide() { panel.orderOut(nil) }
+
+    // PROTOTYPE debug: `-render-e-row <out.png>` disegna il pannello fuori schermo
+    // (chiaro e scuro, riga fissata e non fissata) in PNG 2x e stampa i frame.
+    func renderDebug(to path: String) {
+        panel.setFrameOrigin(NSPoint(x: -5000, y: -5000))
+        panel.orderFrontRegardless()
+        let base = (path as NSString).deletingPathExtension
+        if ProcessInfo.processInfo.arguments.contains("-legacy-scroller") { scrollView.scrollerStyle = .legacy }
+        for (mode, name) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
+            panel.appearance = NSAppearance(named: name)   // solo debug
+            reload(keeping: nil, fallback: 0)
+            for pinned in [true, false] {
+                guard let row = rows.indices.first(where: { item(at: $0)?.fissato == pinned }) else { continue }
+                tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+                background.layoutSubtreeIfNeeded()
+                tableView.layoutSubtreeIfNeeded()
+                background.displayIfNeeded()
+                let size = background.bounds.size
+                let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * 2), pixelsHigh: Int(size.height * 2),
+                                           bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                                           colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
+                rep.size = size
+                background.cacheDisplay(in: background.bounds, to: rep)
+                let out = "\(base)-\(mode)-\(pinned ? "pinned" : "recent").png"
+                try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: out))
+                print("== \(out)")
+                print("table", tableView.frame, "clip", scrollView.contentView.bounds, "column", tableView.tableColumns[0].width)
+                if let rowView = tableView.rowView(atRow: row, makeIfNecessary: false),
+                   let cell = tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ECellView {
+                    cell.layoutSubtreeIfNeeded()
+                    print("rowView", rowView.frame, "cell", cell.frame, "scroller", scrollView.scrollerStyle.rawValue)
+                    print("trailing", cell.trailing.convert(cell.trailing.bounds, to: rowView))
+                    for b in [cell.pinButton!, cell.moreButton!] {
+                        print(" pill", b.convert(b.bounds, to: rowView), "button", b.button.frame,
+                              "image", b.button.image?.size ?? .zero, "scaling", b.button.imageScaling.rawValue,
+                              "pos", b.button.imagePosition.rawValue, "bezel", b.button.isBordered,
+                              "ambiguous", b.button.hasAmbiguousLayout)
+                    }
+                }
+            }
+        }
+        panel.appearance = nil
+    }
 
     @objc private func prevVariant() { hide(); onLeave?(PrototypeVariant.e.shifted(by: -1)) }
     @objc private func nextVariant() { hide(); onLeave?(PrototypeVariant.e.shifted(by: 1)) }
