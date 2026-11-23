@@ -16,6 +16,10 @@ _Avoid_: Clip, voce, item
 Un breve testo facoltativo che l'utente assegna a un elemento per riconoscerlo nello storico. Un elemento ha al più un'etichetta, indipendentemente dal fatto che sia fissato.
 _Avoid_: Label, nome, titolo, tag
 
+**Elemento fissato**:
+Un elemento che l'utente ha fissato perché resti nello storico. Non conta nel limite dello storico e nessuna eliminazione automatica o in blocco lo rimuove; lo si toglie solo con un'azione esplicita a parte. Fissare e sfissare sono le azioni.
+_Avoid_: Pinnato, preferito, salvato, bloccato
+
 **Ultimo copiato**:
 L'elemento più recente dello storico. È uguale al contenuto degli appunti di sistema, quindi `Cmd+V` lo incolla. La selezione di un elemento copia soltanto; un'opzione del menu, spenta all'inizio, incolla in automatico dopo che l'utente ha concesso il permesso. Unica eccezione: dopo un incolla multiplo gli appunti contengono il testo unito.
 _Avoid_: Corrente, primo elemento
