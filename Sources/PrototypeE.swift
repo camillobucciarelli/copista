@@ -166,9 +166,16 @@ private final class ERowView: NSTableRowView {
     }
     override func drawBackground(in dirtyRect: NSRect) {}
     override func drawSeparator(in dirtyRect: NSRect) {}
+    // Le righe di gruppo fluttuanti disegnano da se' un filo in basso: per le
+    // didascalie non disegno nulla (il fondo sono le sottoviste).
+    override func draw(_ dirtyRect: NSRect) {
+        if isGroupRowStyle { return }
+        super.draw(dirtyRect)
+    }
     override func drawSelection(in dirtyRect: NSRect) {
         NSColor.controlAccentColor.setFill()   // stesso accento del glifo fissato
-        NSBezierPath(roundedRect: bounds.insetBy(dx: 10, dy: 0), xRadius: 6, yRadius: 6).fill()
+        // 2 sopra/sotto: la selezione non tocca didascalie o righe vicine
+        NSBezierPath(roundedRect: bounds.insetBy(dx: 10, dy: 2), xRadius: 6, yRadius: 6).fill()
     }
 }
 
@@ -198,6 +205,20 @@ private final class ECaptionView: NSTableCellView {
         label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
+}
+
+/// PROTOTYPE: su macOS 26 la riga di gruppo fluttuante fa nascere la "scroll pocket"
+/// (effetto bordo) con un filo da 1pt sotto la didascalia. Non c'e' API pubblica per
+/// toglierla sotto NSScrollView: la nascondo. ponytail: dipende da nomi privati
+/// (NSScrollPocket / BackdropView); se cambiano torna il filo, nient'altro.
+final class PocketlessScrollView: NSScrollView {
+    override func layout() {
+        super.layout()
+        for sub in subviews {
+            let name = String(describing: type(of: sub))
+            if name.contains("Pocket") || name == "BackdropView" { sub.isHidden = true }
+        }
+    }
 }
 
 // MARK: - Riga
@@ -315,11 +336,12 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     private let store: HistoryStore
     private let panel: KeyPanel
     private let background = NSVisualEffectView()
+    private var captionGround = true   // PROTOTYPE debug
     private let tint = FillView(fill: EColor.ground(alpha: 0.92))   // PROTOTYPE: velo al 92% come il mockup
     private let searchBox = FillView(fill: EColor.fill, radius: 7)
     private let search = NSTextField(string: "")
     private let tableView = NSTableView()
-    private let scrollView = NSScrollView()
+    private let scrollView = PocketlessScrollView()
     private let emptyLabel = text("", size: 13, color: .secondaryLabelColor)
     private let footer = NSView()
     private var footerKeys: NSStackView!
@@ -746,6 +768,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         }
         print("material", background.material.rawValue, "state", background.state.rawValue, "tint", tint.fill as Any)
         if ProcessInfo.processInfo.arguments.contains("-legacy-scroller") { scrollView.scrollerStyle = .legacy }
+        if ProcessInfo.processInfo.arguments.contains("-e-nofloat") { tableView.floatsGroupRows = false }
+        if ProcessInfo.processInfo.arguments.contains("-e-noground") { captionGround = false }
         for (mode, name) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             panel.appearance = NSAppearance(named: name)   // solo debug
             reload(keeping: nil, fallback: 0)
@@ -1131,12 +1155,12 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         if case .spacer = rows[row] { return 6 }
         guard let item = item(at: row) else { return 20 }
-        return item.etichetta != nil ? 44 : 30
+        return item.etichetta != nil ? 48 : 34   // 44/30 del mockup + 2+2 di stacco della selezione
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
         let rowView = ERowView()
-        if isCaption(row) { rowView.makeCaptionGround() }
+        if isCaption(row), captionGround { rowView.makeCaptionGround() }
         return rowView
     }
 
