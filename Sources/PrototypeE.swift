@@ -147,6 +147,25 @@ private final class PillButton: FillView {
 /// (testo bianco) anche col fuoco nel campo di ricerca.
 private final class ERowView: NSTableRowView {
     override var isEmphasized: Bool { get { true } set {} }
+
+    /// PROTOTYPE: le didascalie sono righe di gruppo fluttuanti (sticky). Sotto hanno lo
+    /// stesso fondo del pannello (materiale + velo 92%), cosi' le righe non traspaiono
+    /// e non compare la barra grigia di sistema.
+    func makeCaptionGround() {
+        let material = NSVisualEffectView()
+        material.material = .popover
+        material.blendingMode = .behindWindow
+        material.state = .active
+        let veil = FillView(fill: EColor.ground(alpha: 0.92))
+        for view in [material, veil] as [NSView] {
+            view.frame = bounds
+            view.autoresizingMask = [.width, .height]
+        }
+        addSubview(material, positioned: .below, relativeTo: nil)
+        addSubview(veil, positioned: .above, relativeTo: material)
+    }
+    override func drawBackground(in dirtyRect: NSRect) {}
+    override func drawSeparator(in dirtyRect: NSRect) {}
     override func drawSelection(in dirtyRect: NSRect) {
         NSColor.controlAccentColor.setFill()   // stesso accento del glifo fissato
         NSBezierPath(roundedRect: bounds.insetBy(dx: 10, dy: 0), xRadius: 6, yRadius: 6).fill()
@@ -331,8 +350,9 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     init(store: HistoryStore) {
         self.store = store
-        // 480×400 come nei mockup; la barra PROTOTIPO sta in una finestra figlia sotto
-        panel = KeyPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 400),
+        // 560×400 (mockup 480, allargato su richiesta: lo spazio in piu' va al testo);
+        // la barra PROTOTIPO sta in una finestra figlia sotto
+        panel = KeyPanel(contentRect: NSRect(x: 0, y: 0, width: 560, height: 400),
                          styleMask: [.titled, .fullSizeContentView, .nonactivatingPanel],
                          backing: .buffered, defer: false)
         super.init()
@@ -407,6 +427,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         tableView.addTableColumn(column)
         tableView.headerView = nil
         tableView.style = .plain
+        tableView.floatsGroupRows = true   // PROTOTYPE: didascalie sticky
         tableView.intercellSpacing = .zero
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = false
@@ -692,7 +713,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     }
 
     // PROTOTYPE: barra in una finestra figlia, 4 sotto il pannello, stessa larghezza; lo segue.
-    private let protoWindow = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 46),
+    private let protoWindow = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 560, height: 46),
                                       styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
 
     private func attachProtoBar() {
@@ -726,6 +747,10 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             for pinned in [true, false] {
                 guard let row = rows.indices.first(where: { item(at: $0)?.fissato == pinned }) else { continue }
                 tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+                if let i = args.firstIndex(of: "-e-scroll"), i + 1 < args.count, let y = Double(args[i + 1]) {
+                    scrollView.contentView.scroll(to: NSPoint(x: 0, y: y))
+                    scrollView.reflectScrolledClipView(scrollView.contentView)
+                }
                 background.layoutSubtreeIfNeeded()
                 tableView.layoutSubtreeIfNeeded()
                 background.displayIfNeeded()
@@ -1089,8 +1114,13 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        ERowView()
+        let rowView = ERowView()
+        if item(at: row) == nil { rowView.makeCaptionGround() }
+        return rowView
     }
+
+    // PROTOTYPE: didascalie sticky (righe di gruppo fluttuanti)
+    func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool { item(at: row) == nil }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let item = item(at: row) else {
