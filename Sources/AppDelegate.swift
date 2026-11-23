@@ -2,7 +2,9 @@ import AppKit
 import Carbon.HIToolbox
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
-    private let store = HistoryStore()
+    // PROTOTYPE: con `-variant` lo storico e' finto, in memoria.
+    private let isPrototype = PrototypeVariant.atLaunch != nil
+    private let store = PrototypeVariant.atLaunch == nil ? HistoryStore() : HistoryStore(prototypeItems: PrototypeVariant.seed())
     private lazy var monitor = ClipboardMonitor(store: store)
     private lazy var panel = HistoryPanelController(store: store)
     private var statusItem: NSStatusItem!
@@ -27,7 +29,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         panel.onCopy = { [weak self] items in self?.copy(items) }
         panel.onDelete = { [weak self] items in self?.delete(items) }
         panel.onEdit = { [weak self] item in self?.edit(item) }
+        panel.onTogglePin = { [weak self] items in self?.store.togglePin(ids: Set(items.map(\.id))) }   // PROTOTYPE
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
+
+        // PROTOTYPE: niente appunti reali ne' Android; il pannello si apre subito.
+        if isPrototype {
+            NSApp.activate(ignoringOtherApps: true)
+            panel.show()
+            return
+        }
 
         // Controllo degli appunti
         monitor.start()
@@ -53,6 +63,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     /// Gli elementi sono nell'ordine della lista.
     private func copy(_ items: [ClipItem]) {
         guard let first = items.first else { return }
+        if isPrototype {   // PROTOTYPE: copia finta, gli appunti restano intatti
+            panel.note("copiato (finto): \(items.count) elemento/i")
+            return
+        }
         panel.hide()
         if items.count == 1 {
             monitor.write(first.text)     // l'elemento diventa "l'ultimo copiato"
@@ -106,6 +120,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         textView.autoresizingMask = .width
         textView.textContainer?.widthTracksTextView = true
         textView.string = item.text
+        // PROTOTYPE: campo etichetta sopra il testo
+        let labelField = NSTextField(frame: NSRect(x: 0, y: 208, width: 420, height: 24))
+        labelField.placeholderString = "Etichetta (facoltativa)"
+        labelField.stringValue = item.etichetta ?? ""
+        let accessory = NSView(frame: NSRect(x: 0, y: 0, width: 420, height: 232))
         let scroll = NSScrollView(frame: textView.frame)
         scroll.documentView = textView
         scroll.hasVerticalScroller = true
@@ -113,7 +132,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let alert = NSAlert()
         alert.messageText = L("panel.edit")
-        alert.accessoryView = scroll
+        accessory.addSubview(labelField)
+        accessory.addSubview(scroll)
+        alert.accessoryView = accessory
         alert.addButton(withTitle: L("button.save"))
         alert.addButton(withTitle: L("button.cancel"))
         alert.window.initialFirstResponder = textView
@@ -125,23 +146,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         defer { NotificationCenter.default.removeObserver(observer) }
 
         NSApp.activate(ignoringOtherApps: true)
+        defer { if isPrototype { panel.show() } }   // PROTOTYPE: torna al pannello
         let response = alert.runModal()
         previousApp?.activate()
         guard response == .alertFirstButtonReturn else { return }
-        let wasOnClipboard = monitor.currentString() == item.text
+        let wasOnClipboard = !isPrototype && monitor.currentString() == item.text
         store.update(id: item.id, text: textView.string)
+        let label = labelField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        store.setEtichetta(id: item.id, label.isEmpty ? nil : label)   // PROTOTYPE
         if wasOnClipboard { monitor.write(textView.string, record: false) }
     }
 
     private func delete(_ items: [ClipItem]) {
         guard !items.isEmpty else { return }
-        store.remove(ids: Set(items.map(\.id)))
+        // PROTOTYPE: i fissati non si eliminano; se non resta nulla, beep.
+        let deletable = items.filter { !$0.fissato }
+        guard !deletable.isEmpty else { NSSound.beep(); return }
+        store.remove(ids: Set(deletable.map(\.id)))
         syncClipboard()
     }
 
     /// Dopo una rimozione: gli appunti di sistema non devono contenere
     /// un elemento che non e' piu' nello storico.
     private func syncClipboard() {
+        if isPrototype { return }   // PROTOTYPE: mai toccare gli appunti reali
         guard let current = monitor.currentString() else { return }
         if store.items.contains(where: { $0.text == current }) { return }
         if let first = store.items.first {

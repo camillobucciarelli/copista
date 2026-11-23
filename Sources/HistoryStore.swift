@@ -4,6 +4,14 @@ struct ClipItem: Codable, Equatable {
     let id: UUID
     var text: String
     var date: Date
+    // PROTOTYPE: etichetta e fissato (#19). `fissatoSalvato` opzionale cosi'
+    // history.json esistente si decodifica ancora.
+    var etichetta: String?
+    var fissatoSalvato: Bool?
+    var fissato: Bool {
+        get { fissatoSalvato ?? false }
+        set { fissatoSalvato = newValue }
+    }
 }
 
 /// Storico degli elementi copiati. L'elemento 0 e' il piu' recente.
@@ -13,6 +21,14 @@ final class HistoryStore {
     let maxItems = 100
 
     private let fileURL: URL
+    private var inMemory = false   // PROTOTYPE: niente lettura/scrittura su disco
+
+    // PROTOTYPE: storico finto in memoria, mai su disco.
+    init(prototypeItems: [ClipItem]) {
+        fileURL = URL(fileURLWithPath: "/dev/null")
+        inMemory = true
+        items = prototypeItems
+    }
 
     init() {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -30,9 +46,25 @@ final class HistoryStore {
         } else {
             items.insert(ClipItem(id: UUID(), text: text, date: Date()), at: 0)
         }
-        if items.count > maxItems {
-            items.removeLast(items.count - maxItems)
+        // PROTOTYPE: i fissati sono fuori dal limite di 100.
+        while items.filter({ !$0.fissato }).count > maxItems,
+              let last = items.lastIndex(where: { !$0.fissato }) {
+            items.remove(at: last)
         }
+        changed()
+    }
+
+    // PROTOTYPE
+    func togglePin(ids: Set<UUID>) {
+        let pin = items.contains { ids.contains($0.id) && !$0.fissato }   // misto: fissa tutti
+        for i in items.indices where ids.contains(items[i].id) { items[i].fissato = pin }
+        changed()
+    }
+
+    // PROTOTYPE
+    func setEtichetta(id: UUID, _ etichetta: String?) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        items[index].etichetta = etichetta
         changed()
     }
 
@@ -79,6 +111,7 @@ final class HistoryStore {
     }
 
     private func save() {
+        if inMemory { return }   // PROTOTYPE
         guard let data = try? JSONEncoder().encode(items) else { return }
         try? data.write(to: fileURL, options: .atomic)
         // Solo l'utente corrente puo' leggere il file.
