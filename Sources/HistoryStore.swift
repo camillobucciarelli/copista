@@ -104,6 +104,22 @@ final class HistoryStore {
         return true
     }
 
+    /// Salva la bozza del foglio di modifica. Se l'elemento e' sparito nel frattempo
+    /// (svuotato, uscito per il limite) la bozza diventa un elemento nuovo in cima, non
+    /// fissato; se il testo c'e' gia', quell'elemento risale e prende l'Etichetta della bozza,
+    /// o tiene la sua se la bozza non ne ha.
+    @discardableResult
+    func saveDraft(id: UUID, text: String, etichetta: String?) -> Bool {
+        if items.contains(where: { $0.id == id }) { return update(id: id, text: text, etichetta: etichetta) }
+        guard !Self.isBlank(text) else { return false }
+        add(text)
+        if let label = Self.normalize(etichetta), let index = items.firstIndex(where: { $0.text == text }) {
+            items[index].etichetta = label
+            changed()
+        }
+        return true
+    }
+
     func setEtichetta(id: UUID, _ etichetta: String?) {
         guard let index = items.firstIndex(where: { $0.id == id }) else { return }
         items[index].etichetta = Self.normalize(etichetta)

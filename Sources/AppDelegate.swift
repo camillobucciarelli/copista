@@ -99,11 +99,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSApp.mainMenu = main
     }
 
-    /// Il foglio di modifica non scrive negli appunti, salvo che l'elemento fosse l'ultimo copiato.
+    /// Il foglio di modifica non scrive negli appunti, salvo che l'elemento fosse l'ultimo copiato
+    /// o che sia sparito mentre il pannello era chiuso: la bozza torna allora in cima allo storico,
+    /// quindi diventa l'ultimo copiato.
     private func save(_ item: ClipItem, _ text: String, _ etichetta: String?) -> Bool {
         let wasOnClipboard = monitor.currentString() == item.text
-        guard store.update(id: item.id, text: text, etichetta: etichetta) else { return false }
-        if wasOnClipboard { monitor.write(text, record: false) }
+        let vanished = !store.items.contains { $0.id == item.id }
+        guard store.saveDraft(id: item.id, text: text, etichetta: etichetta) else { return false }
+        if wasOnClipboard || vanished { monitor.write(text, record: false) }
         return true
     }
 

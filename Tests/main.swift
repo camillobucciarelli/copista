@@ -172,6 +172,27 @@ do { // Sfissare non elimina nulla; il limite torna valido alla copia successiva
           "escono i due più vecchi")
 }
 
+do { // Bozza del foglio salvata dopo che l'elemento è sparito: diventa un elemento nuovo in cima
+    let store = freshStore()
+    store.add("originale")
+    let a = id(store, "originale")
+    store.clear()
+    check(store.saveDraft(id: a, text: "bozza", etichetta: " mia "), "bozza accettata")
+    check(store.items.count == 1 && store.items[0].text == "bozza", "aggiunta in cima")
+    check(store.items[0].etichetta == "mia" && !store.items[0].fissato, "con l'etichetta, non fissata")
+
+    store.add("altro")
+    store.setEtichetta(id: id(store, "bozza"), "di B")
+    check(store.saveDraft(id: UUID(), text: "bozza", etichetta: nil), "testo già presente")
+    check(store.items[0].text == "bozza" && store.items[0].etichetta == "di B" && store.items.count == 2,
+          "l'elemento uguale risale e tiene la sua etichetta")
+    check(!store.saveDraft(id: UUID(), text: "  ", etichetta: "x"), "bozza vuota rifiutata")
+
+    let b = id(store, "altro")
+    check(store.saveDraft(id: b, text: "altro 2", etichetta: nil), "id presente: modifica sul posto")
+    check(store.items.first { $0.id == b }?.text == "altro 2" && store.items.count == 2, "nessun elemento nuovo")
+}
+
 do { // Salvataggio e ricarica
     let url = tempDir.appendingPathComponent("persist.json")
     let store = HistoryStore(fileURL: url)
