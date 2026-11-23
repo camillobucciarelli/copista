@@ -35,6 +35,7 @@
 "panel.pinnedBubble" = "Fissato: sfissa (%@) per poterlo eliminare";
 "panel.pinnedBubble.noKey" = "Fissato: sfissa per poterlo eliminare";
 "panel.saved" = "Salvato";
+"panel.selection.one" = "1 elemento selezionato";
 "panel.selection" = "%d elementi selezionati";
 "action.copy" = "Copia";
 "action.edit" = "Modifica…";

@@ -35,6 +35,7 @@
 "panel.pinnedBubble" = "Épinglé : désépinglez-le (%@) pour le supprimer";
 "panel.pinnedBubble.noKey" = "Épinglé : désépinglez-le pour le supprimer";
 "panel.saved" = "Enregistré";
+"panel.selection.one" = "1 élément sélectionné";
 "panel.selection" = "%d éléments sélectionnés";
 "action.copy" = "Copier";
 "action.edit" = "Modifier…";

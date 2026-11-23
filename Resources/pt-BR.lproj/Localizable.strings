@@ -35,6 +35,7 @@
 "panel.pinnedBubble" = "Fixado: desafixe (%@) para poder apagá-lo";
 "panel.pinnedBubble.noKey" = "Fixado: desafixe para poder apagá-lo";
 "panel.saved" = "Salvo";
+"panel.selection.one" = "1 item selecionado";
 "panel.selection" = "%d itens selecionados";
 "action.copy" = "Copiar";
 "action.edit" = "Editar…";

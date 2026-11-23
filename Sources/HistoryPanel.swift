@@ -309,7 +309,7 @@ private final class ItemCellView: NSTableCellView {
         titleLabel.stringValue = item.etichetta ?? ""
         previewLabel.stringValue = preview(item.text)
         previewLabel.font = .systemFont(ofSize: hasTitle ? 11 : 13)
-        toolTip = String(item.text.prefix(600))
+        // Niente tooltip con il testo: i tooltip sono finestre a parte, catturate nella condivisione schermo.
         let name = shortName(item)
         pinButton.image = symbolImage(fissato ? "pin.fill" : "pin")
         pinButton.toolTip = withKey(L(fissato ? "action.unpin" : "action.pin"), pinKey)
@@ -605,6 +605,11 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         paragraph.maximumLineHeight = 18
         sheetText.isRichText = false
         sheetText.allowsUndo = true
+        // Correzioni e completamenti mostrano parole del testo in finestre a parte, catturabili.
+        sheetText.isContinuousSpellCheckingEnabled = false
+        sheetText.isAutomaticSpellingCorrectionEnabled = false
+        sheetText.isAutomaticTextCompletionEnabled = false
+        sheetText.isAutomaticTextReplacementEnabled = false
         sheetText.font = .systemFont(ofSize: 13)
         sheetText.textColor = .labelColor
         sheetText.defaultParagraphStyle = paragraph
@@ -904,7 +909,10 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         menu.autoenablesItems = false
         let items = selectedItems()
         guard !items.isEmpty else { return }
-        let header = NSMenuItem(title: items.count == 1 ? shortName(items[0]) : String(format: L("panel.selection"), items.count),
+        // Il menu e' una finestra a parte, non esclusa dalla condivisione schermo: mai il testo
+        // dell'elemento, solo l'Etichetta (scelta dall'utente) o un titolo generico.
+        let header = NSMenuItem(title: items.count == 1 ? (items[0].etichetta ?? L("panel.selection.one"))
+                                    : String(format: L("panel.selection"), items.count),
                                 action: nil, keyEquivalent: "")
         header.isEnabled = false
         menu.addItem(header)
@@ -1063,6 +1071,19 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     }
 
     func textDidChange(_ notification: Notification) { updateSheetState() }
+
+    /// Il menu contestuale standard mette la parola selezionata nei titoli ("Cerca “…”"),
+    /// in una finestra catturabile: si tengono solo le voci di modifica.
+    func textView(_ view: NSTextView, menu: NSMenu, for event: NSEvent, at charIndex: Int) -> NSMenu? {
+        let keep: Set<Selector> = [#selector(NSText.cut(_:)), #selector(NSText.copy(_:)),
+                                   #selector(NSText.paste(_:)), #selector(NSText.selectAll(_:))]
+        let edit = NSMenu()
+        for item in menu.items where item.action.map(keep.contains) == true {
+            menu.removeItem(item)
+            edit.addItem(item)
+        }
+        return edit
+    }
 
     private func updateSheetState() {
         let text = sheetText.string

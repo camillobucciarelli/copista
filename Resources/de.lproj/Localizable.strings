@@ -35,6 +35,7 @@
 "panel.pinnedBubble" = "Angeheftet: Lösen (%@), um es zu löschen";
 "panel.pinnedBubble.noKey" = "Angeheftet: Lösen, um es zu löschen";
 "panel.saved" = "Gesichert";
+"panel.selection.one" = "1 Eintrag ausgewählt";
 "panel.selection" = "%d Einträge ausgewählt";
 "action.copy" = "Kopieren";
 "action.edit" = "Bearbeiten …";

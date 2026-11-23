@@ -35,6 +35,7 @@
 "panel.pinnedBubble" = "Pinned: unpin (%@) to delete it";
 "panel.pinnedBubble.noKey" = "Pinned: unpin to delete it";
 "panel.saved" = "Saved";
+"panel.selection.one" = "1 item selected";
 "panel.selection" = "%d items selected";
 "action.copy" = "Copy";
 "action.edit" = "Edit…";
