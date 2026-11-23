@@ -314,8 +314,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     init(store: HistoryStore) {
         self.store = store
-        // 400 di contenuto come nei mockup + 46 di barra PROTOTIPO
-        panel = KeyPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 446),
+        // 480×400 come nei mockup; la barra PROTOTIPO sta in una finestra figlia sotto
+        panel = KeyPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 400),
                          styleMask: [.titled, .fullSizeContentView, .nonactivatingPanel],
                          backing: .buffered, defer: false)
         super.init()
@@ -457,7 +457,13 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
         buildCard()
 
-        for view in [searchBox, scrollView, emptyLabel, footer, protoBox, card, bubble] as [NSView] {
+        protoWindow.contentView = protoBox   // PROTOTYPE: fuori dal pannello
+        protoWindow.backgroundColor = .windowBackgroundColor
+        protoWindow.isOpaque = false
+        protoWindow.hasShadow = true
+        protoWindow.level = .floating
+        protoWindow.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        for view in [searchBox, scrollView, emptyLabel, footer, card, bubble] as [NSView] {
             view.translatesAutoresizingMaskIntoConstraints = false
             background.addSubview(view)
         }
@@ -478,11 +484,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             footer.leadingAnchor.constraint(equalTo: background.leadingAnchor),
             footer.trailingAnchor.constraint(equalTo: background.trailingAnchor),
             footer.heightAnchor.constraint(equalToConstant: 30),
-            footer.bottomAnchor.constraint(equalTo: protoBox.topAnchor),
+            footer.bottomAnchor.constraint(equalTo: background.bottomAnchor),
 
-            protoBox.leadingAnchor.constraint(equalTo: background.leadingAnchor),
-            protoBox.trailingAnchor.constraint(equalTo: background.trailingAnchor),
-            protoBox.bottomAnchor.constraint(equalTo: background.bottomAnchor),
             protoStack.leadingAnchor.constraint(equalTo: protoBox.leadingAnchor, constant: 14),
             protoStack.trailingAnchor.constraint(lessThanOrEqualTo: protoBox.trailingAnchor, constant: -12),
             protoStack.topAnchor.constraint(equalTo: protoBox.topAnchor, constant: 5),
@@ -650,17 +653,34 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
                                          y: area.midY - size.height / 2 + area.height * 0.08))
         }
         panel.orderFrontRegardless()
+        attachProtoBar()
         panel.makeKey()
         panel.makeFirstResponder(search)
     }
 
-    func hide() { panel.orderOut(nil) }
+    func hide() {
+        protoWindow.orderOut(nil)
+        panel.orderOut(nil)
+    }
+
+    // PROTOTYPE: barra in una finestra figlia, 4 sotto il pannello, stessa larghezza; lo segue.
+    private let protoWindow = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 46),
+                                      styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
+
+    private func attachProtoBar() {
+        let frame = panel.frame
+        protoWindow.setFrame(NSRect(x: frame.minX, y: frame.minY - 46 - 4, width: frame.width, height: 46), display: true)
+        if protoWindow.parent == nil { panel.addChildWindow(protoWindow, ordered: .above) }
+        protoWindow.orderFront(nil)
+    }
 
     // PROTOTYPE debug: `-render-e-row <out.png>` disegna il pannello fuori schermo
     // (chiaro e scuro, riga fissata e non fissata) in PNG 2x e stampa i frame.
     func renderDebug(to path: String) {
         panel.setFrameOrigin(NSPoint(x: -5000, y: -5000))
         panel.orderFrontRegardless()
+        attachProtoBar()
+        print("panel.frame", panel.frame, "contentView", panel.contentView!.frame, "protoWindow", protoWindow.frame)
         let base = (path as NSString).deletingPathExtension
         if ProcessInfo.processInfo.arguments.contains("-legacy-scroller") { scrollView.scrollerStyle = .legacy }
         for (mode, name) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
