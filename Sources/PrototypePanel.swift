@@ -4,7 +4,7 @@ import AppKit
 // Avvio con `-variant a|b|c`. Senza argomento l'app si comporta come sempre.
 
 enum PrototypeVariant: String, CaseIterable {
-    case a, b, c, d
+    case a, b, c, d, e
 
     var name: String {
         switch self {
@@ -12,6 +12,7 @@ enum PrototypeVariant: String, CaseIterable {
         case .b: return "Al loro posto"
         case .c: return "Schede"
         case .d: return "Scelta"
+        case .e: return "Proposta design"
         }
     }
 

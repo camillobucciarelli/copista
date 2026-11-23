@@ -7,7 +7,7 @@ final class KeyPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 }
 
-private func iconButton(_ symbol: String, _ tooltip: String, _ target: AnyObject, _ action: Selector) -> NSButton {
+func iconButton(_ symbol: String, _ tooltip: String, _ target: AnyObject, _ action: Selector) -> NSButton {
     let button = NSButton()
     button.title = ""
     button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: tooltip)
@@ -422,10 +422,19 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         if variant == .d { beginInlineEdit(item) } else { onEdit?(item) }
     }
 
+    var onEnterE: (() -> Void)?   // PROTOTYPE: la variante E vive in un altro pannello
+
+    func showVariant(_ v: PrototypeVariant) {
+        variant = v
+        applyVariant()
+        show()
+    }
+
     private func setVariant(_ v: PrototypeVariant) {
         let keep = Set(selectedItems().map(\.id))
         if editingID != nil { endInlineEdit() }
         variant = v
+        if v == .e { hide(); onEnterE?(); return }
         applyVariant()
         updateHint()
         reload(keeping: keep, fallback: 0)
@@ -452,6 +461,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             hint.stringValue = L(autoPaste ? "panel.hint.autoPaste" : "panel.hint")
         case .a: hint.stringValue = "↑↓ scegli   ↩ copia   puntina: fissa/sfissa   ⌫ elimina (non i fissati)   esc"
         case .b: hint.stringValue = "↑↓ scegli   ↩ copia   ⌘P / puntina: fissa/sfissa   ⌫ elimina (non i fissati)   esc"
+        case .e: break   // PROTOTYPE: E ha il suo pannello (PrototypeE.swift)
         case .d: hint.stringValue = "⇥ scheda   ↑↓ scegli   ↩ copia   ⌘E modifica   ⌘P fissa/sfissa   ⌫ elimina   esc"
         case .c: hint.stringValue = "⇥ scheda   ↑↓ scegli   ↩ copia   ⌘P / clic destro: fissa   ⌫ elimina   esc"
         }
@@ -472,7 +482,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     private func buildRows() {
         let items = store.items
         switch variant {
-        case nil, .b?:
+        case nil, .b?, .e?:
             rows = items.map { .item($0) }
         case .a?:
             let pinned = items.filter(\.fissato)
@@ -708,7 +718,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         // PROTOTYPE: resa per variante
         let label = item.etichetta
         switch variant {
-        case nil: break
+        case nil, .e?: break
         case .a?:
             if let label {
                 cell.titleLabel.isHidden = false

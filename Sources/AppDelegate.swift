@@ -7,6 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let store = PrototypeVariant.atLaunch == nil ? HistoryStore() : HistoryStore(prototypeItems: PrototypeVariant.seed())
     private lazy var monitor = ClipboardMonitor(store: store)
     private lazy var panel = HistoryPanelController(store: store)
+    private lazy var panelE = PrototypeEController(store: store)   // PROTOTYPE
     private var statusItem: NSStatusItem!
     private var hotKey: HotKey?
     private let reception = AndroidReception()
@@ -35,7 +36,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // PROTOTYPE: niente appunti reali ne' Android; il pannello si apre subito.
         if isPrototype {
             NSApp.activate(ignoringOtherApps: true)
-            panel.show()
+            panel.onEnterE = { [weak self] in self?.panelE.show() }
+            panelE.onLeave = { [weak self] v in self?.panel.showVariant(v) }
+            if PrototypeVariant.atLaunch == .e { panelE.show() } else { panel.show() }
             return
         }
 
@@ -225,7 +228,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return item
     }
 
-    @objc private func showHistory() { panel.show() }
+    @objc private func showHistory() {
+        if panel.variant == .e { panelE.show() } else { panel.show() }   // PROTOTYPE
+    }
 
     @objc private func clearAll() {
         store.clear()
