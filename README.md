@@ -88,4 +88,4 @@ Prima configurazione (bucket, dominio, secret, primo upload): `tool/site_setup.s
 
 ## Licenza
 
-MIT. Vedi [LICENSE](LICENSE).
+GNU AGPL-3.0, con i permessi aggiuntivi per la distribuzione sugli store in [LICENSE-EXCEPTIONS.txt](LICENSE-EXCEPTIONS.txt). Vedi [LICENSE](LICENSE).
