@@ -149,13 +149,13 @@ do { // Ricerca su testo ed Etichetta, case/diacritic-insensitive, fissati prima
     store.add("iban vecchio")
     store.setEtichetta(id: id(store, "DE89 3704"), "IBAN")
     store.togglePin(ids: [id(store, "DE89 3704")])
-    let r = search(store.items, query: "iban")
+    let r = searchItems(store.items, query: "iban")
     check(r.fissati.map(\.text) == ["DE89 3704"], "trova per etichetta, maiuscole ignorate")
     check(r.recenti.map(\.text) == ["iban vecchio"], "trova per testo")
-    check(search(store.items, query: "PERCHE").recenti.map(\.text) == ["Perché no"], "accenti ignorati")
-    let all = search(store.items, query: "  ")
+    check(searchItems(store.items, query: "PERCHE").recenti.map(\.text) == ["Perché no"], "accenti ignorati")
+    let all = searchItems(store.items, query: "  ")
     check(all.fissati.count == 1 && all.recenti.count == 3, "query vuota: tutto, fissati separati")
-    check(search(store.items, query: "zzz").fissati.isEmpty && search(store.items, query: "zzz").recenti.isEmpty, "nessun risultato")
+    check(searchItems(store.items, query: "zzz").fissati.isEmpty && searchItems(store.items, query: "zzz").recenti.isEmpty, "nessun risultato")
 }
 
 do { // Salvataggio e ricarica

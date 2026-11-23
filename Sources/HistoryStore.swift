@@ -24,7 +24,7 @@ extension ClipItem {
 
 /// Ricerca su testo ed Etichetta, senza distinguere maiuscole e accenti.
 /// Restituisce Fissati e Recenti, ciascuno nell'ordine dello storico.
-func search(_ items: [ClipItem], query: String) -> (fissati: [ClipItem], recenti: [ClipItem]) {
+func searchItems(_ items: [ClipItem], query: String) -> (fissati: [ClipItem], recenti: [ClipItem]) {
     let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
     let options: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
     let matches = query.isEmpty ? items : items.filter {
