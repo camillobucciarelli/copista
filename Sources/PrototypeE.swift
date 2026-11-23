@@ -7,15 +7,18 @@ import AppKit
 // MARK: - Colori semantici (i bianchi rgba del mockup)
 
 private enum EColor {
-    /// rgba(255,255,255,0.08): riempimento di campi e tasti.
-    static var fill: NSColor {
-        if #available(macOS 14.0, *) { return .quaternarySystemFill }
-        return NSColor.labelColor.withAlphaComponent(0.06)
-    }
+    /// Un solo riempimento traslucido per ricerca, tasti, Etichetta e Testo:
+    /// bianco 8% in scuro (rgba del mockup), nero 5.5% in chiaro.
+    /// (quaternarySystemFill vale solo 2.7%: troppo tenue rispetto al mockup.)
+    static let fill = adaptive(dark: 0.08, light: 0.055)
     /// rgba(255,255,255,0.14): pulsante secondario.
-    static var strongFill: NSColor {
-        if #available(macOS 14.0, *) { return .tertiarySystemFill }
-        return NSColor.labelColor.withAlphaComponent(0.1)
+    static let strongFill = adaptive(dark: 0.14, light: 0.09)
+
+    private static func adaptive(dark: CGFloat, light: CGFloat) -> NSColor {
+        NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+                ? NSColor(white: 1, alpha: dark) : NSColor(white: 0, alpha: light)
+        }
     }
     /// Testo e icone sopra l'evidenziazione d'accento.
     static var onAccent: NSColor { .alternateSelectedControlTextColor }
@@ -31,21 +34,20 @@ class FillView: NSView {
 
     init(fill: NSColor? = nil, border: NSColor? = nil, radius: CGFloat = 0) {
         super.init(frame: .zero)
-        wantsLayer = true
         self.fill = fill
         self.border = border
         self.radius = radius
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
 
-    override var wantsUpdateLayer: Bool { true }
-    override func updateLayer() {
-        effectiveAppearance.performAsCurrentDrawingAppearance {
-            layer?.backgroundColor = fill?.cgColor
-            layer?.borderColor = border?.cgColor
-        }
-        layer?.borderWidth = border == nil ? 0 : 1
-        layer?.cornerRadius = radius
+    override var isOpaque: Bool { false }
+    // draw(_:) gira con l'aspetto della vista come corrente: i colori dinamici si
+    // risolvono da soli a ogni cambio chiaro/scuro.
+    override func draw(_ dirtyRect: NSRect) {
+        let rect = border == nil ? bounds : bounds.insetBy(dx: 0.5, dy: 0.5)
+        let path = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
+        if let fill { fill.setFill(); path.fill() }
+        if let border { border.setStroke(); path.lineWidth = 1; path.stroke() }
     }
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
@@ -132,7 +134,7 @@ private final class PillButton: FillView {
 private final class ERowView: NSTableRowView {
     override var isEmphasized: Bool { get { true } set {} }
     override func drawSelection(in dirtyRect: NSRect) {
-        NSColor.selectedContentBackgroundColor.setFill()
+        NSColor.controlAccentColor.setFill()   // stesso accento del glifo fissato
         NSBezierPath(roundedRect: bounds.insetBy(dx: 10, dy: 0), xRadius: 6, yRadius: 6).fill()
     }
 }
@@ -358,6 +360,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         search.placeholderString = "Cerca testo o etichetta"
         search.setAccessibilityLabel("Cerca negli appunti")
         search.font = .systemFont(ofSize: 13)
+        search.isBezeled = false
         search.isBordered = false
         search.drawsBackground = false
         search.focusRingType = .none
@@ -521,6 +524,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         // Etichetta: campo 26 alto, raggio 6, padding 0×8
         cardLabel.font = .systemFont(ofSize: 13)
         cardLabel.placeholderString = "facoltativa"
+        cardLabel.isBezeled = false
         cardLabel.isBordered = false
         cardLabel.drawsBackground = false
         cardLabel.focusRingType = .none
