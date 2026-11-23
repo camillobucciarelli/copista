@@ -146,7 +146,10 @@ func validate(_ shortcut: Shortcut?, for action: ShortcutAction,
         // Nel foglio ↩ va a capo.
         if action.scope == .sheet, ["↩", "⌤"].contains(shortcut.key), !hasStrong { return .typesText }
     }
-    for other in ShortcutAction.allCases where other != action && other.scope == action.scope {
+    // Pannello e foglio sono ambiti separati; la globale invece e' attiva ovunque (Carbon la
+    // intercetta prima del pannello), quindi e' in conflitto con ogni azione e viceversa.
+    for other in ShortcutAction.allCases where other != action
+        && (other.scope == action.scope || other.scope == .global || action.scope == .global) {
         if let used = current[other] ?? nil, used.sameKeys(as: shortcut) { return .conflict(other) }
     }
     return nil

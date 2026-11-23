@@ -268,8 +268,16 @@ do { // Stessa combinazione in ambiti diversi ammessa
     check(validate(esc, for: .cancelEdit, in: current) == nil, "esc in pannello e foglio")
     let cmdE = Shortcut(keyCode: 14, modifiers: cmd, key: "e")
     check(validate(cmdE, for: .save, in: ShortcutAction.defaults) == nil, "⌘E nel foglio anche se usata nel pannello")
-    check(validate(Shortcut(keyCode: 9, modifiers: [.command, .shift], key: "v"), for: .copy, in: ShortcutAction.defaults) == nil,
-          "⌘⇧V nel pannello anche se globale")
+}
+
+do { // La globale è in conflitto con ogni azione del pannello e del foglio, e viceversa
+    let cmdShiftV = Shortcut(keyCode: 9, modifiers: [.command, .shift], key: "v")
+    check(validate(cmdShiftV, for: .copy, in: ShortcutAction.defaults) == .conflict(.openHistory), "⌘⇧V nel pannello: è la globale")
+    check(validate(cmdShiftV, for: .save, in: ShortcutAction.defaults) == .conflict(.openHistory), "⌘⇧V nel foglio: è la globale")
+    let cmdE = Shortcut(keyCode: 14, modifiers: cmd, key: "e")
+    check(validate(cmdE, for: .openHistory, in: ShortcutAction.defaults) == .conflict(.edit), "⌘E globale: è Modifica")
+    let cmdReturn = Shortcut(keyCode: 36, modifiers: cmd, key: "↩")
+    check(validate(cmdReturn, for: .openHistory, in: ShortcutAction.defaults) == .conflict(.save), "⌘↩ globale: è Salva")
 }
 
 do { // "Nessuna" ammessa

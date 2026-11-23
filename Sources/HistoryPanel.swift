@@ -729,6 +729,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         background.layoutSubtreeIfNeeded()   // la lista ha la sua altezza prima di scorrere
         panel.makeKey()
         if resumingEdit {
+            // La lista dietro il foglio segue lo storico (puo' essere cambiato a pannello chiuso).
+            reload(keeping: Set(selectedItems().map(\.id)), fallback: tableView.selectedRowIndexes.first ?? 0)
             panel.makeFirstResponder(sheetConfirm.isHidden ? sheetText : nil)
             return
         }
@@ -977,6 +979,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
 
     private func handleKey(_ event: NSEvent) -> NSEvent? {
         guard panel.isVisible, event.window === panel else { return event }
+        // Composizione in corso (giapponese, cinese…): ↩ e frecce servono al metodo di input.
+        if let client = panel.firstResponder as? NSTextInputClient, client.hasMarkedText() { return event }
         if editing != nil {
             if matches(event, .save) { saveEdit(); return nil }
             if matches(event, .cancelEdit) { cancelEdit(); return nil }
@@ -1037,6 +1041,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         editing = nil
         sheet.isHidden = true
         setDimmed(false)
+        reload(keeping: Set(selectedItems().map(\.id)), fallback: tableView.selectedRowIndexes.first ?? 0)
         panel.makeFirstResponder(search)
     }
 
