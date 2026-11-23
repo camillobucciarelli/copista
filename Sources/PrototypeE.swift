@@ -441,6 +441,11 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         scrollView.hasVerticalScroller = true
         scrollView.autohidesScrollers = true
         scrollView.drawsBackground = false
+        // PROTOTYPE: 8 di respiro in fondo alla lista (sopra il filo del pie' di pagina).
+        // In cima i 8 sono fuori dalla lista (vedi topAnchor): cosi' la didascalia
+        // sticky resta a filo del bordo della lista e sopra non traspaiono righe.
+        scrollView.automaticallyAdjustsContentInsets = false
+        scrollView.contentInsets = NSEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         emptyLabel.alignment = .center
         emptyLabel.lineBreakMode = .byTruncatingTail
 
@@ -524,7 +529,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             searchBox.trailingAnchor.constraint(equalTo: background.trailingAnchor, constant: -12),
             searchBox.heightAnchor.constraint(equalToConstant: 28),
 
-            scrollView.topAnchor.constraint(equalTo: searchBox.bottomAnchor, constant: 8),
+            scrollView.topAnchor.constraint(equalTo: searchBox.bottomAnchor, constant: 16),   // 8 + 8 di padding
             scrollView.leadingAnchor.constraint(equalTo: background.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: background.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: footer.topAnchor),
@@ -747,9 +752,13 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             for pinned in [true, false] {
                 guard let row = rows.indices.first(where: { item(at: $0)?.fissato == pinned }) else { continue }
                 tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
-                if let i = args.firstIndex(of: "-e-scroll"), i + 1 < args.count, let y = Double(args[i + 1]) {
-                    scrollView.contentView.scroll(to: NSPoint(x: 0, y: y))
-                    scrollView.reflectScrolledClipView(scrollView.contentView)
+                if let i = args.firstIndex(of: "-e-scroll"), i + 1 < args.count {
+                    let clip = scrollView.contentView
+                    tableView.layoutSubtreeIfNeeded()
+                    let y = args[i + 1] == "bottom" ? 1e6 : (Double(args[i + 1]) ?? 0)
+                    let target = clip.constrainBoundsRect(NSRect(origin: NSPoint(x: 0, y: y), size: clip.bounds.size))
+                    clip.scroll(to: target.origin)
+                    scrollView.reflectScrolledClipView(clip)
                 }
                 background.layoutSubtreeIfNeeded()
                 tableView.layoutSubtreeIfNeeded()
