@@ -20,6 +20,20 @@ private enum EColor {
                 ? NSColor(white: 1, alpha: dark) : NSColor(white: 0, alpha: light)
         }
     }
+    /// Velo controlBackgroundColor sopra il materiale (bianco in chiaro, ~30 in scuro come il mockup). Va risolto dentro il provider:
+    /// `controlBackgroundColor.withAlphaComponent` resta bloccato sull'aspetto di creazione.
+    static func ground(alpha: CGFloat) -> NSColor {
+        NSColor(name: nil) { appearance in
+            // Dentro il materiale l'aspetto e' "vibrant": risolvo sull'aspetto base chiaro/scuro.
+            let base = NSAppearance(named: appearance.bestMatch(from: [.aqua, .darkAqua]) ?? .aqua) ?? appearance
+            var resolved = NSColor.controlBackgroundColor
+            base.performAsCurrentDrawingAppearance {
+                resolved = NSColor.controlBackgroundColor.usingColorSpace(.sRGB) ?? .controlBackgroundColor
+            }
+            return resolved.withAlphaComponent(alpha)
+        }
+    }
+
     /// Testo e icone sopra l'evidenziazione d'accento.
     static var onAccent: NSColor { .alternateSelectedControlTextColor }
 }
@@ -282,6 +296,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     private let store: HistoryStore
     private let panel: KeyPanel
     private let background = NSVisualEffectView()
+    private let tint = FillView(fill: EColor.ground(alpha: 0.92))   // PROTOTYPE: velo al 92% come il mockup
     private let searchBox = FillView(fill: EColor.fill, radius: 7)
     private let search = NSTextField(string: "")
     private let tableView = NSTableView()
@@ -351,6 +366,15 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         background.blendingMode = .behindWindow
         background.state = .active
         panel.contentView = background
+        // Velo semantico sopra il materiale (alfa regolabile in debug con -e-tint)
+        tint.translatesAutoresizingMaskIntoConstraints = false
+        background.addSubview(tint)
+        NSLayoutConstraint.activate([
+            tint.topAnchor.constraint(equalTo: background.topAnchor),
+            tint.bottomAnchor.constraint(equalTo: background.bottomAnchor),
+            tint.leadingAnchor.constraint(equalTo: background.leadingAnchor),
+            tint.trailingAnchor.constraint(equalTo: background.trailingAnchor),
+        ])
 
         // Ricerca: 28 alto, raggio 7, riempimento, lente 14, testo 13
         let glass = NSImageView(image: NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)!
@@ -686,6 +710,15 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         attachProtoBar()
         print("panel.frame", panel.frame, "contentView", panel.contentView!.frame, "protoWindow", protoWindow.frame)
         let base = (path as NSString).deletingPathExtension
+        let args = ProcessInfo.processInfo.arguments
+        if let i = args.firstIndex(of: "-e-material"), i + 1 < args.count,
+           let raw = Int(args[i + 1]), let m = NSVisualEffectView.Material(rawValue: raw) {
+            background.material = m
+        }
+        if let i = args.firstIndex(of: "-e-tint"), i + 1 < args.count, let a = Double(args[i + 1]) {
+            tint.fill = a > 0 ? EColor.ground(alpha: CGFloat(a)) : nil
+        }
+        print("material", background.material.rawValue, "state", background.state.rawValue, "tint", tint.fill as Any)
         if ProcessInfo.processInfo.arguments.contains("-legacy-scroller") { scrollView.scrollerStyle = .legacy }
         for (mode, name) in [("light", NSAppearance.Name.aqua), ("dark", .darkAqua)] {
             panel.appearance = NSAppearance(named: name)   // solo debug
