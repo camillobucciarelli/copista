@@ -1,18 +1,129 @@
 import AppKit
 
-// PROTOTYPE (#19) variante E "Proposta design": pannello a se', dalla revisione di design.
-// Ricerca in testa, sezioni Fissati / Recenti, azioni nel menu ⌘K, editor a scheda nel pannello.
+// PROTOTYPE (#19) variante E "Proposta design": pannello a se', dai mockup
+// Proposta-lista / Proposta-azioni / Proposta-modifica. Solo colori semantici:
+// segue chiaro/scuro del sistema anche a pannello aperto.
 
-/// PROTOTYPE: la riga selezionata resta in evidenza (accento, testo bianco) anche
-/// quando il fuoco e' nel campo di ricerca.
+// MARK: - Colori semantici (i bianchi rgba del mockup)
+
+private enum EColor {
+    /// rgba(255,255,255,0.08): riempimento di campi e tasti.
+    static var fill: NSColor {
+        if #available(macOS 14.0, *) { return .quaternarySystemFill }
+        return NSColor.labelColor.withAlphaComponent(0.06)
+    }
+    /// rgba(255,255,255,0.14): pulsante secondario.
+    static var strongFill: NSColor {
+        if #available(macOS 14.0, *) { return .tertiarySystemFill }
+        return NSColor.labelColor.withAlphaComponent(0.1)
+    }
+    /// Testo e icone sopra l'evidenziazione d'accento.
+    static var onAccent: NSColor { .alternateSelectedControlTextColor }
+}
+
+// MARK: - Viste di base
+
+/// Vista con sfondo, bordo e raggio risolti all'aspetto corrente (si aggiorna da sola).
+class FillView: NSView {
+    var fill: NSColor? { didSet { needsDisplay = true } }
+    var border: NSColor? { didSet { needsDisplay = true } }
+    var radius: CGFloat = 0 { didSet { needsDisplay = true } }
+
+    init(fill: NSColor? = nil, border: NSColor? = nil, radius: CGFloat = 0) {
+        super.init(frame: .zero)
+        wantsLayer = true
+        self.fill = fill
+        self.border = border
+        self.radius = radius
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
+
+    override var wantsUpdateLayer: Bool { true }
+    override func updateLayer() {
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            layer?.backgroundColor = fill?.cgColor
+            layer?.borderColor = border?.cgColor
+        }
+        layer?.borderWidth = border == nil ? 0 : 1
+        layer?.cornerRadius = radius
+    }
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
+    }
+}
+
+/// Tasto stile <kbd>: 11pt, padding 1×5, raggio 4, bordo sottile.
+private func keycap(_ text: String, filled: Bool) -> NSView {
+    let box = FillView(fill: filled ? EColor.fill : nil, border: .separatorColor, radius: 4)
+    let label = NSTextField(labelWithString: text)
+    label.font = .systemFont(ofSize: 11)
+    label.textColor = filled ? .labelColor : .secondaryLabelColor
+    label.translatesAutoresizingMaskIntoConstraints = false
+    box.addSubview(label)
+    NSLayoutConstraint.activate([
+        label.leadingAnchor.constraint(equalTo: box.leadingAnchor, constant: 5),
+        label.trailingAnchor.constraint(equalTo: box.trailingAnchor, constant: -5),
+        label.topAnchor.constraint(equalTo: box.topAnchor, constant: 1),
+        label.bottomAnchor.constraint(equalTo: box.bottomAnchor, constant: -1),
+    ])
+    return box
+}
+
+private func text(_ string: String, size: CGFloat, weight: NSFont.Weight = .regular,
+                  color: NSColor = .labelColor) -> NSTextField {
+    let field = NSTextField(labelWithString: string)
+    field.font = .systemFont(ofSize: size, weight: weight)
+    field.textColor = color
+    return field
+}
+
+/// Pulsante a pillola (Annulla / Salva) e pulsante icona 22×22 delle righe.
+private final class PillButton: FillView {
+    let button = NSButton()
+    init(title: String, symbol: String? = nil, fill: NSColor?, titleColor: NSColor, weight: NSFont.Weight = .regular,
+         padding: CGFloat, height: CGFloat, radius: CGFloat, target: AnyObject, action: Selector) {
+        super.init(fill: fill, radius: radius)
+        button.isBordered = false
+        button.target = target
+        button.action = action
+        button.translatesAutoresizingMaskIntoConstraints = false
+        if let symbol {
+            button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: title)?
+                .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))
+            button.imagePosition = .imageOnly
+            button.contentTintColor = titleColor
+            button.title = ""
+        } else {
+            button.attributedTitle = NSAttributedString(string: title, attributes: [
+                .font: NSFont.systemFont(ofSize: 13, weight: weight), .foregroundColor: titleColor,
+            ])
+        }
+        addSubview(button)
+        translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: centerYAnchor),
+            heightAnchor.constraint(equalToConstant: height),
+            widthAnchor.constraint(equalTo: button.widthAnchor, constant: padding * 2),
+        ])
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
+}
+
+/// La riga selezionata: accento, raggio 6, margine 10 ai lati; sempre "in evidenza"
+/// (testo bianco) anche col fuoco nel campo di ricerca.
 private final class ERowView: NSTableRowView {
     override var isEmphasized: Bool { get { true } set {} }
+    override func drawSelection(in dirtyRect: NSRect) {
+        NSColor.selectedContentBackgroundColor.setFill()
+        NSBezierPath(roundedRect: bounds.insetBy(dx: 10, dy: 0), xRadius: 6, yRadius: 6).fill()
+    }
 }
 
 private func shortName(_ item: ClipItem) -> String {
     if let label = item.etichetta { return label }
-    let parts = item.text.split(whereSeparator: { $0.isWhitespace || $0.isNewline })
-    let line = parts.joined(separator: " ")
+    let line = preview(item.text)
     return line.count > 40 ? String(line.prefix(40)) + "…" : line
 }
 
@@ -20,18 +131,36 @@ private func preview(_ text: String) -> String {
     String(text.split(whereSeparator: { $0.isWhitespace || $0.isNewline }).joined(separator: " ").prefix(200))
 }
 
-// PROTOTYPE
+/// Intestazione di sezione: 10pt semibold, maiuscolo, spaziatura .06em, secondario, rientro 18.
+private final class ECaptionView: NSTableCellView {
+    let label = NSTextField(labelWithString: "")
+    init(_ title: String) {
+        super.init(frame: .zero)
+        label.attributedStringValue = NSAttributedString(string: title.uppercased(), attributes: [
+            .font: NSFont.systemFont(ofSize: 10, weight: .semibold),
+            .foregroundColor: NSColor.secondaryLabelColor,
+            .kern: 0.6,
+        ])
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18).isActive = true
+        label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4).isActive = true
+    }
+    required init?(coder: NSCoder) { fatalError("init(coder:) non usato") }
+}
+
+// MARK: - Riga
+
 final class ECellView: NSTableCellView {
     let titleLabel = NSTextField(labelWithString: "")
     let previewLabel = NSTextField(labelWithString: "")
     let pinState = NSImageView()
-    var pinButton: NSButton!
-    var moreButton: NSButton!
+    fileprivate var pinButton: PillButton!
+    fileprivate var moreButton: PillButton!
     var onPin: (() -> Void)?
     var onMore: (() -> Void)?
     private var fissato = false
     private var hasTitle = false
-    private var hovering = false
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -43,16 +172,22 @@ final class ECellView: NSTableCellView {
         }
         titleLabel.font = .systemFont(ofSize: 13, weight: .semibold)
 
-        pinState.image = NSImage(systemSymbolName: "pin.fill", accessibilityDescription: "Fissato")
+        pinState.image = NSImage(systemSymbolName: "pin.fill", accessibilityDescription: "Fissato")?
+            .withSymbolConfiguration(.init(pointSize: 11, weight: .regular))
         pinState.setAccessibilityLabel("Fissato")
-        pinState.symbolConfiguration = .init(pointSize: 10, weight: .regular)
-        pinButton = iconButton("pin", "Fissa", self, #selector(pinClicked))
-        moreButton = iconButton("ellipsis", "Azioni", self, #selector(moreClicked))
+        pinButton = PillButton(title: "Fissa", symbol: "pin", fill: EColor.onAccent.withAlphaComponent(0.18),
+                               titleColor: EColor.onAccent, padding: 0, height: 22, radius: 5,
+                               target: self, action: #selector(pinClicked))
+        pinButton.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        moreButton = PillButton(title: "Altre azioni", symbol: "ellipsis", fill: EColor.onAccent.withAlphaComponent(0.18),
+                                titleColor: EColor.onAccent, padding: 0, height: 22, radius: 5,
+                                target: self, action: #selector(moreClicked))
+        moreButton.widthAnchor.constraint(equalToConstant: 22).isActive = true
 
         let texts = NSStackView(views: [titleLabel, previewLabel])
         texts.orientation = .vertical
         texts.alignment = .leading
-        texts.spacing = 1
+        texts.spacing = 0
         texts.setContentHuggingPriority(.defaultLow, for: .horizontal)
         let row = NSStackView(views: [texts, pinState, pinButton, moreButton])
         row.alignment = .centerY
@@ -60,9 +195,10 @@ final class ECellView: NSTableCellView {
         row.translatesAutoresizingMaskIntoConstraints = false
         addSubview(row)
         textField = previewLabel
+        // margine riga 10 + padding 8 a sinistra, 10 + 6 a destra
         NSLayoutConstraint.activate([
-            row.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            row.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 18),
+            row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             row.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
@@ -72,74 +208,73 @@ final class ECellView: NSTableCellView {
     func configure(_ item: ClipItem) {
         fissato = item.fissato
         hasTitle = item.etichetta != nil
-        hovering = false
         titleLabel.isHidden = !hasTitle
         titleLabel.stringValue = item.etichetta ?? ""
         previewLabel.stringValue = preview(item.text)
         previewLabel.font = .systemFont(ofSize: hasTitle ? 11 : 13)
         toolTip = String(item.text.prefix(600))
         let name = shortName(item)
-        pinButton.image = NSImage(systemSymbolName: fissato ? "pin.fill" : "pin", accessibilityDescription: nil)
-        pinButton.toolTip = fissato ? "Sfissa" : "Fissa"
-        pinButton.setAccessibilityLabel("\(fissato ? "Sfissa" : "Fissa") \(name)")
-        moreButton.setAccessibilityLabel("Azioni per \(name)")
+        pinButton.button.image = NSImage(systemSymbolName: fissato ? "pin.fill" : "pin", accessibilityDescription: nil)?
+            .withSymbolConfiguration(.init(pointSize: 12, weight: .regular))
+        pinButton.button.toolTip = fissato ? "Sfissa (⌘P)" : "Fissa (⌘P)"
+        pinButton.button.setAccessibilityLabel("\(fissato ? "Sfissa" : "Fissa") \(name)")
+        moreButton.button.toolTip = "Azioni (⌘K)"
+        moreButton.button.setAccessibilityLabel("Altre azioni per \(name)")
         refresh()
     }
 
     override var backgroundStyle: NSView.BackgroundStyle { didSet { refresh() } }
 
-    override func updateTrackingAreas() {
-        super.updateTrackingAreas()
-        trackingAreas.forEach(removeTrackingArea)
-        addTrackingArea(NSTrackingArea(rect: .zero, options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-                                       owner: self, userInfo: nil))
-    }
-    override func mouseEntered(with event: NSEvent) { hovering = true; refresh() }
-    override func mouseExited(with event: NSEvent) { hovering = false; refresh() }
-
     private func refresh() {
         let selected = (superview as? NSTableRowView)?.isSelected ?? false
-        let showButtons = selected || hovering
-        pinButton.isHidden = !showButtons
-        moreButton.isHidden = !showButtons
-        pinState.isHidden = showButtons || !fissato
-        let emphasized = backgroundStyle == .emphasized
-        titleLabel.textColor = emphasized ? .white : .labelColor
-        previewLabel.textColor = emphasized
-            ? NSColor.white.withAlphaComponent(hasTitle ? 0.85 : 1)
+        pinButton.isHidden = !selected        // pulsanti solo sulla riga selezionata
+        moreButton.isHidden = !selected
+        pinState.isHidden = selected || !fissato
+        let onAccent = backgroundStyle == .emphasized
+        titleLabel.textColor = onAccent ? EColor.onAccent : .labelColor
+        previewLabel.textColor = onAccent
+            ? EColor.onAccent.withAlphaComponent(hasTitle ? 0.85 : 1)
             : (hasTitle ? .secondaryLabelColor : .labelColor)
-        pinButton.contentTintColor = emphasized ? .white : .secondaryLabelColor
-        moreButton.contentTintColor = pinButton.contentTintColor
-        pinState.contentTintColor = emphasized ? .white : .controlAccentColor
+        pinState.contentTintColor = .controlAccentColor
     }
 
     @objc private func pinClicked() { onPin?() }
     @objc private func moreClicked() { onMore?() }
 }
 
-// PROTOTYPE
-final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSSearchFieldDelegate,
+// MARK: - Pannello
+
+final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextFieldDelegate,
                                   NSTextViewDelegate, NSMenuDelegate, NSWindowDelegate {
     private let store: HistoryStore
     private let panel: KeyPanel
-    private let search = NSSearchField()
+    private let background = NSVisualEffectView()
+    private let searchBox = FillView(fill: EColor.fill, radius: 7)
+    private let search = NSTextField(string: "")
     private let tableView = NSTableView()
     private let scrollView = NSScrollView()
-    private let emptyLabel = NSTextField(labelWithString: "")
-    private let footerLeft = NSTextField(labelWithString: "↩ copia")
-    private let footerRight = NSTextField(labelWithString: "⌘K azioni")
-    private let protoState = NSTextField(labelWithString: "")
+    private let emptyLabel = text("", size: 13, color: .secondaryLabelColor)
+    private let footer = NSView()
+    private var footerKeys: NSStackView!
+    private let footerFlash = text("", size: 11, color: .labelColor)
+    private let bubble = NSVisualEffectView()
+    private let bubbleLabel = text("", size: 11)
+    private let protoState = text("", size: 10, color: .secondaryLabelColor)
     private let contextMenu = NSMenu()
     private var rows: [PanelRow] = []
-    private var footerReset: DispatchWorkItem?
+    private var flashReset: DispatchWorkItem?
+    private var bubbleReset: DispatchWorkItem?
     private var keyMonitor: Any?
+    private var responderObservation: NSKeyValueObservation?
 
     // Editor a scheda
-    private let card = NSView()
+    private let card = NSVisualEffectView()
     private var cardTop: NSLayoutConstraint!
+    private let labelBox = FillView(fill: EColor.fill, border: .separatorColor, radius: 6)
     private let cardLabel = NSTextField(string: "")
+    private let textBox = FillView(fill: EColor.fill, border: .separatorColor, radius: 6)
     private let cardText = NSTextView()
-    private let cardCount = NSTextField(labelWithString: "")
+    private let cardCount = text("", size: 11, color: .secondaryLabelColor)
     private var cardButtons: NSStackView!
     private var cardConfirm: NSStackView!
     private var editing: ClipItem?
@@ -148,7 +283,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     init(store: HistoryStore) {
         self.store = store
-        // 400 di contenuto + barra PROTOTIPO
+        // 400 di contenuto come nei mockup + 46 di barra PROTOTIPO
         panel = KeyPanel(contentRect: NSRect(x: 0, y: 0, width: 480, height: 446),
                          styleMask: [.titled, .fullSizeContentView, .nonactivatingPanel],
                          backing: .buffered, defer: false)
@@ -157,6 +292,10 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self else { return event }
             return self.handleKey(event)
+        }
+        // Bordo d'accento sul campo che ha il fuoco (come nel mockup dell'editor).
+        responderObservation = panel.observe(\.firstResponder, options: [.new]) { [weak self] _, _ in
+            self?.updateFocusBorders()
         }
     }
 
@@ -174,24 +313,42 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             panel.standardWindowButton(button)?.isHidden = true
         }
         panel.delegate = self
-        panel.appearance = NSAppearance(named: .vibrantDark)
 
-        let background = NSVisualEffectView()
-        background.material = .hudWindow
+        background.material = .hudWindow   // come il pannello reale; segue chiaro/scuro
         background.blendingMode = .behindWindow
         background.state = .active
         panel.contentView = background
 
+        // Ricerca: 28 alto, raggio 7, riempimento, lente 14, testo 13
+        let glass = NSImageView(image: NSImage(systemSymbolName: "magnifyingglass", accessibilityDescription: nil)!
+            .withSymbolConfiguration(.init(pointSize: 12, weight: .medium))!)
+        glass.contentTintColor = .secondaryLabelColor
         search.placeholderString = "Cerca testo o etichetta"
-        search.font = .systemFont(ofSize: 14)
+        search.setAccessibilityLabel("Cerca negli appunti")
+        search.font = .systemFont(ofSize: 13)
+        search.isBordered = false
+        search.drawsBackground = false
+        search.focusRingType = .none
         search.delegate = self
-        search.sendsSearchStringImmediately = true
+        search.cell?.isScrollable = true
+        search.cell?.wraps = false
+        let searchRow = NSStackView(views: [glass, search])
+        searchRow.spacing = 6
+        searchRow.translatesAutoresizingMaskIntoConstraints = false
+        searchBox.addSubview(searchRow)
+        NSLayoutConstraint.activate([
+            searchRow.leadingAnchor.constraint(equalTo: searchBox.leadingAnchor, constant: 8),
+            searchRow.trailingAnchor.constraint(equalTo: searchBox.trailingAnchor, constant: -8),
+            searchRow.centerYAnchor.constraint(equalTo: searchBox.centerYAnchor),
+        ])
 
+        // Lista: niente stile "inset" di sistema, margini e raggi come il mockup
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("clip"))
         column.resizingMask = .autoresizingMask
         tableView.addTableColumn(column)
         tableView.headerView = nil
-        tableView.style = .inset
+        tableView.style = .plain
+        tableView.intercellSpacing = .zero
         tableView.backgroundColor = .clear
         tableView.allowsMultipleSelection = false
         tableView.dataSource = self
@@ -200,27 +357,58 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         tableView.doubleAction = #selector(doubleClicked)   // clic singolo seleziona soltanto
         contextMenu.delegate = self
         tableView.menu = contextMenu
-
         scrollView.documentView = tableView
         scrollView.hasVerticalScroller = true
         scrollView.autohidesScrollers = true
         scrollView.drawsBackground = false
-
-        emptyLabel.textColor = .secondaryLabelColor
         emptyLabel.alignment = .center
-        for footer in [footerLeft, footerRight] {
-            footer.font = .systemFont(ofSize: 11)
-            footer.textColor = .secondaryLabelColor
+        emptyLabel.lineBreakMode = .byTruncatingTail
+
+        // Pie' di pagina: 30 alto, padding 14, filo superiore, tasti
+        let rule = FillView(fill: .separatorColor)
+        let left = NSStackView(views: [keycap("↩", filled: true), text("copia", size: 11, color: .secondaryLabelColor)])
+        let right = NSStackView(views: [keycap("⌘K", filled: true), text("azioni", size: 11, color: .secondaryLabelColor)])
+        left.spacing = 4
+        right.spacing = 4
+        footerKeys = left
+        footerFlash.isHidden = true
+        for view in [rule, left, right, footerFlash] as [NSView] {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            footer.addSubview(view)
         }
+        NSLayoutConstraint.activate([
+            rule.topAnchor.constraint(equalTo: footer.topAnchor),
+            rule.leadingAnchor.constraint(equalTo: footer.leadingAnchor),
+            rule.trailingAnchor.constraint(equalTo: footer.trailingAnchor),
+            rule.heightAnchor.constraint(equalToConstant: 1),
+            left.leadingAnchor.constraint(equalTo: footer.leadingAnchor, constant: 14),
+            left.centerYAnchor.constraint(equalTo: footer.centerYAnchor),
+            footerFlash.leadingAnchor.constraint(equalTo: footer.leadingAnchor, constant: 14),
+            footerFlash.centerYAnchor.constraint(equalTo: footer.centerYAnchor),
+            right.trailingAnchor.constraint(equalTo: footer.trailingAnchor, constant: -14),
+            right.centerYAnchor.constraint(equalTo: footer.centerYAnchor),
+        ])
+
+        // Fumetto "Fissato: sfissa (⌘P)…": raggio 6, padding 5×8, 11pt
+        bubble.material = .toolTip
+        bubble.state = .active
+        bubble.wantsLayer = true
+        bubble.layer?.cornerRadius = 6
+        bubble.layer?.masksToBounds = true
+        bubble.isHidden = true
+        bubbleLabel.translatesAutoresizingMaskIntoConstraints = false
+        bubble.addSubview(bubbleLabel)
+        NSLayoutConstraint.activate([
+            bubbleLabel.leadingAnchor.constraint(equalTo: bubble.leadingAnchor, constant: 8),
+            bubbleLabel.trailingAnchor.constraint(equalTo: bubble.trailingAnchor, constant: -8),
+            bubbleLabel.topAnchor.constraint(equalTo: bubble.topAnchor, constant: 5),
+            bubbleLabel.bottomAnchor.constraint(equalTo: bubble.bottomAnchor, constant: -5),
+        ])
 
         // Barra PROTOTIPO
-        let protoBox = NSView()
-        protoBox.wantsLayer = true
-        protoBox.layer?.backgroundColor = NSColor.systemOrange.withAlphaComponent(0.22).cgColor
-        let protoTitle = NSTextField(labelWithString: "PROTOTIPO — variante E (Proposta design)")
-        protoTitle.font = .systemFont(ofSize: 11, weight: .bold)
+        let protoBox = FillView(fill: NSColor.systemOrange.withAlphaComponent(0.22))
+        let protoTitle = text("PROTOTIPO — variante E (Proposta design)", size: 11, weight: .bold)
         protoState.font = .monospacedSystemFont(ofSize: 10, weight: .regular)
-        protoState.textColor = .secondaryLabelColor
         protoState.lineBreakMode = .byTruncatingTail
         protoState.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         let prev = NSButton(title: "◀", target: self, action: #selector(prevVariant))
@@ -237,32 +425,33 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
         buildCard()
 
-        for view in [search, scrollView, emptyLabel, footerLeft, footerRight, protoBox, card] as [NSView] {
+        for view in [searchBox, scrollView, emptyLabel, footer, protoBox, card, bubble] as [NSView] {
             view.translatesAutoresizingMaskIntoConstraints = false
             background.addSubview(view)
         }
+        bubble.translatesAutoresizingMaskIntoConstraints = true   // posizionato a mano sotto la riga
         cardTop = card.topAnchor.constraint(equalTo: background.topAnchor, constant: -400)
 
         NSLayoutConstraint.activate([
-            search.topAnchor.constraint(equalTo: background.topAnchor, constant: 12),
-            search.leadingAnchor.constraint(equalTo: background.leadingAnchor, constant: 12),
-            search.trailingAnchor.constraint(equalTo: background.trailingAnchor, constant: -12),
-            search.heightAnchor.constraint(equalToConstant: 28),
+            searchBox.topAnchor.constraint(equalTo: background.topAnchor, constant: 12),
+            searchBox.leadingAnchor.constraint(equalTo: background.leadingAnchor, constant: 12),
+            searchBox.trailingAnchor.constraint(equalTo: background.trailingAnchor, constant: -12),
+            searchBox.heightAnchor.constraint(equalToConstant: 28),
 
-            scrollView.topAnchor.constraint(equalTo: search.bottomAnchor, constant: 8),
+            scrollView.topAnchor.constraint(equalTo: searchBox.bottomAnchor, constant: 8),
             scrollView.leadingAnchor.constraint(equalTo: background.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: background.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: footerLeft.topAnchor, constant: -6),
+            scrollView.bottomAnchor.constraint(equalTo: footer.topAnchor),
 
-            footerLeft.leadingAnchor.constraint(equalTo: background.leadingAnchor, constant: 18),
-            footerLeft.bottomAnchor.constraint(equalTo: protoBox.topAnchor, constant: -8),
-            footerRight.trailingAnchor.constraint(equalTo: background.trailingAnchor, constant: -18),
-            footerRight.centerYAnchor.constraint(equalTo: footerLeft.centerYAnchor),
+            footer.leadingAnchor.constraint(equalTo: background.leadingAnchor),
+            footer.trailingAnchor.constraint(equalTo: background.trailingAnchor),
+            footer.heightAnchor.constraint(equalToConstant: 30),
+            footer.bottomAnchor.constraint(equalTo: protoBox.topAnchor),
 
             protoBox.leadingAnchor.constraint(equalTo: background.leadingAnchor),
             protoBox.trailingAnchor.constraint(equalTo: background.trailingAnchor),
             protoBox.bottomAnchor.constraint(equalTo: background.bottomAnchor),
-            protoStack.leadingAnchor.constraint(equalTo: protoBox.leadingAnchor, constant: 18),
+            protoStack.leadingAnchor.constraint(equalTo: protoBox.leadingAnchor, constant: 14),
             protoStack.trailingAnchor.constraint(lessThanOrEqualTo: protoBox.trailingAnchor, constant: -12),
             protoStack.topAnchor.constraint(equalTo: protoBox.topAnchor, constant: 5),
             protoStack.bottomAnchor.constraint(equalTo: protoBox.bottomAnchor, constant: -6),
@@ -277,29 +466,55 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         ])
     }
 
-    private func caption(_ text: String) -> NSTextField {
-        let field = NSTextField(labelWithString: text)
-        field.font = .systemFont(ofSize: 11)
-        field.textColor = .secondaryLabelColor
-        return field
+    private func caption(_ string: String) -> NSTextField {
+        text(string, size: 11, color: .secondaryLabelColor)
     }
 
+    /// Scheda di modifica: inset 10, raggio 10, padding 14/16/12.
     private func buildCard() {
+        card.material = .popover
+        card.blendingMode = .withinWindow
+        card.state = .active
         card.wantsLayer = true
-        card.layer?.backgroundColor = NSColor(white: 0.08, alpha: 0.96).cgColor
         card.layer?.cornerRadius = 10
-        card.layer?.borderWidth = 0.5
-        card.layer?.borderColor = NSColor(white: 1, alpha: 0.12).cgColor
+        card.layer?.masksToBounds = true
         card.isHidden = true
+        let cardBorder = FillView(border: .separatorColor, radius: 10)
 
-        let heading = NSTextField(labelWithString: "Modifica elemento")
-        heading.font = .systemFont(ofSize: 13, weight: .semibold)
+        let heading = text("Modifica elemento", size: 13, weight: .semibold)
+
+        // Etichetta: campo 26 alto, raggio 6, padding 0×8
+        cardLabel.font = .systemFont(ofSize: 13)
         cardLabel.placeholderString = "facoltativa"
+        cardLabel.isBordered = false
+        cardLabel.drawsBackground = false
+        cardLabel.focusRingType = .none
+        cardLabel.cell?.isScrollable = true
+        cardLabel.cell?.wraps = false
+        cardLabel.translatesAutoresizingMaskIntoConstraints = false
+        labelBox.addSubview(cardLabel)
+        NSLayoutConstraint.activate([
+            labelBox.heightAnchor.constraint(equalToConstant: 26),
+            cardLabel.leadingAnchor.constraint(equalTo: labelBox.leadingAnchor, constant: 8),
+            cardLabel.trailingAnchor.constraint(equalTo: labelBox.trailingAnchor, constant: -8),
+            cardLabel.centerYAnchor.constraint(equalTo: labelBox.centerYAnchor),
+        ])
 
+        // Testo: 84 alto (4 righe da 18), raggio 6, padding 6×8, scorre
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.minimumLineHeight = 18
+        paragraph.maximumLineHeight = 18
         cardText.isRichText = false
         cardText.allowsUndo = true
         cardText.font = .systemFont(ofSize: 13)
+        cardText.textColor = .labelColor
+        cardText.defaultParagraphStyle = paragraph
+        cardText.typingAttributes = [.font: NSFont.systemFont(ofSize: 13), .paragraphStyle: paragraph,
+                                     .foregroundColor: NSColor.labelColor]
         cardText.drawsBackground = false
+        cardText.focusRingType = .none
+        cardText.textContainerInset = NSSize(width: 8, height: 6)
+        cardText.textContainer?.lineFragmentPadding = 0
         cardText.isVerticallyResizable = true
         cardText.autoresizingMask = .width
         cardText.textContainer?.widthTracksTextView = true
@@ -307,51 +522,84 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         let scroll = NSScrollView()
         scroll.documentView = cardText
         scroll.hasVerticalScroller = true
+        scroll.autohidesScrollers = true
         scroll.drawsBackground = false
-        scroll.borderType = .bezelBorder
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        textBox.addSubview(scroll)
+        NSLayoutConstraint.activate([
+            textBox.heightAnchor.constraint(equalToConstant: 84),
+            scroll.topAnchor.constraint(equalTo: textBox.topAnchor, constant: 1),
+            scroll.bottomAnchor.constraint(equalTo: textBox.bottomAnchor, constant: -1),
+            scroll.leadingAnchor.constraint(equalTo: textBox.leadingAnchor, constant: 1),
+            scroll.trailingAnchor.constraint(equalTo: textBox.trailingAnchor, constant: -1),
+        ])
 
-        cardCount.font = .systemFont(ofSize: 11)
-        cardCount.textColor = .tertiaryLabelColor
+        // Pulsanti a destra, ciascuno col suo tasto sotto (gap 3), distanza 10
+        let cancel = PillButton(title: "Annulla", fill: EColor.strongFill, titleColor: .labelColor,
+                                padding: 14, height: 24, radius: 6, target: self, action: #selector(escInEditor))
+        let save = PillButton(title: "Salva", fill: .controlAccentColor, titleColor: EColor.onAccent, weight: .semibold,
+                              padding: 18, height: 24, radius: 6, target: self, action: #selector(saveEdit))
+        func withKey(_ button: NSView, _ key: String) -> NSStackView {
+            let stack = NSStackView(views: [button, keycap(key, filled: false)])
+            stack.orientation = .vertical
+            stack.spacing = 3
+            return stack
+        }
+        cardButtons = NSStackView(views: [NSView(), withKey(cancel, "esc"), withKey(save, "⌘↩")])
+        cardButtons.spacing = 10
+        cardButtons.alignment = .top
 
-        let cancel = NSButton(title: "Annulla", target: self, action: #selector(escInEditor))
-        let save = NSButton(title: "Salva", target: self, action: #selector(saveEdit))
-        save.bezelColor = .controlAccentColor
-        save.keyEquivalent = "\r"
-        save.keyEquivalentModifierMask = .command   // ↩ da solo va a capo nel testo
-        cancel.toolTip = "esc"
-        save.toolTip = "⌘↩"
-        cardButtons = NSStackView(views: [cardCount, NSView(), cancel, save])
-        cardButtons.spacing = 8
-
-        let question = NSTextField(labelWithString: "Scartare le modifiche?")
-        question.font = .systemFont(ofSize: 12, weight: .medium)
-        let keep = NSButton(title: "Continua a modificare", target: self, action: #selector(keepEditing))
-        let discard = NSButton(title: "Scarta", target: self, action: #selector(discardEdit))
-        discard.bezelColor = .systemRed
+        let question = text("Scartare le modifiche?", size: 13, weight: .medium)
+        let keep = PillButton(title: "Continua a modificare", fill: EColor.strongFill, titleColor: .labelColor,
+                              padding: 14, height: 24, radius: 6, target: self, action: #selector(keepEditing))
+        let discard = PillButton(title: "Scarta", fill: .systemRed, titleColor: EColor.onAccent, weight: .semibold,
+                                 padding: 18, height: 24, radius: 6, target: self, action: #selector(discardEdit))
         cardConfirm = NSStackView(views: [question, NSView(), keep, discard])
-        cardConfirm.spacing = 8
+        cardConfirm.spacing = 10
         cardConfirm.isHidden = true
 
-        let stack = NSStackView(views: [heading, caption("Etichetta"), cardLabel, caption("Testo"), scroll, cardButtons, cardConfirm])
+        // Nota in fondo con filo superiore
+        let noteRule = FillView(fill: .separatorColor)
+        let note = caption("Con modifiche non salvate, esc chiede conferma.")
+
+        let stack = NSStackView(views: [heading, caption("Etichetta"), labelBox, caption("Testo"), textBox, cardCount,
+                                        cardButtons, cardConfirm, noteRule, note])
         stack.orientation = .vertical
         stack.alignment = .leading
-        stack.spacing = 6
+        stack.spacing = 4
         stack.setCustomSpacing(12, after: heading)
-        stack.setCustomSpacing(12, after: cardLabel)
-        stack.setCustomSpacing(10, after: scroll)
+        stack.setCustomSpacing(10, after: labelBox)
+        stack.setCustomSpacing(10, after: cardCount)
+        stack.setCustomSpacing(10, after: cardButtons)
+        stack.setCustomSpacing(10, after: cardConfirm)
+        stack.setCustomSpacing(8, after: noteRule)
         stack.translatesAutoresizingMaskIntoConstraints = false
+        cardBorder.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(stack)
+        card.addSubview(cardBorder)
         NSLayoutConstraint.activate([
             stack.topAnchor.constraint(equalTo: card.topAnchor, constant: 14),
-            stack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -14),
-            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 14),
-            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -14),
-            cardLabel.widthAnchor.constraint(equalTo: stack.widthAnchor),
-            scroll.widthAnchor.constraint(equalTo: stack.widthAnchor),
-            scroll.heightAnchor.constraint(equalToConstant: 104),   // ~6 righe a 13pt
+            stack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -12),
+            stack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 16),
+            stack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -16),
+            labelBox.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            textBox.widthAnchor.constraint(equalTo: stack.widthAnchor),
             cardButtons.widthAnchor.constraint(equalTo: stack.widthAnchor),
             cardConfirm.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            noteRule.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            noteRule.heightAnchor.constraint(equalToConstant: 1),
+            cardBorder.topAnchor.constraint(equalTo: card.topAnchor),
+            cardBorder.bottomAnchor.constraint(equalTo: card.bottomAnchor),
+            cardBorder.leadingAnchor.constraint(equalTo: card.leadingAnchor),
+            cardBorder.trailingAnchor.constraint(equalTo: card.trailingAnchor),
         ])
+    }
+
+    private func updateFocusBorders() {
+        let responder = panel.firstResponder
+        let labelFocused = (responder as? NSTextView)?.delegate === cardLabel
+        labelBox.border = labelFocused ? NSColor.controlAccentColor.withAlphaComponent(0.8) : .separatorColor
+        textBox.border = responder === cardText ? NSColor.controlAccentColor.withAlphaComponent(0.8) : .separatorColor
     }
 
     // MARK: - Mostra / nascondi / varianti
@@ -393,8 +641,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         if !query.isEmpty {
             rows = pinned + recent   // cercando: niente intestazioni
         } else {
-            rows = (pinned.isEmpty ? [] : [.header("FISSATI")] + pinned)
-                + (recent.isEmpty ? [] : [.header("RECENTI")] + recent)
+            rows = (pinned.isEmpty ? [] : [.header("Fissati")] + pinned)
+                + (recent.isEmpty ? [] : [.header("Recenti")] + recent)
         }
     }
 
@@ -442,26 +690,47 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     }
 
     func controlTextDidChange(_ obj: Notification) {
+        guard (obj.object as? NSTextField) === search else { return }
         reload(keeping: nil, fallback: 0)
     }
 
     // MARK: - Azioni
 
-    /// Messaggio di 2 secondi a sinistra nel pie' di pagina.
-    private func flash(_ text: String, warning: Bool = false) {
-        footerReset?.cancel()
-        footerLeft.stringValue = text
-        footerLeft.textColor = warning ? .systemOrange : .labelColor
+    /// Messaggio di 2 secondi al posto di "↩ copia" nel pie' di pagina.
+    private func flash(_ message: String) {
+        flashReset?.cancel()
+        footerFlash.stringValue = message
+        footerFlash.isHidden = false
+        footerKeys.isHidden = true
         let reset = DispatchWorkItem { [weak self] in
-            self?.footerLeft.stringValue = "↩ copia"
-            self?.footerLeft.textColor = .secondaryLabelColor
+            self?.footerFlash.isHidden = true
+            self?.footerKeys.isHidden = false
         }
-        footerReset = reset
+        flashReset = reset
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: reset)
+    }
+
+    /// Fumetto sotto la riga selezionata, a 22 dal bordo destro, per 2 secondi.
+    private func showBubble(_ message: String) {
+        bubbleReset?.cancel()
+        bubbleLabel.stringValue = message
+        let size = bubble.fittingSize
+        var rowRect = tableView.rect(ofRow: max(tableView.selectedRow, 0))
+        rowRect = tableView.convert(rowRect, to: background)
+        let y = background.isFlipped ? rowRect.maxY + 2 : rowRect.minY - size.height - 2
+        bubble.frame = NSRect(x: background.bounds.width - 22 - size.width, y: y, width: size.width, height: size.height)
+        bubble.isHidden = false
+        let reset = DispatchWorkItem { [weak self] in self?.bubble.isHidden = true }
+        bubbleReset = reset
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: reset)
     }
 
     private func copy(_ item: ClipItem) {
         flash("Copiato (finto): “\(shortName(item))” — appunti invariati")
+    }
+
+    private func pasteIntoApp(_ item: ClipItem) {
+        flash("Incollato (finto): “\(shortName(item))”")
     }
 
     private func togglePin(_ item: ClipItem) {
@@ -472,7 +741,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
     private func delete(_ item: ClipItem) {
         guard !item.fissato else {
             NSSound.beep()
-            flash("Elemento fissato: sfissalo (⌘P) per eliminarlo", warning: true)
+            showBubble("Fissato: sfissa (⌘P) per poterlo eliminare")
             return
         }
         let fallback = tableView.selectedRow
@@ -501,12 +770,17 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             return menuItem
         }
         _ = add("Copia", #selector(menuCopy), "\r", [])
+        _ = add("Incolla nell'app", #selector(menuPaste), "\r", .option)
         _ = add("Modifica…", #selector(menuEdit), "e", .command)
         _ = add(item.fissato ? "Sfissa" : "Fissa", #selector(menuPin), "p", .command)
         menu.addItem(.separator())
         let delete = add("Elimina", #selector(menuDelete), String(UnicodeScalar(8)), [])
         delete.isEnabled = !item.fissato
-        if item.fissato {
+        if delete.isEnabled {   // rosso come nel mockup
+            delete.attributedTitle = NSAttributedString(string: "Elimina", attributes: [
+                .foregroundColor: NSColor.systemRed, .font: NSFont.menuFont(ofSize: 0),
+            ])
+        } else {
             let why = NSMenuItem(title: "Sfissa per poterlo eliminare", action: nil, keyEquivalent: "")
             why.isEnabled = false
             menu.addItem(why)
@@ -518,7 +792,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         let menu = NSMenu()
         fillActionMenu(menu, for: item)
         let rect = tableView.rect(ofRow: tableView.selectedRow)
-        menu.popUp(positioning: nil, at: NSPoint(x: rect.maxX - 180, y: rect.maxY), in: tableView)
+        menu.popUp(positioning: nil, at: NSPoint(x: rect.maxX - 14 - 240, y: rect.maxY), in: tableView)
     }
 
     func menuNeedsUpdate(_ menu: NSMenu) {   // clic destro
@@ -532,6 +806,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         store.items.first { $0.id == sender.representedObject as? UUID }
     }
     @objc private func menuCopy(_ sender: NSMenuItem) { if let i = menuTarget(sender) { copy(i) } }
+    @objc private func menuPaste(_ sender: NSMenuItem) { if let i = menuTarget(sender) { pasteIntoApp(i) } }
     @objc private func menuEdit(_ sender: NSMenuItem) { if let i = menuTarget(sender) { openEditor(i) } }
     @objc private func menuPin(_ sender: NSMenuItem) { if let i = menuTarget(sender) { togglePin(i) } }
     @objc private func menuDelete(_ sender: NSMenuItem) { if let i = menuTarget(sender) { delete(i) } }
@@ -558,7 +833,10 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         switch event.keyCode {
         case 125 where !event.modifierFlags.contains(.shift): move(by: 1); return nil
         case 126 where !event.modifierFlags.contains(.shift): move(by: -1); return nil
-        case 36, 76: if let i = selected { copy(i) }; return nil
+        case 36, 76:
+            guard let i = selected else { return nil }
+            if event.modifierFlags.contains(.option) { pasteIntoApp(i) } else { copy(i) }
+            return nil
         case 53:
             if search.stringValue.isEmpty { hide() } else {
                 search.stringValue = ""
@@ -577,6 +855,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     private func openEditor(_ item: ClipItem) {
         editing = item
+        bubble.isHidden = true
         cardLabel.stringValue = item.etichetta ?? ""
         cardText.string = item.text
         cardText.setSelectedRange(NSRange(location: 0, length: 0))
@@ -585,9 +864,9 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         cardConfirm.isHidden = true
         cardButtons.isHidden = false
         card.isHidden = false
-        card.superview?.layoutSubtreeIfNeeded()
+        background.layoutSubtreeIfNeeded()
         cardTop.constant = -card.frame.height - 10
-        card.superview?.layoutSubtreeIfNeeded()
+        background.layoutSubtreeIfNeeded()
         setDimmed(true)
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
@@ -597,8 +876,9 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         panel.makeFirstResponder(cardText)
     }
 
+    /// Dietro la scheda la lista resta visibile al 35%.
     private func setDimmed(_ dimmed: Bool) {
-        for view in [search, scrollView, footerLeft, footerRight, emptyLabel] as [NSView] {
+        for view in [searchBox, scrollView, footer, emptyLabel] as [NSView] {
             view.alphaValue = dimmed ? 0.35 : 1
         }
         search.isEnabled = !dimmed
@@ -668,29 +948,29 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     func numberOfRows(in tableView: NSTableView) -> Int { rows.count }
 
-    func tableViewSelectionDidChange(_ notification: Notification) { updateState() }
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        bubble.isHidden = true
+        updateState()
+    }
 
     func tableView(_ tableView: NSTableView, selectionIndexesForProposedSelection proposed: IndexSet) -> IndexSet {
         proposed.filteredIndexSet { item(at: $0) != nil }
     }
 
-    func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool { item(at: row) == nil }
-
+    /// Didascalie: margine 4 sopra (10 dalla seconda), 12 di testo, 4 sotto. Righe 44 / 30.
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        guard let item = item(at: row) else { return 22 }
+        guard let item = item(at: row) else { return row == 0 ? 20 : 26 }
         return item.etichetta != nil ? 44 : 30
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        item(at: row) == nil ? nil : ERowView()
+        ERowView()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let item = item(at: row) else {
-            let header = HeaderCellView(frame: .zero)
-            header.label.font = .systemFont(ofSize: 10, weight: .semibold)
-            if case .header(let text) = rows[row] { header.label.stringValue = text }
-            return header
+            if case .header(let title) = rows[row] { return ECaptionView(title) }
+            return nil
         }
         let identifier = NSUserInterfaceItemIdentifier("ECell")
         let cell = (tableView.makeView(withIdentifier: identifier, owner: self) as? ECellView) ?? {
