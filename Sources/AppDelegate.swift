@@ -3,10 +3,16 @@ import Carbon.HIToolbox
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let store = HistoryStore()
+    private let shortcuts = ShortcutSettings()
     private lazy var monitor = ClipboardMonitor(store: store)
-    private lazy var panel = HistoryPanelController(store: store)
+    private lazy var panel = HistoryPanelController(store: store, shortcuts: shortcuts)
+    private lazy var settings = SettingsWindowController(
+        shortcuts: shortcuts,
+        registerGlobal: { [weak self] in self?.registerGlobal($0) ?? false },
+        isReceptionOn: { [weak self] in self?.reception.isRunning ?? false },
+        toggleReception: { [weak self] in self?.toggleReception() })
     private var statusItem: NSStatusItem!
-    private var hotKey: HotKey?
+    private lazy var hotKey = HotKey { [weak self] in self?.panel.toggle() }
     private let reception = AndroidReception()
     private let receptionEnabledKey = "androidReceptionEnabled"
     private let receptionExplainedKey = "androidReceptionExplained"
@@ -25,8 +31,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Pannello
         panel.onCopy = { [weak self] items in self?.copy(items) }
-        panel.onDelete = { [weak self] items in self?.delete(items) }
-        panel.onEdit = { [weak self] item in self?.edit(item) }
+        panel.onDelete = { [weak self] items in self?.delete(items) ?? false }
+        panel.onSave = { [weak self] item, text, etichetta in self?.save(item, text, etichetta) ?? false }
         store.onChange = { [weak self] in self?.panel.reloadIfVisible() }
 
         // Controllo degli appunti
@@ -41,11 +47,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             UserDefaults.standard.set(false, forKey: receptionEnabledKey)
         }
 
-        // Cmd+Shift+V globale
-        hotKey = HotKey(keyCode: UInt32(kVK_ANSI_V),
-                        modifiers: UInt32(cmdKey | shiftKey)) { [weak self] in
-            self?.panel.toggle()
-        }
+        // Scorciatoia globale (predefinita ⌘⇧V)
+        settings.globalFailed = !registerGlobal(shortcuts.shortcut(for: .openHistory))
+    }
+
+    private func registerGlobal(_ shortcut: Shortcut?) -> Bool {
+        guard let shortcut else { hotKey.unregister(); return true }
+        return hotKey.register(shortcut)
     }
 
     // MARK: - Azioni sugli elementi
@@ -91,52 +99,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSApp.mainMenu = main
     }
 
-    /// Editor di testo semplice. Non scrive negli appunti: salva solo nello storico.
-    private func edit(_ item: ClipItem) {
-        // Il pannello non e' attivante: l'app in primo piano e' ancora quella di prima.
-        let previousApp = NSWorkspace.shared.frontmostApplication.flatMap {
-            $0.processIdentifier == ProcessInfo.processInfo.processIdentifier ? nil : $0
-        }
-        panel.hide()
-        let textView = NSTextView(frame: NSRect(x: 0, y: 0, width: 420, height: 200))
-        textView.isRichText = false
-        textView.allowsUndo = true
-        textView.font = .systemFont(ofSize: 13)
-        textView.isVerticallyResizable = true
-        textView.autoresizingMask = .width
-        textView.textContainer?.widthTracksTextView = true
-        textView.string = item.text
-        let scroll = NSScrollView(frame: textView.frame)
-        scroll.documentView = textView
-        scroll.hasVerticalScroller = true
-        scroll.borderType = .bezelBorder
-
-        let alert = NSAlert()
-        alert.messageText = L("panel.edit")
-        alert.accessoryView = scroll
-        alert.addButton(withTitle: L("button.save"))
-        alert.addButton(withTitle: L("button.cancel"))
-        alert.window.initialFirstResponder = textView
-
-        let saveButton = alert.buttons[0]
-        let observer = NotificationCenter.default.addObserver(forName: NSText.didChangeNotification, object: textView, queue: .main) { _ in
-            saveButton.isEnabled = !textView.string.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        }
-        defer { NotificationCenter.default.removeObserver(observer) }
-
-        NSApp.activate(ignoringOtherApps: true)
-        let response = alert.runModal()
-        previousApp?.activate()
-        guard response == .alertFirstButtonReturn else { return }
+    /// Il foglio di modifica non scrive negli appunti, salvo che l'elemento fosse l'ultimo copiato.
+    private func save(_ item: ClipItem, _ text: String, _ etichetta: String?) -> Bool {
         let wasOnClipboard = monitor.currentString() == item.text
-        store.update(id: item.id, text: textView.string)
-        if wasOnClipboard { monitor.write(textView.string, record: false) }
+        guard store.update(id: item.id, text: text, etichetta: etichetta) else { return false }
+        if wasOnClipboard { monitor.write(text, record: false) }
+        return true
     }
 
-    private func delete(_ items: [ClipItem]) {
-        guard !items.isEmpty else { return }
-        store.remove(ids: Set(items.map(\.id)))
+    /// Elimina solo i non fissati. Se non elimina nulla gli appunti restano com'erano
+    /// (un Testo unito non viene sostituito senza un'eliminazione reale).
+    private func delete(_ items: [ClipItem]) -> Bool {
+        guard !store.remove(ids: Set(items.map(\.id))).isEmpty else { return false }
         syncClipboard()
+        return true
     }
 
     /// Dopo una rimozione: gli appunti di sistema non devono contenere
@@ -157,36 +133,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.removeAllItems()
 
         let show = addItem(to: menu, L("menu.show"), #selector(showHistory))
-        show.keyEquivalent = "v"
-        show.keyEquivalentModifierMask = [.command, .shift]
+        if let global = shortcuts.shortcut(for: .openHistory) {
+            show.keyEquivalent = global.keyEquivalent
+            var mask: NSEvent.ModifierFlags = []
+            if global.modifiers.contains(.command) { mask.insert(.command) }
+            if global.modifiers.contains(.shift) { mask.insert(.shift) }
+            if global.modifiers.contains(.option) { mask.insert(.option) }
+            if global.modifiers.contains(.control) { mask.insert(.control) }
+            show.keyEquivalentModifierMask = mask
+        }
 
         menu.addItem(.separator())
 
         let count = store.items.count
-        let info = NSMenuItem(title: count == 1 ? L("menu.count.one") : String(format: L("menu.count.other"), count),
+        let pinned = store.items.filter(\.fissato).count
+        let info = NSMenuItem(title: String(format: L(count == 1 ? "menu.items.one" : "menu.items.other"), count) + " · "
+                                + String(format: L(pinned == 1 ? "menu.pinned.one" : "menu.pinned.other"), pinned),
                               action: nil, keyEquivalent: "")
         info.isEnabled = false
         menu.addItem(info)
 
-        addItem(to: menu, L("menu.clearAll"), #selector(clearAll))
-        addItem(to: menu, L("menu.keepLastTen"), #selector(keepLastTen))
-        addItem(to: menu, L("menu.removeOlderHour"), #selector(removeOlderThanHour))
-        addItem(to: menu, L("menu.removeOlderDay"), #selector(removeOlderThanDay))
-
-        menu.addItem(.separator())
-
         let pause = addItem(to: menu, L("menu.pause"), #selector(togglePause))
         pause.state = monitor.isPaused ? .on : .off
 
-        let android = addItem(to: menu, L("menu.android"), #selector(toggleReception))
-        android.state = reception.isRunning ? .on : .off
-
-        let autoPaste = addItem(to: menu, L("menu.autoPaste"), #selector(toggleAutoPaste))
-        autoPaste.state = UserDefaults.standard.bool(forKey: autoPasteKey) ? .on : .off
-        autoPaste.toolTip = L("menu.autoPaste.tooltip")
+        let clean = NSMenu()
+        addItem(to: clean, L("menu.clearAll"), #selector(clearAll))
+        addItem(to: clean, L("menu.keepLastTen"), #selector(keepLastTen))
+        addItem(to: clean, L("menu.removeOlderHour"), #selector(removeOlderThanHour))
+        addItem(to: clean, L("menu.removeOlderDay"), #selector(removeOlderThanDay))
+        let cleanItem = NSMenuItem(title: L("menu.clean"), action: nil, keyEquivalent: "")
+        cleanItem.submenu = clean
+        menu.addItem(cleanItem)
 
         menu.addItem(.separator())
-        addItem(to: menu, L("menu.quit"), #selector(quit))
+        addItem(to: menu, L("menu.settings"), #selector(showSettings)).keyEquivalent = ","
+        addItem(to: menu, L("menu.quit"), #selector(quit)).keyEquivalent = "q"
     }
 
     @discardableResult
@@ -199,24 +180,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func showHistory() { panel.show() }
 
+    @objc private func showSettings() { settings.show() }
+
     @objc private func clearAll() {
-        store.clear()
-        syncClipboard()
+        if store.clear() > 0 { syncClipboard() }
     }
 
     @objc private func keepLastTen() {
-        store.keepLatest(10)
-        syncClipboard()
+        if store.keepLatest(10) > 0 { syncClipboard() }
     }
 
     @objc private func removeOlderThanHour() {
-        store.removeOlder(than: 3600)
-        syncClipboard()
+        if store.removeOlder(than: 3600) > 0 { syncClipboard() }
     }
 
     @objc private func removeOlderThanDay() {
-        store.removeOlder(than: 86400)
-        syncClipboard()
+        if store.removeOlder(than: 86400) > 0 { syncClipboard() }
     }
 
     @objc private func togglePause() {
@@ -224,15 +203,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         reception.isPaused = monitor.isPaused
     }
 
-    @objc private func toggleAutoPaste() {
-        let defaults = UserDefaults.standard
-        let on = !defaults.bool(forKey: autoPasteKey)
-        defaults.set(on, forKey: autoPasteKey)
-        // Senza permesso resta attivo ma la selezione si limita a copiare.
-        if on, !CGPreflightPostEventAccess() { _ = CGRequestPostEventAccess() }
-    }
-
-    @objc private func toggleReception() {
+    private func toggleReception() {
         let defaults = UserDefaults.standard
         if reception.isRunning {
             reception.stop()
