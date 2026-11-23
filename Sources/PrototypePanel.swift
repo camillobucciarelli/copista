@@ -1,16 +1,17 @@
-import Foundation
+import AppKit
 
 // PROTOTYPE (#19): come mostra il pannello etichette ed Elementi fissati?
 // Avvio con `-variant a|b|c`. Senza argomento l'app si comporta come sempre.
 
 enum PrototypeVariant: String, CaseIterable {
-    case a, b, c
+    case a, b, c, d
 
     var name: String {
         switch self {
         case .a: return "Sezione in cima"
         case .b: return "Al loro posto"
         case .c: return "Schede"
+        case .d: return "Scelta"
         }
     }
 
@@ -20,6 +21,12 @@ enum PrototypeVariant: String, CaseIterable {
         else { return nil }
         return PrototypeVariant(rawValue: raw.lowercased()) ?? .a
     }()
+
+    /// Simboli matita da provare per "Modifica" (variante D); solo quelli presenti su questo macOS.
+    static let editSymbols: [String] = [
+        "pencil.line", "square.and.pencil", "pencil.circle", "pencil.tip",
+        "pencil.and.outline", "pencil.and.list.clipboard",
+    ].filter { NSImage(systemSymbolName: $0, accessibilityDescription: nil) != nil }
 
     func shifted(by delta: Int) -> PrototypeVariant {
         let all = Self.allCases

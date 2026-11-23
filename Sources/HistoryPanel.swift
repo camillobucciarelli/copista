@@ -35,6 +35,14 @@ final class ClipCellView: NSTableCellView {
     var onDelete: (() -> Void)?
     var onEdit: (() -> Void)?
     var onPin: (() -> Void)?
+    private var row: NSStackView!
+
+    /// PROTOTYPE: variante D vuole [modifica] [fissa] [cestino].
+    func setEditFirst(_ editFirst: Bool) {
+        row.removeArrangedSubview(editButton)
+        let index = row.arrangedSubviews.firstIndex(of: pinButton)! + (editFirst ? 0 : 1)
+        row.insertArrangedSubview(editButton, at: index)
+    }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -69,7 +77,7 @@ final class ClipCellView: NSTableCellView {
         texts.spacing = 1
         texts.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        let row = NSStackView(views: [pinIcon, badge, texts, pinButton, editButton, deleteButton])
+        row = NSStackView(views: [pinIcon, badge, texts, pinButton, editButton, deleteButton])
         row.orientation = .horizontal
         row.alignment = .centerY
         row.spacing = 6
@@ -131,6 +139,16 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     private let protoState = NSTextField(labelWithString: "")
     private var protoNote = ""
     private let contextMenu = NSMenu()
+    // PROTOTYPE variante D: icona modifica ciclabile e modifica dentro il pannello
+    private var editSymbolIndex = 0
+    private var editSymbol: String { PrototypeVariant.editSymbols.isEmpty ? "pencil" : PrototypeVariant.editSymbols[editSymbolIndex] }
+    private let editSymbolButton = NSButton()
+    private let protoKeys = NSTextField(labelWithString: "")
+    private let titleField = NSTextField(labelWithString: L("history.title"))
+    private let editorView = NSView()
+    private let editorLabel = NSTextField(string: "")
+    private let editorText = NSTextView()
+    private var editingID: UUID?
 
     var onCopy: (([ClipItem]) -> Void)?
     var onDelete: (([ClipItem]) -> Void)?
@@ -174,7 +192,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         background.state = .active
         panel.contentView = background
 
-        let title = NSTextField(labelWithString: L("history.title"))
+        let title = titleField
         title.font = .systemFont(ofSize: 13, weight: .semibold)
         title.textColor = .secondaryLabelColor
 
@@ -220,9 +238,17 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         let prev = NSButton(title: "◀", target: self, action: #selector(prevVariant))
         let next = NSButton(title: "▶", target: self, action: #selector(nextVariant))
         for b in [prev, next] { b.isBordered = false; b.font = .systemFont(ofSize: 11) }
-        let titleRow = NSStackView(views: [protoTitle, prev, next])
+        editSymbolButton.isBordered = false
+        editSymbolButton.imagePosition = .imageOnly
+        editSymbolButton.toolTip = "Cambia icona modifica (\\)"
+        editSymbolButton.target = self
+        editSymbolButton.action = #selector(nextEditSymbol)
+        protoKeys.font = .systemFont(ofSize: 10)
+        protoKeys.textColor = .secondaryLabelColor
+        protoKeys.stringValue = "↩ copia  ⌘E modifica  ⌘P fissa/sfissa  ⌫ elimina (Recenti)  ⇥ scheda  esc chiudi  |  editor: ⌘↩ salva  esc annulla"
+        let titleRow = NSStackView(views: [protoTitle, prev, next, editSymbolButton])
         titleRow.spacing = 4
-        let protoStack = NSStackView(views: [titleRow, protoState])
+        let protoStack = NSStackView(views: [titleRow, protoKeys, protoState])
         protoStack.orientation = .vertical
         protoStack.alignment = .leading
         protoStack.spacing = 2
@@ -236,7 +262,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         ])
         protoBox.isHidden = variant == nil
 
-        for view in [title, tabs, scrollView, hint, emptyLabel, protoBox] as [NSView] {
+        buildEditor()
+        for view in [title, tabs, scrollView, hint, emptyLabel, protoBox, editorView] as [NSView] {
             view.translatesAutoresizingMaskIntoConstraints = false
             background.addSubview(view)
         }
@@ -264,6 +291,11 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             protoBox.trailingAnchor.constraint(equalTo: background.trailingAnchor),
             protoBox.bottomAnchor.constraint(equalTo: background.bottomAnchor),
 
+            editorView.topAnchor.constraint(equalTo: background.topAnchor, constant: 12),
+            editorView.leadingAnchor.constraint(equalTo: background.leadingAnchor, constant: 18),
+            editorView.trailingAnchor.constraint(equalTo: background.trailingAnchor, constant: -18),
+            editorView.bottomAnchor.constraint(equalTo: protoBox.topAnchor, constant: -10),
+
             emptyLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             emptyLabel.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor),
         ])
@@ -273,15 +305,126 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     // MARK: - PROTOTYPE: varianti
 
     private func applyVariant() {
-        tabs.isHidden = variant != .c
-        tableView.menu = variant == .c ? contextMenu : nil
+        let tabbed = variant == .c || variant == .d
+        tabs.isHidden = !tabbed
+        tableView.menu = tabbed ? contextMenu : nil
+        editSymbolButton.isHidden = variant != .d
+        protoKeys.isHidden = variant != .d
+        editSymbolButton.image = NSImage(systemSymbolName: editSymbol, accessibilityDescription: nil)
         if let v = variant {
             protoTitle.stringValue = "PROTOTIPO — variante \(v.rawValue.uppercased()) (\(v.name))   [ ]"
+                + (v == .d ? "   matita: \(editSymbol)  \\" : "")
         }
+    }
+
+    @objc private func nextEditSymbol() {
+        guard !PrototypeVariant.editSymbols.isEmpty else { NSSound.beep(); return }
+        editSymbolIndex = (editSymbolIndex + 1) % PrototypeVariant.editSymbols.count
+        applyVariant()
+        reload(keeping: Set(selectedItems().map(\.id)), fallback: tableView.selectedRow)
+    }
+
+    // MARK: - PROTOTYPE: modifica dentro il pannello (variante D)
+
+    private func buildEditor() {
+        let heading = NSTextField(labelWithString: L("panel.edit"))
+        heading.font = .systemFont(ofSize: 13, weight: .semibold)
+        heading.textColor = .secondaryLabelColor
+        let labelCaption = NSTextField(labelWithString: "Etichetta")
+        labelCaption.font = .systemFont(ofSize: 11)
+        labelCaption.textColor = .secondaryLabelColor
+        editorLabel.placeholderString = "facoltativa"
+        let textCaption = NSTextField(labelWithString: "Testo")
+        textCaption.font = labelCaption.font
+        textCaption.textColor = .secondaryLabelColor
+
+        editorText.isRichText = false
+        editorText.allowsUndo = true
+        editorText.font = .systemFont(ofSize: 13)
+        editorText.drawsBackground = false
+        editorText.isVerticallyResizable = true
+        editorText.autoresizingMask = .width
+        editorText.textContainer?.widthTracksTextView = true
+        let scroll = NSScrollView()
+        scroll.documentView = editorText
+        scroll.hasVerticalScroller = true
+        scroll.drawsBackground = false
+        scroll.borderType = .bezelBorder
+
+        let cancel = NSButton(title: L("button.cancel"), target: self, action: #selector(cancelInlineEdit))
+        let save = NSButton(title: L("button.save"), target: self, action: #selector(saveInlineEdit))
+        save.bezelColor = .controlAccentColor
+        let buttons = NSStackView(views: [NSView(), cancel, save])
+        buttons.spacing = 8
+
+        let stack = NSStackView(views: [heading, labelCaption, editorLabel, textCaption, scroll, buttons])
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 6
+        stack.setCustomSpacing(12, after: heading)
+        stack.setCustomSpacing(12, after: editorLabel)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        editorView.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.topAnchor.constraint(equalTo: editorView.topAnchor),
+            stack.bottomAnchor.constraint(equalTo: editorView.bottomAnchor),
+            stack.leadingAnchor.constraint(equalTo: editorView.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: editorView.trailingAnchor),
+            editorLabel.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            scroll.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            buttons.widthAnchor.constraint(equalTo: stack.widthAnchor),
+        ])
+        scroll.setContentHuggingPriority(.defaultLow, for: .vertical)
+        editorView.isHidden = true
+    }
+
+    private func setEditing(_ on: Bool) {
+        editorView.isHidden = !on
+        for view in [titleField, scrollView, hint] as [NSView] { view.isHidden = on }
+        tabs.isHidden = on || !(variant == .c || variant == .d)
+        if on { emptyLabel.isHidden = true }
+    }
+
+    private func beginInlineEdit(_ item: ClipItem) {
+        editingID = item.id
+        editorLabel.stringValue = item.etichetta ?? ""
+        editorText.string = item.text
+        setEditing(true)
+        panel.makeFirstResponder(editorText)
+        editorText.setSelectedRange(NSRange(location: 0, length: 0))
+    }
+
+    @objc private func saveInlineEdit() {
+        guard let id = editingID else { return }
+        let text = editorText.string
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { NSSound.beep(); return }
+        let label = editorLabel.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        endInlineEdit()
+        store.update(id: id, text: text)
+        store.setEtichetta(id: id, label.isEmpty ? nil : label)
+        reload(keeping: [id], fallback: 0)
+        note("salvato")
+    }
+
+    @objc private func cancelInlineEdit() {
+        endInlineEdit()
+        reload(keeping: Set(selectedItems().map(\.id)), fallback: 0)
+    }
+
+    private func endInlineEdit() {
+        editingID = nil
+        setEditing(false)
+        panel.makeFirstResponder(tableView)
+    }
+
+    /// In D "Modifica" apre l'editor nel pannello; altrove il dialogo dell'app.
+    private func edit(_ item: ClipItem) {
+        if variant == .d { beginInlineEdit(item) } else { onEdit?(item) }
     }
 
     private func setVariant(_ v: PrototypeVariant) {
         let keep = Set(selectedItems().map(\.id))
+        if editingID != nil { endInlineEdit() }
         variant = v
         applyVariant()
         updateHint()
@@ -309,6 +452,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             hint.stringValue = L(autoPaste ? "panel.hint.autoPaste" : "panel.hint")
         case .a: hint.stringValue = "↑↓ scegli   ↩ copia   puntina: fissa/sfissa   ⌫ elimina (non i fissati)   esc"
         case .b: hint.stringValue = "↑↓ scegli   ↩ copia   ⌘P / puntina: fissa/sfissa   ⌫ elimina (non i fissati)   esc"
+        case .d: hint.stringValue = "⇥ scheda   ↑↓ scegli   ↩ copia   ⌘E modifica   ⌘P fissa/sfissa   ⌫ elimina   esc"
         case .c: hint.stringValue = "⇥ scheda   ↑↓ scegli   ↩ copia   ⌘P / clic destro: fissa   ⌫ elimina   esc"
         }
     }
@@ -335,7 +479,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             let recent = items.filter { !$0.fissato }
             rows = (pinned.isEmpty ? [] : [.header("FISSATI")] + pinned.map { .item($0) })
                 + [.header("RECENTI")] + recent.map { .item($0) }
-        case .c?:
+        case .c?, .d?:
             rows = items.filter { $0.fissato == (tab == 1) }.map { .item($0) }
         }
     }
@@ -353,6 +497,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     }
 
     func show() {
+        if editingID != nil { endInlineEdit() }   // PROTOTYPE
         updateHint()
         reload(keeping: [], fallback: 0)
 
@@ -405,6 +550,12 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
 
     private func handleKey(_ event: NSEvent) -> NSEvent? {
         guard panel.isVisible, event.window === panel else { return event }
+        // PROTOTYPE: editor nel pannello. ⌘↩ salva, esc annulla, il resto va ai campi.
+        if editingID != nil {
+            if [36, 76].contains(event.keyCode), event.modifierFlags.contains(.command) { saveInlineEdit(); return nil }
+            if event.keyCode == 53 { cancelInlineEdit(); return nil }
+            return event
+        }
         // ⇧+frecce: la tabella estende la selezione.
         if [125, 126].contains(event.keyCode), event.modifierFlags.contains(.shift) { return event }
         // PROTOTYPE: [ ] cambiano variante, ⌘P fissa, ⇥ cambia scheda
@@ -413,7 +564,13 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             if chars == "[" || event.keyCode == 33 { setVariant(v.shifted(by: -1)); return nil }
             if chars == "]" || event.keyCode == 30 { setVariant(v.shifted(by: 1)); return nil }
             if event.keyCode == 35, event.modifierFlags.contains(.command), v != .a { togglePinSelected(); return nil }
-            if event.keyCode == 48, v == .c {
+            if v == .d, chars == "\\" || event.keyCode == 42 { nextEditSymbol(); return nil }
+            if v == .d, event.keyCode == 14, event.modifierFlags.contains(.command) {
+                if let first = selectedItems().first { beginInlineEdit(first) } else { NSSound.beep() }
+                return nil
+            }
+            if v == .d, [51, 117].contains(event.keyCode), tab == 1 { NSSound.beep(); return nil }
+            if event.keyCode == 48, v == .c || v == .d {
                 tabs.selectedSegment = 1 - tabs.selectedSegment
                 tabChanged()
                 return nil
@@ -493,7 +650,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         store.items.first { $0.id == sender.representedObject as? UUID }
     }
     @objc private func menuPin(_ sender: NSMenuItem) { if let i = menuTarget(sender) { onTogglePin?([i]) } }
-    @objc private func menuEdit(_ sender: NSMenuItem) { if let i = menuTarget(sender) { onEdit?(i) } }
+    @objc private func menuEdit(_ sender: NSMenuItem) { if let i = menuTarget(sender) { edit(i) } }
     @objc private func menuDelete(_ sender: NSMenuItem) { if let i = menuTarget(sender) { onDelete?([i]) } }
 
     // MARK: - Tabella
@@ -543,6 +700,9 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         cell.pinButton.isHidden = true
         cell.deleteButton.isHidden = false
         cell.deleteButton.isEnabled = true
+        cell.setEditFirst(variant == .d)
+        cell.editButton.image = NSImage(systemSymbolName: variant == .d ? editSymbol : "pencil",
+                                        accessibilityDescription: L("panel.edit"))
         cell.toolTip = String(item.text.prefix(600))
 
         // PROTOTYPE: resa per variante
@@ -566,6 +726,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
             }
             cell.pinButton.isHidden = false
             cell.deleteButton.isEnabled = !item.fissato
+        case .d?: break   // PROTOTYPE: sotto, dopo i pulsanti
         case .c?:
             if let label {
                 cell.label.stringValue = label
@@ -576,8 +737,20 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
                                        accessibilityDescription: item.fissato ? "Sfissa" : "Fissa")
         cell.pinButton.contentTintColor = item.fissato ? .systemOrange : .secondaryLabelColor
         cell.pinButton.toolTip = item.fissato ? "Sfissa" : "Fissa"
+        if variant == .d {   // PROTOTYPE: in Fissati il pulsante rimanda a Recenti
+            if let label {
+                cell.badge.isHidden = false
+                cell.badge.stringValue = " \(label) "
+            }
+            cell.pinButton.isHidden = false
+            cell.deleteButton.isHidden = item.fissato
+            cell.pinButton.image = NSImage(systemSymbolName: item.fissato ? "pin.slash" : "pin",
+                                           accessibilityDescription: item.fissato ? "Sfissa" : "Fissa")
+            cell.pinButton.contentTintColor = .secondaryLabelColor
+            cell.pinButton.toolTip = item.fissato ? "Sfissa: torna in Recenti" : "Fissa"
+        }
 
-        cell.onEdit = { [weak self] in self?.onEdit?(item) }
+        cell.onEdit = { [weak self] in self?.edit(item) }
         cell.onDelete = { [weak self] in self?.onDelete?([item]) }
         cell.onPin = { [weak self] in self?.onTogglePin?([item]) }
         return cell
