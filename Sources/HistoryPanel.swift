@@ -1018,6 +1018,7 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         refreshKeys()
         sheetLabel.stringValue = item.etichetta ?? ""
         sheetText.string = item.text
+        sheetText.undoManager?.removeAllActions()   // una nuova modifica non annulla quella precedente
         sheetText.setSelectedRange(NSRange(location: 0, length: 0))
         sheetText.scrollToBeginningOfDocument(nil)
         updateSheetState()
