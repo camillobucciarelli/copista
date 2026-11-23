@@ -118,6 +118,7 @@ final class HeaderCellView: NSTableCellView {
 enum PanelRow {
     case header(String)
     case item(ClipItem)
+    case spacer   // PROTOTYPE (variante E): 6pt fra le sezioni, non fluttua
 }
 
 final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate, NSMenuDelegate {

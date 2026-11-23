@@ -772,6 +772,13 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
                 let out = "\(base)-\(mode)-\(pinned ? "pinned" : "recent").png"
                 try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: out))
                 print("== \(out)")
+                // didascalie visibili (anche quella fluttuante) in coordinate finestra
+                func captions(in view: NSView) -> [ECaptionView] {
+                    view.subviews.flatMap { ($0 as? ECaptionView).map { [$0] } ?? captions(in: $0) }
+                }
+                for caption in captions(in: background) where !caption.isHiddenOrHasHiddenAncestor {
+                    print(" caption", caption.label.stringValue, caption.label.convert(caption.label.bounds, to: nil))
+                }
                 print("table", tableView.frame, "clip", scrollView.contentView.bounds, "column", tableView.tableColumns[0].width)
                 if let rowView = tableView.rowView(atRow: row, makeIfNecessary: false),
                    let cell = tableView.view(atColumn: 0, row: row, makeIfNecessary: false) as? ECellView {
@@ -807,7 +814,10 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         if !query.isEmpty {
             rows = pinned + recent   // cercando: niente intestazioni
         } else {
+            // La distanza fra sezioni sta in una riga vuota dopo i fissati, non nella
+            // didascalia: le due didascalie sono identiche e quella sticky non salta.
             rows = (pinned.isEmpty ? [] : [.header("Fissati")] + pinned)
+                + (pinned.isEmpty || recent.isEmpty ? [] : [.spacer])
                 + (recent.isEmpty ? [] : [.header("Recenti")] + recent)
         }
     }
@@ -1116,25 +1126,32 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         proposed.filteredIndexSet { item(at: $0) != nil }
     }
 
-    /// Didascalie: margine 4 sopra (10 dalla seconda), 12 di testo, 4 sotto. Righe 44 / 30.
+    /// Didascalie tutte uguali: 4 sopra, 12 di testo, 4 sotto. Spaziatore 6
+    /// (= i 10 sopra la seconda didascalia del mockup). Righe 44 / 30.
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        guard let item = item(at: row) else { return row == 0 ? 20 : 26 }
+        if case .spacer = rows[row] { return 6 }
+        guard let item = item(at: row) else { return 20 }
         return item.etichetta != nil ? 44 : 30
     }
 
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
         let rowView = ERowView()
-        if item(at: row) == nil { rowView.makeCaptionGround() }
+        if isCaption(row) { rowView.makeCaptionGround() }
         return rowView
     }
 
     // PROTOTYPE: didascalie sticky (righe di gruppo fluttuanti)
-    func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool { item(at: row) == nil }
+    func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool { isCaption(row) }
+
+    private func isCaption(_ row: Int) -> Bool {
+        if case .header = rows[row] { return true }
+        return false
+    }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         guard let item = item(at: row) else {
             if case .header(let title) = rows[row] { return ECaptionView(title) }
-            return nil
+            return NSView()   // spaziatore
         }
         let identifier = NSUserInterfaceItemIdentifier("ECell")
         let cell = (tableView.makeView(withIdentifier: identifier, owner: self) as? ECellView) ?? {
