@@ -712,8 +712,10 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
     }
 
     func show() {
-        if editing != nil { closeSheet() }
-        search.stringValue = ""
+        // Un foglio di modifica aperto sopravvive alla chiusura del pannello: si riapre
+        // com'era, con la bozza. Le modifiche si scartano solo dalla conferma di Annulla.
+        let resumingEdit = editing != nil
+        if !resumingEdit { search.stringValue = "" }
         refreshKeys()
 
         let mouse = NSEvent.mouseLocation
@@ -725,8 +727,12 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         }
         panel.orderFrontRegardless()
         background.layoutSubtreeIfNeeded()   // la lista ha la sua altezza prima di scorrere
-        reload(keeping: [], fallback: 0)
         panel.makeKey()
+        if resumingEdit {
+            panel.makeFirstResponder(sheetConfirm.isHidden ? sheetText : nil)
+            return
+        }
+        reload(keeping: [], fallback: 0)
         panel.makeFirstResponder(search)
     }
 
@@ -965,9 +971,8 @@ final class HistoryPanelController: NSObject, NSTableViewDataSource, NSTableView
         if flags.contains(.shift) { mods.insert(.shift) }
         if flags.contains(.option) { mods.insert(.option) }
         if flags.contains(.control) { mods.insert(.control) }
-        let code = event.keyCode == 76 ? 36 : event.keyCode   // invio del tastierino = ↩
-        let wanted = shortcut.keyCode == 76 ? 36 : shortcut.keyCode
-        return code == wanted && mods == shortcut.modifiers
+        // Stessa equivalenza dei conflitti (invio del tastierino = ↩).
+        return shortcut.sameKeys(as: Shortcut(keyCode: event.keyCode, modifiers: mods, key: ""))
     }
 
     private func handleKey(_ event: NSEvent) -> NSEvent? {

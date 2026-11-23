@@ -17,9 +17,13 @@ struct Shortcut: Codable, Equatable {
     var modifiers: Modifiers
     var key: String
 
+    /// Invio del tastierino (76) e ↩ (36) sono lo stesso tasto.
+    var normalizedKeyCode: UInt16 { keyCode == 76 ? 36 : keyCode }
+
     /// Due combinazioni sono la stessa se tasto e modificatori coincidono.
+    /// Stessa equivalenza usata per riconoscere i tasti premuti nel pannello.
     func sameKeys(as other: Shortcut) -> Bool {
-        keyCode == other.keyCode && modifiers == other.modifiers
+        normalizedKeyCode == other.normalizedKeyCode && modifiers == other.modifiers
     }
 
     /// Nell'ordine di macOS: ⌃⌥⇧⌘ poi il tasto.
@@ -137,7 +141,7 @@ func validate(_ shortcut: Shortcut?, for action: ShortcutAction,
         if !hasStrong { return .needsModifier }
     case .panel, .sheet:
         if ["←", "→", "↑", "↓", "⇥"].contains(shortcut.key), !hasStrong { return .fixedKey }
-        let producesText = Shortcut.specialKeys[shortcut.keyCode] == nil
+        let producesText = Shortcut.specialKeys[shortcut.keyCode] == nil || shortcut.keyCode == 49   // 49 = spazio
         if producesText, !hasStrong { return .typesText }
         // Nel foglio ↩ va a capo.
         if action.scope == .sheet, ["↩", "⌤"].contains(shortcut.key), !hasStrong { return .typesText }

@@ -74,6 +74,8 @@ final class HistoryStore {
         } else {
             items.insert(ClipItem(id: UUID(), text: text, date: Date()), at: 0)
         }
+        // Toglie tutti i non fissati in eccesso, non solo uno: sfissare non elimina nulla
+        // (101 non fissati restano), e la copia successiva riporta lo storico a 100.
         var excess = items.filter { !$0.fissato }.count - maxItems
         while excess > 0, let last = items.lastIndex(where: { !$0.fissato }) {
             items.remove(at: last)

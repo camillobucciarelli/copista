@@ -158,6 +158,20 @@ do { // Ricerca su testo ed Etichetta, case/diacritic-insensitive, fissati prima
     check(searchItems(store.items, query: "zzz").fissati.isEmpty && searchItems(store.items, query: "zzz").recenti.isEmpty, "nessun risultato")
 }
 
+do { // Sfissare non elimina nulla; il limite torna valido alla copia successiva
+    let store = freshStore()
+    store.add("vecchio-fisso")
+    store.togglePin(ids: [id(store, "vecchio-fisso")])
+    for i in 0..<100 { store.add("r\(i)") }
+    store.togglePin(ids: [id(store, "vecchio-fisso")])
+    check(store.items.filter { !$0.fissato }.count == 101, "sfissare tiene tutti: 101 non fissati")
+    store.add("nuovo")
+    check(store.items.filter { !$0.fissato }.count == 100, "dopo la copia: 100 non fissati")
+    check(store.items[0].text == "nuovo", "il nuovo resta in cima")
+    check(!store.items.contains { $0.text == "vecchio-fisso" } && !store.items.contains { $0.text == "r0" },
+          "escono i due più vecchi")
+}
+
 do { // Salvataggio e ricarica
     let url = tempDir.appendingPathComponent("persist.json")
     let store = HistoryStore(fileURL: url)
@@ -241,6 +255,21 @@ do { // "Nessuna" ammessa
     for action in ShortcutAction.allCases {
         check(validate(nil, for: action, in: ShortcutAction.defaults) == nil, "Nessuna per \(action)")
     }
+}
+
+do { // Spazio senza ⌘/⌥/⌃ rifiutato nel pannello e nel foglio (⇧ non conta)
+    let space = Shortcut(keyCode: 49, modifiers: [], key: "␣")
+    check(validate(space, for: .copy, in: [:]) == .typesText, "spazio nel pannello")
+    check(validate(Shortcut(keyCode: 49, modifiers: shift, key: "␣"), for: .save, in: [:]) == .typesText, "⇧spazio nel foglio")
+    check(validate(Shortcut(keyCode: 49, modifiers: .control, key: "␣"), for: .copy, in: [:]) == nil, "⌃spazio ammessa")
+}
+
+do { // Invio del tastierino e ↩ sono lo stesso tasto, anche nei conflitti
+    let enter = Shortcut(keyCode: 76, modifiers: [], key: "⌤")
+    check(validate(enter, for: .edit, in: ShortcutAction.defaults) == .conflict(.copy), "⌤ in conflitto con Copia (↩)")
+    let cmdEnter = Shortcut(keyCode: 76, modifiers: cmd, key: "⌤")
+    check(validate(cmdEnter, for: .cancelEdit, in: ShortcutAction.defaults) == .conflict(.save), "⌘⌤ in conflitto con Salva (⌘↩)")
+    check(enter.sameKeys(as: Shortcut(keyCode: 36, modifiers: [], key: "↩")), "sameKeys: ⌤ = ↩")
 }
 
 do { // Visualizzazione

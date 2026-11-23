@@ -287,10 +287,21 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     }
 
     @objc private func resetAll() {
-        for action in ShortcutAction.allCases { shortcuts.reset(action) }
+        for action in ShortcutAction.allCases where action != .openHistory { shortcuts.reset(action) }
+        // La globale passa alla predefinita solo se macOS la accetta; altrimenti resta quella che funziona.
+        let previous = shortcuts.shortcut(for: .openHistory)
+        let failed = !registerGlobal(ShortcutAction.defaults[.openHistory] ?? nil)
+        if failed {
+            _ = registerGlobal(previous)
+        } else {
+            shortcuts.reset(.openHistory)
+            globalFailed = false
+        }
         refreshShortcuts()
-        globalFailed = !registerGlobal(shortcuts.shortcut(for: .openHistory))
-        if globalFailed { reasons[.openHistory]?.stringValue = L("settings.globalUnavailable") }
+        if failed {
+            NSSound.beep()
+            reasons[.openHistory]?.stringValue = L("settings.globalUnavailable")
+        }
     }
 
     /// Valida e salva; una combinazione rifiutata non viene salvata e il motivo compare accanto.
