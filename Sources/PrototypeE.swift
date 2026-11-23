@@ -314,7 +314,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         }
         panel.delegate = self
 
-        background.material = .hudWindow   // come il pannello reale; segue chiaro/scuro
+        background.material = .popover   // adattivo: segue chiaro/scuro (.hudWindow e' solo scuro)
         background.blendingMode = .behindWindow
         background.state = .active
         panel.contentView = background
@@ -472,14 +472,14 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
 
     /// Scheda di modifica: inset 10, raggio 10, padding 14/16/12.
     private func buildCard() {
-        card.material = .popover
+        card.material = .menu
         card.blendingMode = .withinWindow
         card.state = .active
         card.wantsLayer = true
         card.layer?.cornerRadius = 10
         card.layer?.masksToBounds = true
         card.isHidden = true
-        let cardBorder = FillView(border: .separatorColor, radius: 10)
+        let cardBorder = FillView(fill: EColor.strongFill, border: .separatorColor, radius: 10)   // velo per staccarla dalla lista
 
         let heading = text("Modifica elemento", size: 13, weight: .semibold)
 
@@ -575,8 +575,8 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         stack.setCustomSpacing(8, after: noteRule)
         stack.translatesAutoresizingMaskIntoConstraints = false
         cardBorder.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(cardBorder)   // sotto il contenuto, cosi' non intercetta i clic
         card.addSubview(stack)
-        card.addSubview(cardBorder)
         NSLayoutConstraint.activate([
             stack.topAnchor.constraint(equalTo: card.topAnchor, constant: 14),
             stack.bottomAnchor.constraint(equalTo: card.bottomAnchor, constant: -12),
@@ -729,10 +729,6 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         flash("Copiato (finto): “\(shortName(item))” — appunti invariati")
     }
 
-    private func pasteIntoApp(_ item: ClipItem) {
-        flash("Incollato (finto): “\(shortName(item))”")
-    }
-
     private func togglePin(_ item: ClipItem) {
         store.togglePin(ids: [item.id])
         reload(keeping: item.id, fallback: 0)
@@ -770,7 +766,6 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
             return menuItem
         }
         _ = add("Copia", #selector(menuCopy), "\r", [])
-        _ = add("Incolla nell'app", #selector(menuPaste), "\r", .option)
         _ = add("Modifica…", #selector(menuEdit), "e", .command)
         _ = add(item.fissato ? "Sfissa" : "Fissa", #selector(menuPin), "p", .command)
         menu.addItem(.separator())
@@ -806,7 +801,6 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         store.items.first { $0.id == sender.representedObject as? UUID }
     }
     @objc private func menuCopy(_ sender: NSMenuItem) { if let i = menuTarget(sender) { copy(i) } }
-    @objc private func menuPaste(_ sender: NSMenuItem) { if let i = menuTarget(sender) { pasteIntoApp(i) } }
     @objc private func menuEdit(_ sender: NSMenuItem) { if let i = menuTarget(sender) { openEditor(i) } }
     @objc private func menuPin(_ sender: NSMenuItem) { if let i = menuTarget(sender) { togglePin(i) } }
     @objc private func menuDelete(_ sender: NSMenuItem) { if let i = menuTarget(sender) { delete(i) } }
@@ -834,8 +828,7 @@ final class PrototypeEController: NSObject, NSTableViewDataSource, NSTableViewDe
         case 125 where !event.modifierFlags.contains(.shift): move(by: 1); return nil
         case 126 where !event.modifierFlags.contains(.shift): move(by: -1); return nil
         case 36, 76:
-            guard let i = selected else { return nil }
-            if event.modifierFlags.contains(.option) { pasteIntoApp(i) } else { copy(i) }
+            if let i = selected { copy(i) }
             return nil
         case 53:
             if search.stringValue.isEmpty { hide() } else {
