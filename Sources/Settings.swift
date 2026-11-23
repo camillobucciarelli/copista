@@ -287,8 +287,9 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     }
 
     @objc private func resetAll() {
-        for action in ShortcutAction.allCases where action != .openHistory { shortcuts.reset(action) }
-        // La globale passa alla predefinita solo se macOS la accetta; altrimenti resta quella che funziona.
+        // Prima la globale: passa alla predefinita solo se macOS la accetta, altrimenti resta
+        // quella che funziona. Poi le azioni locali, senza scontrarsi con la globale rimasta.
+        let current = shortcuts.current
         let previous = shortcuts.shortcut(for: .openHistory)
         let failed = !registerGlobal(ShortcutAction.defaults[.openHistory] ?? nil)
         if failed {
@@ -297,10 +298,18 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             shortcuts.reset(.openHistory)
             globalFailed = false
         }
+        let plan = restoredDefaults(keepingGlobal: shortcuts.shortcut(for: .openHistory), current: current)
+        for action in ShortcutAction.allCases where action != .openHistory && !plan.unchanged.contains(action) {
+            shortcuts.reset(action)
+        }
         refreshShortcuts()
         if failed {
             NSSound.beep()
             reasons[.openHistory]?.stringValue = L("settings.globalUnavailable")
+        }
+        for action in plan.unchanged {   // perche' non e' tornata predefinita
+            reasons[action]?.stringValue = validate(ShortcutAction.defaults[action] ?? nil, for: action,
+                                                    in: plan.shortcuts)?.message ?? ""
         }
     }
 

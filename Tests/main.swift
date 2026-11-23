@@ -280,6 +280,25 @@ do { // La globale è in conflitto con ogni azione del pannello e del foglio, e 
     check(validate(cmdReturn, for: .openHistory, in: ShortcutAction.defaults) == .conflict(.save), "⌘↩ globale: è Salva")
 }
 
+do { // Ripristina predefinite quando la globale predefinita non si registra
+    let cmdE = Shortcut(keyCode: 14, modifiers: cmd, key: "e")
+    let optE = Shortcut(keyCode: 14, modifiers: .option, key: "e")
+    let cmdJ = Shortcut(keyCode: 38, modifiers: cmd, key: "j")
+    var current = ShortcutAction.defaults
+    current[.openHistory] = cmdE
+    current[.edit] = optE
+    current[.togglePin] = cmdJ
+    let plan = restoredDefaults(keepingGlobal: cmdE, current: current)
+    check(plan.shortcuts[.openHistory]! == cmdE, "resta la globale che funziona")
+    check(plan.shortcuts[.edit]! == optE && plan.unchanged == [.edit], "Modifica (⌘E = globale) resta com'era")
+    check(plan.shortcuts[.togglePin]! == ShortcutAction.defaults[.togglePin]!, "Fissa/Sfissa torna predefinita")
+    for action in ShortcutAction.allCases {
+        check(validate(plan.shortcuts[action] ?? nil, for: action, in: plan.shortcuts) == nil, "piano senza conflitti: \(action)")
+    }
+    let full = restoredDefaults(keepingGlobal: ShortcutAction.defaults[.openHistory] ?? nil, current: current)
+    check(full.unchanged.isEmpty && full.shortcuts[.edit]! == ShortcutAction.defaults[.edit]!, "globale predefinita: tutto predefinito")
+}
+
 do { // "Nessuna" ammessa
     for action in ShortcutAction.allCases {
         check(validate(nil, for: action, in: ShortcutAction.defaults) == nil, "Nessuna per \(action)")

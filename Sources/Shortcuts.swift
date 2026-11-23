@@ -155,6 +155,28 @@ func validate(_ shortcut: Shortcut?, for action: ShortcutAction,
     return nil
 }
 
+/// "Ripristina predefinite" con una globale data (quella predefinita, o la precedente se la
+/// predefinita non si registra): le azioni locali tornano predefinite, tranne quelle la cui
+/// predefinita andrebbe in conflitto; quelle restano com'erano e sono in `unchanged`.
+func restoredDefaults(keepingGlobal global: Shortcut?, current: [ShortcutAction: Shortcut?])
+    -> (shortcuts: [ShortcutAction: Shortcut?], unchanged: [ShortcutAction]) {
+    var result = ShortcutAction.defaults
+    result[.openHistory] = global
+    var unchanged: [ShortcutAction] = []
+    var changed = true
+    while changed {   // una combinazione rimasta puo' scontrarsi con un'altra predefinita
+        changed = false
+        for action in ShortcutAction.allCases where action != .openHistory && !unchanged.contains(action) {
+            if validate(result[action] ?? nil, for: action, in: result) != nil {
+                result[action] = current[action] ?? nil
+                unchanged.append(action)
+                changed = true
+            }
+        }
+    }
+    return (result, unchanged)
+}
+
 /// Scorciatoie configurate, in UserDefaults. Chiave assente = predefinita;
 /// dato vuoto = "Nessuna".
 final class ShortcutSettings {
