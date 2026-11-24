@@ -3,14 +3,29 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
+  # Pull request: runner ospitato da GitHub, sola lettura. Il runner self-hosted
+  # (chiavi di firma, chiave App Store Connect) non esegue mai codice delle PR.
+  test:
+    if: github.event_name == 'pull_request'
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - run: ./test.sh
+      - run: ./build.sh
   build:
+    if: github.event_name != 'pull_request'
     runs-on: [self-hosted, macOS]
     steps:
       - uses: actions/checkout@v7
+      - run: ./test.sh
       - run: ./build.sh
       - run: ditto -c -k --keepParent build/Copista.app Copista.zip
       - uses: actions/upload-artifact@v7
