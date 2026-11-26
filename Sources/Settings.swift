@@ -220,8 +220,11 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let service = SMAppService.mainApp
         do {
             if launchAtLogin.state == .on {
-                try service.register()
                 // Spento prima in Impostazioni di Sistema: solo l'utente puo' riaccenderlo li'.
+                // In quello stato register() puo' anche lanciare un errore: non e' un guasto.
+                do { try service.register() } catch {
+                    guard service.status == .requiresApproval else { throw error }
+                }
                 if service.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
             } else if service.status != .notRegistered {
                 try service.unregister()
