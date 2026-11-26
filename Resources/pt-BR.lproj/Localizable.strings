@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Descartar";
 "settings.general" = "Geral";
 "settings.shortcuts" = "Atalhos";
+"settings.launchAtLogin" = "Abrir ao iniciar sessão";
+"settings.launchAtLogin.note" = "O Copista abre quando você inicia a sessão no Mac.";
+"settings.launchAtLogin.approval" = "Permita o Copista em Ajustes do Sistema › Geral › Itens de Início.";
 "settings.autoPaste" = "Colar automaticamente ao selecionar";
 "settings.permission.granted" = "Permissão de Acessibilidade: concedida";
 "settings.permission.missing" = "Permissão de Acessibilidade: não concedida";

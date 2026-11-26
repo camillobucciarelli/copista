@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Scarta";
 "settings.general" = "Generali";
 "settings.shortcuts" = "Scorciatoie";
+"settings.launchAtLogin" = "Apri al login";
+"settings.launchAtLogin.note" = "Copista si apre quando accedi al Mac.";
+"settings.launchAtLogin.approval" = "Consenti Copista in Impostazioni di Sistema › Generali › Elementi login.";
 "settings.autoPaste" = "Incolla automaticamente alla selezione";
 "settings.permission.granted" = "Permesso Accessibilità: concesso";
 "settings.permission.missing" = "Permesso Accessibilità: non concesso";
