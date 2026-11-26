@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Descartar";
 "settings.general" = "General";
 "settings.shortcuts" = "Atajos";
+"settings.launchAtLogin" = "Abrir al iniciar sesión";
+"settings.launchAtLogin.note" = "Copista se abre cuando inicias sesión en el Mac.";
+"settings.launchAtLogin.approval" = "Permite Copista en Ajustes del Sistema › General › Ítems de inicio.";
 "settings.autoPaste" = "Pegar automáticamente al seleccionar";
 "settings.permission.granted" = "Permiso de Accesibilidad: concedido";
 "settings.permission.missing" = "Permiso de Accesibilidad: no concedido";

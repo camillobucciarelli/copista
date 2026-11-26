@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Verwerfen";
 "settings.general" = "Allgemein";
 "settings.shortcuts" = "Tastenkürzel";
+"settings.launchAtLogin" = "Bei der Anmeldung öffnen";
+"settings.launchAtLogin.note" = "Copista wird geöffnet, wenn du dich am Mac anmeldest.";
+"settings.launchAtLogin.approval" = "Erlaube Copista in Systemeinstellungen › Allgemein › Anmeldeobjekte.";
 "settings.autoPaste" = "Bei Auswahl automatisch einsetzen";
 "settings.permission.granted" = "Bedienungshilfen-Berechtigung: erteilt";
 "settings.permission.missing" = "Bedienungshilfen-Berechtigung: nicht erteilt";

@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Abandonner";
 "settings.general" = "Général";
 "settings.shortcuts" = "Raccourcis";
+"settings.launchAtLogin" = "Ouvrir à la connexion";
+"settings.launchAtLogin.note" = "Copista s’ouvre quand vous ouvrez votre session sur le Mac.";
+"settings.launchAtLogin.approval" = "Autorisez Copista dans Réglages Système › Général › Ouverture.";
 "settings.autoPaste" = "Coller automatiquement à la sélection";
 "settings.permission.granted" = "Autorisation Accessibilité : accordée";
 "settings.permission.missing" = "Autorisation Accessibilité : non accordée";

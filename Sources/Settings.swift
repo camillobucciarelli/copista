@@ -1,4 +1,5 @@
 import AppKit
+import ServiceManagement
 
 /// Campo che registra una scorciatoia: clic per registrare, clic fuori per annullare.
 /// Esc e' registrabile come qualsiasi altro tasto.
@@ -86,6 +87,8 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     private let toggleReception: () -> Void
     private var window: NSWindow?
 
+    private let launchAtLogin = NSButton(checkboxWithTitle: L("settings.launchAtLogin"), target: nil, action: nil)
+    private lazy var launchAtLoginNote = note(L("settings.launchAtLogin.note"))
     private let autoPaste = NSButton(checkboxWithTitle: L("settings.autoPaste"), target: nil, action: nil)
     private let permission = NSTextField(labelWithString: "")
     private let reception = NSButton(checkboxWithTitle: L("settings.android"), target: nil, action: nil)
@@ -174,16 +177,25 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         let permissionRow = NSStackView(views: [permission, openSettings])
         permissionRow.spacing = 8
 
-        let stack = NSStackView(views: [
+        let androidNote = note(L("settings.android.note"))
+        var views: [NSView] = [
             autoPaste, note(L("menu.autoPaste.tooltip")), permissionRow,
-            reception, note(L("settings.android.note")),
+            reception, androidNote,
             NSTextField(labelWithString: L("settings.retained")),
-        ])
+        ]
+        // SMAppService esiste da macOS 13: prima la voce non compare.
+        if #available(macOS 13.0, *) {
+            launchAtLogin.target = self
+            launchAtLogin.action = #selector(launchAtLoginChanged)
+            views.insert(contentsOf: [launchAtLogin, launchAtLoginNote], at: 0)
+        }
+        let stack = NSStackView(views: views)
         stack.orientation = .vertical
         stack.alignment = .leading
         stack.spacing = 6
+        if #available(macOS 13.0, *) { stack.setCustomSpacing(18, after: launchAtLoginNote) }
         stack.setCustomSpacing(18, after: permissionRow)
-        stack.setCustomSpacing(18, after: stack.views[4])
+        stack.setCustomSpacing(18, after: androidNote)
         stack.widthAnchor.constraint(equalToConstant: 560).isActive = true
         return padded(stack)
     }
@@ -194,6 +206,35 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         permission.stringValue = L(granted ? "settings.permission.granted" : "settings.permission.missing")
         permission.textColor = granted ? .secondaryLabelColor : .systemOrange
         reception.state = isReceptionOn() ? .on : .off
+        if #available(macOS 13.0, *) {
+            // Lo stato viene da macOS: l'utente puo' cambiarlo anche in Impostazioni di Sistema.
+            let status = SMAppService.mainApp.status
+            launchAtLogin.state = status == .enabled ? .on : .off
+            launchAtLoginNote.stringValue = L(status == .requiresApproval
+                ? "settings.launchAtLogin.approval" : "settings.launchAtLogin.note")
+        }
+    }
+
+    @objc private func launchAtLoginChanged() {
+        guard #available(macOS 13.0, *) else { return }
+        let service = SMAppService.mainApp
+        do {
+            if launchAtLogin.state == .on {
+                // Spento prima in Impostazioni di Sistema: solo l'utente puo' riaccenderlo li'.
+                // In quello stato register() puo' anche lanciare un errore: non e' un guasto.
+                do { try service.register() } catch {
+                    guard service.status == .requiresApproval else { throw error }
+                }
+                if service.status == .requiresApproval { SMAppService.openSystemSettingsLoginItems() }
+            } else if service.status != .notRegistered {
+                try service.unregister()
+            }
+            refreshGeneral()
+        } catch {
+            NSSound.beep()
+            refreshGeneral()
+            launchAtLoginNote.stringValue = error.localizedDescription
+        }
     }
 
     @objc private func autoPasteChanged() {

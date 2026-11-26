@@ -36,6 +36,14 @@ I testi della scheda del Mac App Store sono in `store/<locale>/` (sottotitolo, d
 | `Esc` | Chiude la lista |
 | Icona nella barra | Pulizia dello storico, sospensione, uscita |
 
+## Apertura al login
+
+Impostazioni › Generali › "Apri al login". All'inizio è spenta. Richiede macOS 13 o successivo:
+su macOS 11 e 12 la voce non compare.
+
+Lo stato è quello di macOS: la stessa opzione è in Impostazioni di Sistema › Generali › Elementi login.
+Se lì Copista è stato spento, solo l'utente può riaccenderlo da lì; Copista apre quel pannello.
+
 ## Ricezione da Android
 
 Voce di menu "Ricevi testo da Android". All'inizio è spenta.

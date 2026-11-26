@@ -59,6 +59,9 @@
 "edit.discard.confirm" = "Discard";
 "settings.general" = "General";
 "settings.shortcuts" = "Shortcuts";
+"settings.launchAtLogin" = "Open at Login";
+"settings.launchAtLogin.note" = "Copista opens when you log in to your Mac.";
+"settings.launchAtLogin.approval" = "Allow Copista in System Settings › General › Login Items.";
 "settings.autoPaste" = "Paste automatically on selection";
 "settings.permission.granted" = "Accessibility permission: granted";
 "settings.permission.missing" = "Accessibility permission: not granted";
